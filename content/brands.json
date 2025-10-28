@@ -27,7 +27,10 @@
     {
       "name": "Souvenir DP",
       "logo": "img/Souvenir DP.jpg"
+    },
+    {
+      "name": "test",
+      "logo": "/img/uploads/favicon.png"
     }
   ]
 }
-
