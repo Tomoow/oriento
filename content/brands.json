@@ -1,3 +1,32 @@
 {
-  "brands": []
+  "brands": [
+    {
+      "name": "Murielle",
+      "logo": "img/uploads/murielle.jpg"
+    },
+    {
+      "logo": "img/uploads/christine-bekaert.jpg",
+      "name": "Christine Bekaert"
+    },
+    {
+      "logo": "img/uploads/melano.jpg",
+      "name": "Melano"
+    },
+    {
+      "logo": "img/uploads/joidart.jpg",
+      "name": "Joidart"
+    },
+    {
+      "logo": "img/uploads/marie-martens.jpg",
+      "name": "Marie Martens"
+    },
+    {
+      "logo": "img/uploads/gianni.jpg",
+      "name": "Gianni Chiarini"
+    },
+    {
+      "logo": "img/uploads/souvenir-dp.jpg",
+      "name": "Souvenirs De Pomme"
+    }
+  ]
 }
