@@ -53,6 +53,8 @@ function loadBrands() {
                 if (imagePath.startsWith('/')) {
                     imagePath = imagePath.substring(1);
                 }
+                // Handle CMS path conversion: img/uploads/ -> img/
+                imagePath = imagePath.replace('img/uploads/', 'img/');
                 
                 return `
                     <div class="brand-item">

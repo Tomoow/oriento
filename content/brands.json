@@ -30,7 +30,7 @@
     },
     {
       "name": "test",
-      "logo": "/img/uploads/favicon.png"
+      "logo": "img/favicon.png"
     }
   ]
 }

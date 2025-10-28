@@ -5,7 +5,7 @@ backend:
 # Uncomment below to enable drafts
 # publish_mode: editorial_workflow
 
-media_folder: "img" # Media files will be stored in the img folder
+media_folder: "static/img" # Media files will be stored in the static/img folder
 public_folder: "/img" # The src attribute for uploaded media will begin with /img
 
 collections:
