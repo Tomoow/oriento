@@ -27,6 +27,10 @@
     {
       "logo": "img/Joidart.jpg",
       "name": "Joidart"
+    },
+    {
+      "name": "test",
+      "logo": "/img/orientobrand.jpg"
     }
   ]
 }
