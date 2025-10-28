@@ -48,13 +48,8 @@ function loadBrands() {
             
             // Render brands twice for seamless loop
             const html = brands.map(brand => {
-                // Normalize image path - remove leading slash if present
-                let imagePath = brand.logo;
-                if (imagePath.startsWith('/')) {
-                    imagePath = imagePath.substring(1);
-                }
-                // Handle CMS path conversion: img/uploads/ -> img/
-                imagePath = imagePath.replace('img/uploads/', 'img/');
+                // Use the logo path directly from CMS
+                const imagePath = brand.logo;
                 
                 return `
                     <div class="brand-item">

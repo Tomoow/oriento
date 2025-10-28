@@ -1,36 +1,3 @@
 {
-  "brands": [
-    {
-      "name": "Christine Bekaert",
-      "logo": "img/Christine Bekaert.jpg"
-    },
-    {
-      "name": "Gianni",
-      "logo": "img/Gianni.jpg"
-    },
-    {
-      "name": "Joidart",
-      "logo": "img/Joidart.jpg"
-    },
-    {
-      "name": "Marie Martens",
-      "logo": "img/Marie Martens.jpg"
-    },
-    {
-      "name": "Melano",
-      "logo": "img/Melano.jpg"
-    },
-    {
-      "name": "Murielle",
-      "logo": "img/Murielle.jpg"
-    },
-    {
-      "name": "Souvenir DP",
-      "logo": "img/Souvenir DP.jpg"
-    },
-    {
-      "name": "test",
-      "logo": "img/favicon.png"
-    }
-  ]
+  "brands": []
 }
