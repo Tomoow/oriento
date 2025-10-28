@@ -53,7 +53,7 @@ function loadBrands() {
                 
                 return `
                     <div class="brand-item">
-                        <img src="${imagePath}" alt="${brand.name}">
+                        <img src="${encodeURI(imagePath)}" alt="${brand.name}">
                     </div>
                 `;
             }).join('');

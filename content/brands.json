@@ -1,7 +1,4 @@
 {
-<<<<<<< HEAD
-  "brands": []
-=======
   "brands": [
     {
       "name": "Murielle",
@@ -32,5 +29,4 @@
       "name": "Joidart"
     }
   ]
->>>>>>> c0174076e9ce86fa59b4e70d1e6eb5df77333dcd
 }
