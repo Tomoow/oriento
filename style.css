@@ -1,45 +1,351 @@
+:root {
+  --color-bg: #FFFFFF;        /* White */
+  --color-primary: #C94F4F;   /* Muted Terracotta Red */
+  --color-surface: #FFFFFF;   /* White */
+  --color-secondary: #E3B7A0; /* Dusty Rose */
+  --color-text: #5A3E36;      /* Deep Brown */
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -0.02em;
+    line-height: 150%;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
+    font-family: 'Lato', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 150%;
     min-height: 100vh;
+}
+
+/* Site Header */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-bg);
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+/* Navigation */
+.main-nav {
+    position: relative;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--color-text);
+    margin: 3px 0;
+    transition: 0.3s;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-menu a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.nav-menu a:hover {
+    color: var(--color-primary);
+}
+
+.nav-menu a.active {
+    color: var(--color-primary);
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-primary);
+    transition: width 0.3s ease;
+}
+
+.nav-menu a:hover::after,
+.nav-menu a.active::after {
+    width: 100%;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    max-height: 800px;
+    background-image: url('img/oriento.jpg');
+    background-size: cover;
+    background-position: 75% center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    margin-top: 80px;
+}
+
+.hero-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    color: var(--color-text);
+    max-width: 600px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Brands Section */
+.brands-section {
+    padding: 4rem 0;
+    background-color: var(--color-bg);
+    overflow: hidden;
+}
+
+.brands-carousel {
+    display: flex;
+    gap: 3rem;
+    animation: scroll 40s linear infinite;
+    width: fit-content;
+}
+
+.brand-item {
+    flex-shrink: 0;
+    width: 200px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+.brand-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.brand-item:hover img {
+    filter: grayscale(0%);
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.brands-carousel:hover {
+    animation-play-state: paused;
+}
+
+/* Main Content */
+.main-content {
+    padding: 3rem 0;
 }
 
 .container {
-    background: white;
-    padding: 3rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
-header h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 2rem;
-    font-size: 2.5rem;
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        margin-top: 70px;
+        height: 70vh;
+        max-height: 600px;
+    }
+
+    .header-container {
+        padding: 1rem;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background-color: var(--color-bg);
+        flex-direction: column;
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        box-shadow: 0 4px 10px rgba(90, 62, 54, 0.1);
+    }
+
+    .nav-menu.active {
+        max-height: 400px;
+    }
+
+    .nav-menu li {
+        width: 100%;
+        border-bottom: 1px solid var(--color-secondary);
+    }
+
+    .nav-menu a {
+        display: block;
+        padding: 1rem 2rem;
+    }
+
+    .nav-menu a::after {
+        display: none;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .brands-section {
+        padding: 3rem 0;
+    }
+
+    .brand-item {
+        width: 150px;
+        height: 90px;
+    }
+
+    .brands-carousel {
+        gap: 2rem;
+    }
 }
 
-main {
-    text-align: center;
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Lato', sans-serif;
 }
 
-main p {
-    color: #666;
-    font-size: 1.1rem;
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+    border: 2px solid var(--color-primary);
 }
 
+.btn-primary:hover {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-link {
+    background-color: transparent;
+    color: var(--color-text);
+    border: 2px solid var(--color-text);
+}
+
+.btn-link:hover {
+    background-color: var(--color-text);
+    color: var(--color-surface);
+}

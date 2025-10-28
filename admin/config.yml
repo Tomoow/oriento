@@ -30,4 +30,18 @@ collections:
       - {label: "Description", name: "description", widget: "text", required: false}
       - {label: "Featured Image", name: "image", widget: "image", required: false}
       - {label: "Body", name: "body", widget: "markdown"}
+  
+  - name: "brands" # Brands collection
+    label: "Brands" # Used in the UI
+    files: # File-based collection for a single JSON file
+      - label: "Brands List"
+        name: "brands"
+        file: "content/brands.json"
+        fields:
+          - label: "Brands"
+            name: "brands"
+            widget: "list"
+            fields:
+              - {label: "Brand Name", name: "name", widget: "string", required: true}
+              - {label: "Logo", name: "logo", widget: "image", required: true}
 
