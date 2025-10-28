@@ -1,0 +1,26 @@
+[build]
+  publish = "."
+  command = "echo 'No build command needed'"
+
+# Enable Netlify Identity for CMS
+[build.environment]
+  NODE_VERSION = "18"
+
+# Headers for Netlify CMS
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
