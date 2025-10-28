@@ -1,36 +1,32 @@
 {
   "brands": [
     {
-      "name": "Christine Bekaert",
-      "logo": "img/Christine Bekaert.jpg"
+      "name": "Murielle",
+      "logo": "/img/uploads/murielle.jpg"
     },
     {
       "name": "Gianni",
-      "logo": "img/Gianni.jpg"
+      "logo": "/img/uploads/gianni.jpg"
     },
     {
-      "name": "Joidart",
-      "logo": "img/Joidart.jpg"
+      "logo": "/img/uploads/souvenir-dp.jpg",
+      "name": "SDP"
     },
     {
-      "name": "Marie Martens",
-      "logo": "img/Marie Martens.jpg"
+      "logo": "/img/uploads/melano.jpg",
+      "name": "Melano"
     },
     {
-      "name": "Melano",
-      "logo": "img/Melano.jpg"
+      "logo": "/img/uploads/marie-martens.jpg",
+      "name": "Marie Martens"
     },
     {
-      "name": "Murielle",
-      "logo": "img/Murielle.jpg"
+      "logo": "/img/uploads/christine-bekaert.jpg",
+      "name": "Christine Bekaert"
     },
     {
-      "name": "Souvenir DP",
-      "logo": "img/Souvenir DP.jpg"
-    },
-    {
-      "name": "orientobrand",
-      "logo": "/img/uploads/orientobrand.jpg"
+      "logo": "/img/uploads/joidart.jpg",
+      "name": "Joidart"
     }
   ]
 }
