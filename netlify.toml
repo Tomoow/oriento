@@ -15,6 +15,11 @@
     X-Content-Type-Options = "nosniff"
 
 [[redirects]]
+  from = "/img/uploads/*"
+  to = "/static/img/uploads/:splat"
+  status = 200
+
+[[redirects]]
   from = "/admin"
   to = "/admin/index.html"
   status = 200
