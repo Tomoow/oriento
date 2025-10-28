@@ -49,7 +49,11 @@ function loadBrands() {
             // Render brands twice for seamless loop
             const html = brands.map(brand => {
                 // Use the logo path directly from CMS
-                const imagePath = brand.logo;
+                let imagePath = brand.logo;
+                // Remove leading slash if present (CMS sometimes adds it)
+                if (imagePath.startsWith('/')) {
+                    imagePath = imagePath.substring(1);
+                }
                 
                 return `
                     <div class="brand-item">

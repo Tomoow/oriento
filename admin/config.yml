@@ -6,7 +6,7 @@ backend:
 # publish_mode: editorial_workflow
 
 media_folder: "static/img" # Media files will be stored in static/img (Netlify convention)
-public_folder: "/img" # The src attribute for uploaded media will begin with /img
+public_folder: "img" # The src attribute for uploaded media will begin with img
 
 collections:
   - name: "pages" # Used in routes, e.g., /admin/collections/blog
