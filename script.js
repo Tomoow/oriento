@@ -47,11 +47,19 @@ function loadBrands() {
             const brands = data.brands || [];
             
             // Render brands twice for seamless loop
-            const html = brands.map(brand => `
-                <div class="brand-item">
-                    <img src="${brand.logo}" alt="${brand.name}">
-                </div>
-            `).join('');
+            const html = brands.map(brand => {
+                // Normalize image path - remove leading slash if present
+                let imagePath = brand.logo;
+                if (imagePath.startsWith('/')) {
+                    imagePath = imagePath.substring(1);
+                }
+                
+                return `
+                    <div class="brand-item">
+                        <img src="${imagePath}" alt="${brand.name}">
+                    </div>
+                `;
+            }).join('');
             
             // Duplicate for seamless scrolling
             carousel.innerHTML = html + html;
