@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap');
+
 :root {
   --color-bg: #FFFFFF;        /* White */
   --color-primary: #C94F4F;   /* Muted Terracotta Red */
@@ -5,8 +7,6 @@
   --color-secondary: #E3B7A0; /* Dusty Rose */
   --color-text: #5A3E36;      /* Deep Brown */
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap');
 
 * {
     margin: 0;
