@@ -1,0 +1,37 @@
+{
+  "products": [
+    {
+      "category": "juwelen",
+      "subcategory": "ringen",
+      "image": "img/juwelen 01.png",
+      "alt": "Ring",
+      "new": true,
+      "cadeautip": false
+    },
+    {
+      "category": "accessoires",
+      "subcategory": "handtassen",
+      "image": "img/accessoire 01.png",
+      "alt": "Handtas",
+      "new": false,
+      "cadeautip": true
+    },
+    {
+      "category": "wonen",
+      "subcategory": "huisparfums",
+      "image": "img/wonen 01.png",
+      "alt": "Huisparfum",
+      "new": true,
+      "cadeautip": true
+    },
+    {
+      "category": "juwelen",
+      "subcategory": "oorbellen",
+      "image": "img/juwelen 04.png",
+      "alt": "Oorbel",
+      "new": false,
+      "cadeautip": true
+    }
+  ]
+}
+

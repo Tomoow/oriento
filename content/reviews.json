@@ -1,0 +1,23 @@
+{
+  "reviews": [
+    {
+      "author": "Mieke Bral",
+      "text": "Heerlijke winkel , mooie dingen en supervriendelijk onthaal!",
+      "rating": 5,
+      "date": "5 maanden geleden"
+    },
+    {
+      "author": "Doortje Quidousse",
+      "text": "Aangename sfeer om te winkelen. Je krijgt ruim de tijd om even rond te kijken. Heel mooie stijlvolle producten!",
+      "rating": 5,
+      "date": "2 jaar geleden"
+    },
+    {
+      "author": "Ronny Eggermont",
+      "text": "Zalige winkel om in rond te neuzen. Breed gamma van trendy musthaves. Supervriendelijke bediening in een aangename sfeer. The place-to-be als je een leuk geschenk op de kop wil tikken.",
+      "rating": 4,
+      "date": "3 jaar geleden"
+    }
+  ]
+}
+

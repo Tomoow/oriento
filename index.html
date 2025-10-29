@@ -6,37 +6,48 @@
     <title>Oriento - Home</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <header class="site-header">
-        <div class="header-container">
-            <a href="/" class="logo">
-                <img src="img/logo.svg" alt="Oriento Logo">
-            </a>
-            <nav class="main-nav">
-                <button class="hamburger" aria-label="Menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+    <div class="header-wrapper">
+        <!-- Announcement Banner -->
+        <div class="announcement-banner" id="announcement-banner" style="display: none;">
+            <div class="announcement-content">
+                <div class="announcement-text" id="announcement-text"></div>
+                <button class="announcement-close" id="announcement-close" aria-label="Close announcement">
+                    <i data-lucide="x"></i>
                 </button>
-                <ul class="nav-menu">
-                    <li><a href="/" class="active">Home</a></li>
-                    <li><a href="/about.html">Over ons</a></li>
-                    <li><a href="/juwelen.html">Juwelen</a></li>
-                    <li><a href="/accessoires.html">Accessoires</a></li>
-                    <li><a href="/wonen.html">Wonen</a></li>
-                </ul>
-            </nav>
+            </div>
         </div>
-    </header>
+
+        <header class="site-header">
+            <div class="header-container">
+                <a href="/" class="logo">
+                    <img src="img/logo.svg" alt="Oriento Logo">
+                </a>
+                <nav class="main-nav">
+                    <button class="hamburger" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="nav-menu">
+                        <li><a href="/" class="active"><i data-lucide="home"></i> Home</a></li>
+                        <li><a href="/collectie.html"><i data-lucide="shopping-bag"></i> Collectie</a></li>
+                        <li><a href="/about.html"><i data-lucide="users"></i> Over ons</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+    </div>
 
     <div class="hero-section">
         <div class="hero-content">
             <h1>Welkom bij Oriento</h1>
             <p class="hero-subtitle">Ontdek onze collectie van fijne juwelen, accessoires en woningdecoratie</p>
             <div class="hero-buttons">
-                <button class="btn btn-primary">Bekijk collectie</button>
-                <a href="/about.html" class="btn btn-link">Over ons</a>
+                <a href="/collectie.html" class="btn btn-primary">Bekijk collectie</a>
+                <button class="btn btn-link" id="openingsuren-btn">Openingsuren</button>
             </div>
         </div>
     </div>
@@ -47,11 +58,194 @@
         </div>
     </section>
 
+    <section class="gallery-section">
+        <div class="gallery-title">
+            <h2>Shop our Instagram</h2>
+        </div>
+        <div class="gallery-grid">
+            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 08.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+
+        </div>
+    </section>
+
+    <!-- Google Reviews Section -->
+    <section class="reviews-section">
+        <div class="reviews-container">
+            <div class="reviews-title-wrapper">
+                <button class="reviews-arrow reviews-arrow-left" id="reviews-arrow-left" aria-label="Vorige reviews">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <h2 class="reviews-title">Wat onze klanten zeggen</h2>
+                <button class="reviews-arrow reviews-arrow-right" id="reviews-arrow-right" aria-label="Volgende reviews">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+            <div class="reviews-carousel-wrapper">
+                <div class="reviews-carousel" id="reviews-carousel">
+                    <!-- Reviews will be loaded dynamically -->
+                </div>
+            </div>
+            <div class="reviews-cta">
+                <a href="https://www.google.com/search?sca_esv=4371f740622c0d3e&sxsrf=AE3TifPc0r9fVjbLYAj7dl53oH7vtdg8Yw:1761746015380&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-Exy8w2iexJ7Dw5ArklsCM_ToAhp0EfLw9WPoLhGnfW67JBSFsQz5SXsifFouY8GTXH6tKbcD7cu4MWC-cdJ6e1esfekA&q=Oriento+Reviews&sa=X&ved=2ahUKEwjul7mrx8mQAxVCQ6QEHQ1uEhAQ0bkNegQIKhAE&biw=2327&bih=902&dpr=1.1" target="_blank" class="btn btn-link">
+                    Laat een review achter <i data-lucide="arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <main class="main-content">
         <div class="container">
             <!-- Content will go here -->
         </div>
     </main>
+
+    <!-- Modal for retour information -->
+    <div id="retour-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="retour-content"></div>
+        </div>
+    </div>
+
+    <!-- Modal for opening hours -->
+    <div id="openingsuren-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close openingsuren-close">&times;</span>
+            <h2>Openingsuren</h2>
+            <div class="modal-hours">
+                <div class="modal-day-hours">
+                    <span class="modal-day">Maandag</span>
+                    <span class="modal-hours-text closed">Gesloten</span>
+                </div>
+                <div class="modal-day-hours">
+                    <span class="modal-day">Dinsdag</span>
+                    <span class="modal-hours-text">10:00 - 12:00 en 14:00 - 18:00</span>
+                </div>
+                <div class="modal-day-hours">
+                    <span class="modal-day">Woensdag</span>
+                    <span class="modal-hours-text">10:00 - 12:00 en 14:00 - 18:00</span>
+                </div>
+                <div class="modal-day-hours">
+                    <span class="modal-day">Donderdag</span>
+                    <span class="modal-hours-text">14:00 - 18:00</span>
+                </div>
+                <div class="modal-day-hours">
+                    <span class="modal-day">Vrijdag</span>
+                    <span class="modal-hours-text">10:00 - 12:00 en 14:00 - 18:00</span>
+                </div>
+                <div class="modal-day-hours">
+                    <span class="modal-day">Zaterdag</span>
+                    <span class="modal-hours-text">10:00 - 12:00 en 14:00 - 18:00</span>
+                </div>
+                <div class="modal-day-hours">
+                    <span class="modal-day">Zondag</span>
+                    <span class="modal-hours-text closed">Gesloten</span>
+                </div>
+            </div>
+            <div class="modal-navigation">
+                <a href="https://waze.com/ul?q=Otegemstraat%2031,%208550%20Zwevegem,%20Belgium" target="_blank" class="btn btn-outline">Open in Waze</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=Otegemstraat+31,+8550+Zwevegem,+Belgium" target="_blank" class="btn btn-outline">Open in Google Maps</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-info">
+                <h3>Oriento</h3>
+                <p>Otegemstraat 31</p>
+                <p>8550 Zwevegem</p>
+                <p>Tel: <a href="tel:056754577">056/75.45.77</a></p>
+                <p>Email: <a href="mailto:info@oriento.net">info@oriento.net</a></p>
+                <p>BTW: BE 0678.212.914</p>
+                
+                <div class="footer-social">
+                    <a href="https://www.facebook.com/profile.php?id=100063604631891" target="_blank" aria-label="Facebook">
+                        <i data-lucide="facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/oriento_home.fashion/" target="_blank" aria-label="Instagram">
+                        <i data-lucide="instagram"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-hours">
+                <h4>Openingsuren</h4>
+                <div class="hours-grid">
+                    <div class="day-hours">
+                        <span class="day">Maandag</span>
+                        <span class="hours closed">Gesloten</span>
+                    </div>
+                    <div class="day-hours">
+                        <span class="day">Dinsdag</span>
+                        <span class="hours">10:00 - 12:00 en 14:00 - 18:00</span>
+                    </div>
+                    <div class="day-hours">
+                        <span class="day">Woensdag</span>
+                        <span class="hours">10:00 - 12:00 en 14:00 - 18:00</span>
+                    </div>
+                    <div class="day-hours">
+                        <span class="day">Donderdag</span>
+                        <span class="hours">14:00 - 18:00</span>
+                    </div>
+                    <div class="day-hours">
+                        <span class="day">Vrijdag</span>
+                        <span class="hours">10:00 - 12:00 en 14:00 - 18:00</span>
+                    </div>
+                    <div class="day-hours">
+                        <span class="day">Zaterdag</span>
+                        <span class="hours">10:00 - 12:00 en 14:00 - 18:00</span>
+                    </div>
+                    <div class="day-hours">
+                        <span class="day">Zondag</span>
+                        <span class="hours closed">Gesloten</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-nav">
+                <h4>Pages</h4>
+                <a href="/">Home</a>
+                <a href="/about.html">Over ons</a>
+                <a href="/collectie.html">Collectie</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <div class="footer-bottom-left">
+                    <a href="#" class="footer-bottom-link" data-modal="retour">Retour</a>
+                    <span class="footer-separator">|</span>
+                    <a href="#" class="footer-bottom-link" data-modal="algemene-voorwaarden">Algemene voorwaarden</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>© Oriento 2025</p>
+                    <p class="website-creator">Website made by Tom Lievens</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -64,6 +258,11 @@
                     });
                 }
             });
+        }
+        
+        // Initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
         }
     </script>
 </body>

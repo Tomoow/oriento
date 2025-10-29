@@ -44,4 +44,53 @@ collections:
             fields:
               - {label: "Brand Name", name: "name", widget: "string", required: true}
               - {label: "Logo", name: "logo", widget: "image", required: true}
+  
+  - name: "announcements" # Announcements collection
+    label: "Announcements" # Used in the UI
+    files: # File-based collection for a single JSON file
+      - label: "Announcements"
+        name: "announcements"
+        file: "content/announcements.json"
+        fields:
+          - {label: "Enable Announcements", name: "enabled", widget: "boolean", default: false}
+          - label: "Announcements"
+            name: "announcements"
+            widget: "list"
+            fields:
+              - {label: "Text", name: "text", widget: "text", required: true}
+              - {label: "Active", name: "active", widget: "boolean", default: true}
+  
+  - name: "products" # Products collection
+    label: "Products" # Used in the UI
+    files: # File-based collection for a single JSON file
+      - label: "Products List"
+        name: "products"
+        file: "content/products.json"
+        fields:
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            fields:
+              - {label: "Category", name: "category", widget: "select", options: ["juwelen", "accessoires", "wonen"], required: true}
+              - {label: "Subcategory", name: "subcategory", widget: "string", required: true}
+              - {label: "Image", name: "image", widget: "image", required: true}
+              - {label: "Alt Text", name: "alt", widget: "string", required: false}
+              - {label: "New", name: "new", widget: "boolean", default: false, required: false}
+              - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
+  
+  - name: "reviews" # Reviews collection
+    label: "Google Reviews" # Used in the UI
+    files: # File-based collection for a single JSON file
+      - label: "Reviews List"
+        name: "reviews"
+        file: "content/reviews.json"
+        fields:
+          - label: "Reviews"
+            name: "reviews"
+            widget: "list"
+            fields:
+              - {label: "Author Name", name: "author", widget: "string", required: true}
+              - {label: "Review Text", name: "text", widget: "text", required: true}
+              - {label: "Rating", name: "rating", widget: "number", min: 1, max: 5, default: 5, required: true}
+              - {label: "Date", name: "date", widget: "string", required: false, hint: "e.g., '2 weken geleden' or 'November 2024'"}
 

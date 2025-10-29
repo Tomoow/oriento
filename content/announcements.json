@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "announcements": [
+    {
+      "text": "Wij blijven open in de herfstvakantie !\n\nGesloten op zaterdag 1 november en zaterdag 8 november .",
+      "active": true
+    }
+  ]
+}
+
