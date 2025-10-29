@@ -1,14 +1,6 @@
 {
   "products": [
     {
-      "category": "juwelen",
-      "subcategory": "ringen",
-      "image": "img/juwelen 01.png",
-      "alt": "Ring",
-      "new": true,
-      "cadeautip": false
-    },
-    {
       "category": "accessoires",
       "subcategory": "handtassen",
       "image": "img/accessoire 01.png",
@@ -19,10 +11,18 @@
     {
       "category": "wonen",
       "subcategory": "huisparfums",
-      "image": "img/wonen 01.png",
+      "image": "img/uploads/huisparfums.png",
       "alt": "Huisparfum",
       "new": true,
       "cadeautip": true
+    },
+    {
+      "category": "juwelen",
+      "subcategory": "ringen",
+      "image": "img/uploads/juwelen-03.png",
+      "alt": "Ring",
+      "new": true,
+      "cadeautip": false
     },
     {
       "category": "juwelen",
@@ -34,4 +34,3 @@
     }
   ]
 }
-
