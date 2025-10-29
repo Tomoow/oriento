@@ -301,7 +301,7 @@ body {
 .brands-carousel {
     display: flex;
     gap: 3rem;
-    animation: scroll 40s linear infinite;
+    animation: scroll var(--scroll-duration, 40s) linear infinite;
     width: fit-content;
 }
 
@@ -332,7 +332,7 @@ body {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-50%);
+        transform: translateX(var(--scroll-distance, -50%));
     }
 }
 

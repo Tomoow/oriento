@@ -75,7 +75,12 @@ function loadBrands() {
         .then(data => {
             const brands = data.brands || [];
             
-            // Render brands twice for seamless loop
+            if (brands.length === 0) {
+                carousel.innerHTML = '<p>Brands coming soon...</p>';
+                return;
+            }
+            
+            // Render single brand item HTML
             const html = brands.map(brand => {
                 // Use the logo path directly from CMS
                 let imagePath = brand.logo;
@@ -95,8 +100,68 @@ function loadBrands() {
                 `;
             }).join('');
             
-            // Duplicate for seamless scrolling
-            carousel.innerHTML = html + html;
+            // Clone enough times to ensure seamless infinite loop
+            // We need at least 3 clones (1 original + 2 duplicates) for seamless effect
+            const numClones = 3;
+            
+            // Duplicate the HTML multiple times for seamless infinite scrolling
+            carousel.innerHTML = html.repeat(numClones);
+            
+            // Wait for images to load, then calculate actual widths
+            const images = carousel.querySelectorAll('.brand-item img');
+            let loadedImages = 0;
+            
+            const initializeAnimation = () => {
+                // Calculate actual width of one complete set of brands
+                const firstSetElements = Array.from(carousel.querySelectorAll('.brand-item')).slice(0, brands.length);
+                let setWidth = 0;
+                
+                firstSetElements.forEach((item, index) => {
+                    const itemWidth = item.offsetWidth;
+                    // Add gap (3rem = 48px on desktop, 2rem = 32px on mobile)
+                    const gap = window.innerWidth < 768 ? 32 : 48;
+                    setWidth += itemWidth + (index < firstSetElements.length - 1 ? gap : 0);
+                });
+                
+                // Calculate animation duration - proportional to the scroll distance
+                // Ensures consistent scroll speed regardless of number of brands
+                // Base speed: 50px per second
+                const pixelsPerSecond = 50;
+                const duration = Math.max(20, setWidth / pixelsPerSecond);
+                
+                // Set CSS custom properties
+                carousel.style.setProperty('--scroll-duration', `${duration}s`);
+                carousel.style.setProperty('--scroll-distance', `-${setWidth}px`);
+            };
+            
+            if (images.length === 0) {
+                // No images, initialize immediately
+                initializeAnimation();
+            } else {
+                // Wait for all images to load
+                images.forEach(img => {
+                    if (img.complete) {
+                        loadedImages++;
+                        if (loadedImages === images.length) {
+                            setTimeout(initializeAnimation, 100);
+                        }
+                    } else {
+                        img.addEventListener('load', () => {
+                            loadedImages++;
+                            if (loadedImages === images.length) {
+                                setTimeout(initializeAnimation, 100);
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // Recalculate on window resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(initializeAnimation, 250);
+            });
         })
         .catch(error => {
             console.error('Error loading brands:', error);
@@ -436,32 +501,67 @@ function loadProducts() {
                 return;
             }
             
-            // Group products by category and subcategory
-            const groupedProducts = {};
+            // Build category -> subcategory structure dynamically
+            const categoryMap = {};
             products.forEach(product => {
-                const key = `${product.category}-${product.subcategory}`;
-                if (!groupedProducts[key]) {
-                    groupedProducts[key] = [];
-                }
-                groupedProducts[key].push(product);
+                const category = product.category;
+                const subcategory = product.subcategory;
+                if (!categoryMap[category]) categoryMap[category] = {};
+                if (!categoryMap[category][subcategory]) categoryMap[category][subcategory] = [];
+                categoryMap[category][subcategory].push(product);
             });
+
+            // Rebuild sidebar and content dynamically (configurable sections)
+            const sidebarList = document.querySelector('.category-list');
+            const collectionMain = document.querySelector('.collection-main');
+            if (sidebarList && collectionMain) {
+                // Sidebar
+                sidebarList.innerHTML = Object.keys(categoryMap).map(category => {
+                    const subLinks = Object.keys(categoryMap[category]).map(sub => (
+                        `<li><a href="#${category}-${sub}" class="subcategory-link" data-category="${category}" data-subcategory="${sub}">${formatLabel(sub)}</a></li>`
+                    )).join('');
+                    return `
+                        <li class="category-item">
+                            <a href="#${category}" class="category-link" data-category="${category}">
+                                <h3>${formatLabel(category)}</h3>
+                            </a>
+                            <ul class="subcategory-list">${subLinks}</ul>
+                        </li>
+                    `;
+                }).join('');
+
+                // Content sections
+                collectionMain.innerHTML = Object.keys(categoryMap).map(category => {
+                    const subSections = Object.keys(categoryMap[category]).map(sub => (
+                        `
+                        <div id="${category}-${sub}" class="subcategory-section" data-subcategory="${sub}">
+                            <h2>${formatLabel(sub)}</h2>
+                            <div class="product-grid"></div>
+                        </div>
+                        `
+                    )).join('');
+                    return `
+                        <section id="${category}" class="category-section" data-category="${category}">
+                            <h1>${formatLabel(category)}</h1>
+                            ${subSections}
+                        </section>
+                    `;
+                }).join('');
+
+                // Re-init sidebar interactions after rebuilding
+                initCollectionSidebar();
+            }
             
             // Render products in their respective grids
-            Object.keys(groupedProducts).forEach(key => {
-                // Split key by first hyphen only (category-subcategory)
-                const firstDashIndex = key.indexOf('-');
-                const category = key.substring(0, firstDashIndex);
-                const subcategory = key.substring(firstDashIndex + 1);
-                // Find the subcategory section
-                const subcategoryId = `${category}-${subcategory}`;
-                const section = document.getElementById(subcategoryId);
-                const grid = section ? section.querySelector('.product-grid') : null;
-                
-                if (grid) {
-                    let imagePath;
-                    const html = groupedProducts[key].map(product => {
+            Object.keys(categoryMap).forEach(category => {
+                Object.keys(categoryMap[category]).forEach(subcategory => {
+                    const section = document.getElementById(`${category}-${subcategory}`);
+                    const grid = section ? section.querySelector('.product-grid') : null;
+                    if (!grid) return;
+
+                    const html = categoryMap[category][subcategory].map(product => {
                         // Normalize image path like in loadBrands
-                        imagePath = product.image;
+                        let imagePath = product.image;
                         if (imagePath.startsWith('/')) {
                             imagePath = imagePath.substring(1);
                         }
@@ -480,9 +580,8 @@ function loadProducts() {
                             </div>
                         `;
                     }).join('');
-                    
                     grid.innerHTML = html;
-                }
+                });
             });
             
             // Initialize scroll animations after products are loaded
@@ -495,6 +594,13 @@ function loadProducts() {
             // Fallback: use static content
             initProductScrollAnimations();
         });
+}
+
+// Helper to prettify labels from keys (e.g., handtassen -> Handtassen, kussens-plaids -> Kussens en Plaids)
+function formatLabel(key) {
+    return key
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase());
 }
 
 // Initialize scroll animations for product items
@@ -837,6 +943,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initModal();
     initOpeningsurenModal();
     initScrollAnimations();
+    loadGallery(); // Load homepage gallery from CMS
     loadAnnouncements();
     initScrollProgress();
     initCollectionSidebar();
@@ -888,4 +995,44 @@ function initOpeningsurenModal() {
             closeModal();
         }
     });
+}
+
+// Load homepage gallery (bento box) from JSON and render
+function loadGallery() {
+    const grid = document.querySelector('.gallery-grid');
+    if (!grid) return; // Not on homepage
+
+    fetch('content/gallery.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gallery file not found');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const items = data.gallery || [];
+            if (items.length === 0) return;
+
+            const html = items.map((item, idx) => {
+                let imagePath = item.image;
+                if (imagePath.startsWith('/')) imagePath = imagePath.substring(1);
+                if (imagePath.startsWith('img/uploads/')) {
+                    imagePath = imagePath.replace('img/uploads/', 'static/img/uploads/');
+                }
+                const content = `
+                    <img src="${encodeURI(imagePath)}" alt="${item.alt || 'Gallery'}">
+                    <div class="gallery-overlay">Bekijk onze collectie</div>
+                `;
+                const wrapperOpen = item.href ? `<a href="${item.href}" class="gallery-item">` : `<div class="gallery-item">`;
+                const wrapperClose = item.href ? `</a>` : `</div>`;
+                return `${wrapperOpen}${content}${wrapperClose}`;
+            }).join('');
+
+            grid.innerHTML = html;
+            // Re-init animations after injecting
+            initScrollAnimations();
+        })
+        .catch(() => {
+            // Silent fallback to static gallery
+        });
 }

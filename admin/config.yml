@@ -78,6 +78,21 @@ collections:
               - {label: "New", name: "new", widget: "boolean", default: false, required: false}
               - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
   
+  - name: "gallery" # Gallery (bento box on homepage)
+    label: "Homepage Gallery"
+    files:
+      - label: "Gallery Items"
+        name: "gallery"
+        file: "content/gallery.json"
+        fields:
+          - label: "Gallery"
+            name: "gallery"
+            widget: "list"
+            fields:
+              - {label: "Image", name: "image", widget: "image", required: true}
+              - {label: "Alt Text", name: "alt", widget: "string", required: false}
+              - {label: "Link", name: "href", widget: "string", required: false, hint: "Optional link when clicking the image"}
+  
   - name: "reviews" # Reviews collection
     label: "Google Reviews" # Used in the UI
     files: # File-based collection for a single JSON file
