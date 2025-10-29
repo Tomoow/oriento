@@ -750,16 +750,75 @@ function initScrollProgress() {
 }
 
 // Initialize collection page sidebar
+let sidebarToggleInitialized = false;
+let openSidebar, closeSidebar;
+
 function initCollectionSidebar() {
     const sidebarToggle = document.getElementById('sidebar-toggle-mobile');
     const sidebar = document.getElementById('collection-sidebar');
     const sidebarClose = document.getElementById('sidebar-close');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
-    const subcategoryLinks = document.querySelectorAll('.subcategory-link');
-    const categoryLinks = document.querySelectorAll('.category-link');
     const headerWrapper = document.querySelector('.header-wrapper');
     
     if (!sidebar) return;
+    
+    // Only initialize toggle functionality once (toggle button is not rebuilt)
+    if (!sidebarToggleInitialized) {
+        sidebarToggleInitialized = true;
+        
+        // Function to open sidebar
+        openSidebar = function() {
+            sidebar.classList.add('active');
+            if (sidebarToggle) sidebarToggle.classList.add('active');
+            if (sidebarOverlay) sidebarOverlay.classList.add('active');
+            
+            // Change icon
+            const icon = sidebarToggle?.querySelector('i');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'x');
+                lucide.createIcons();
+            }
+        };
+        
+        // Function to close sidebar
+        closeSidebar = function() {
+            sidebar.classList.remove('active');
+            if (sidebarToggle) sidebarToggle.classList.remove('active');
+            if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+            
+            // Change icon
+            const icon = sidebarToggle?.querySelector('i');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'align-left');
+                lucide.createIcons();
+            }
+        };
+        
+        // Mobile toggle functionality
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                if (sidebar.classList.contains('active')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+        }
+        
+        // Close button functionality
+        if (sidebarClose) {
+            sidebarClose.addEventListener('click', closeSidebar);
+        }
+        
+        // Click outside to close (on overlay)
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeSidebar);
+        }
+    }
+    
+    // Get current links (they may have been rebuilt)
+    const subcategoryLinks = document.querySelectorAll('.subcategory-link');
+    const categoryLinks = document.querySelectorAll('.category-link');
     
     // Dynamically calculate header height and set sidebar position
     function updateSidebarPosition() {
@@ -795,106 +854,74 @@ function initCollectionSidebar() {
         });
     }
     
-    // Function to open sidebar
-    function openSidebar() {
-        sidebar.classList.add('active');
-        if (sidebarToggle) sidebarToggle.classList.add('active');
-        if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    // Smooth scroll to section when clicking sidebar links
+    function handleLinkClick(e) {
+        const link = this;
+        const targetId = link.getAttribute('href')?.substring(1);
+        if (!targetId) return;
         
-        // Change icon
-        const icon = sidebarToggle?.querySelector('i');
-        if (icon) {
-            icon.setAttribute('data-lucide', 'x');
-            lucide.createIcons();
-        }
-    }
-    
-    // Function to close sidebar
-    function closeSidebar() {
-        sidebar.classList.remove('active');
-        if (sidebarToggle) sidebarToggle.classList.remove('active');
-        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement) return;
         
-        // Change icon
-        const icon = sidebarToggle?.querySelector('i');
-        if (icon) {
-            icon.setAttribute('data-lucide', 'align-left');
-            lucide.createIcons();
+        e.preventDefault();
+        
+        // Get current links (they may have been rebuilt)
+        const currentSubLinks = document.querySelectorAll('.subcategory-link');
+        const currentCatLinks = document.querySelectorAll('.category-link');
+        
+        // Update active states
+        if (link.classList.contains('subcategory-link')) {
+            currentSubLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            
+            // Also update category link
+            const category = link.getAttribute('data-category');
+            currentCatLinks.forEach(l => {
+                if (l.getAttribute('data-category') === category) {
+                    l.classList.add('active');
+                } else {
+                    l.classList.remove('active');
+                }
+            });
+        } else {
+            currentCatLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
         }
-    }
-    
-    // Mobile toggle functionality
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function() {
-            if (sidebar.classList.contains('active')) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
+        
+        // Close mobile sidebar
+        if (window.innerWidth <= 768 && typeof closeSidebar === 'function') {
+            closeSidebar();
+        }
+        
+        // Smooth scroll
+        const headerHeight = document.querySelector('.header-wrapper')?.offsetHeight || 80;
+        const targetPosition = targetElement.offsetTop - headerHeight;
+        
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
         });
     }
     
-    // Close button functionality
-    if (sidebarClose) {
-        sidebarClose.addEventListener('click', closeSidebar);
-    }
-    
-    // Click outside to close (on overlay)
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', closeSidebar);
-    }
-    
-    // Smooth scroll to section when clicking sidebar links
-    function handleLinkClick(e) {
-        const targetId = this.getAttribute('href').substring(1);
-        const targetElement = document.getElementById(targetId);
+    // Use event delegation on the sidebar nav to handle clicks (avoids duplicate listeners)
+    const sidebarNav = sidebar.querySelector('.sidebar-nav');
+    if (sidebarNav) {
+        // Remove old listener by cloning (simple way to remove all listeners)
+        const navParent = sidebarNav.parentNode;
+        const navClone = sidebarNav.cloneNode(true);
+        navParent.replaceChild(navClone, sidebarNav);
         
-        if (targetElement) {
-            e.preventDefault();
-            
-            // Update active states
-            if (this.classList.contains('subcategory-link')) {
-                subcategoryLinks.forEach(link => link.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Also update category link
-                const category = this.getAttribute('data-category');
-                categoryLinks.forEach(link => {
-                    if (link.getAttribute('data-category') === category) {
-                        link.classList.add('active');
-                    } else {
-                        link.classList.remove('active');
-                    }
-                });
-            } else {
-                categoryLinks.forEach(link => link.classList.remove('active'));
-                this.classList.add('active');
-            }
-            
-            // Close mobile sidebar
-            if (window.innerWidth <= 768) {
-                closeSidebar();
-            }
-            
-            // Smooth scroll
-            const headerHeight = document.querySelector('.header-wrapper')?.offsetHeight || 80;
-            const targetPosition = targetElement.offsetTop - headerHeight;
-            
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
+        // Add new event listener using delegation
+        const newNav = sidebar.querySelector('.sidebar-nav');
+        if (newNav) {
+            newNav.addEventListener('click', function(e) {
+                const link = e.target.closest('.subcategory-link, .category-link');
+                if (link) {
+                    handleLinkClick.call(link, e);
+                }
             });
         }
     }
-    
-    // Add click handlers
-    subcategoryLinks.forEach(link => {
-        link.addEventListener('click', handleLinkClick);
-    });
-    
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', handleLinkClick);
-    });
     
     // Update active state on scroll
     function updateActiveOnScroll() {
