@@ -925,6 +925,9 @@ function initCollectionSidebar() {
     
     // Update active state on scroll
     function updateActiveOnScroll() {
+        // Get fresh references to links (they may have been rebuilt)
+        const currentSubLinks = document.querySelectorAll('.subcategory-link');
+        const currentCatLinks = document.querySelectorAll('.category-link');
         const sections = document.querySelectorAll('.category-section, .subcategory-section');
         const headerHeight = document.querySelector('.header-wrapper')?.offsetHeight || 80;
         const scrollPosition = window.pageYOffset + headerHeight + 100;
@@ -939,11 +942,11 @@ function initCollectionSidebar() {
             }
         });
         
+        // Remove active state from ALL links first
+        currentSubLinks.forEach(link => link.classList.remove('active'));
+        currentCatLinks.forEach(link => link.classList.remove('active'));
+        
         if (activeSection) {
-            // Update sidebar active states
-            subcategoryLinks.forEach(link => link.classList.remove('active'));
-            categoryLinks.forEach(link => link.classList.remove('active'));
-            
             const sectionId = activeSection.getAttribute('id');
             const matchingLink = document.querySelector(`[href="#${sectionId}"]`);
             if (matchingLink) {
