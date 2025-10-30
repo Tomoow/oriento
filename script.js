@@ -355,63 +355,33 @@ function initModal() {
     const modalContent = document.getElementById('retour-content');
     const closeBtn = modal.querySelector('.modal-close');
     
-    // Retour content
+    // Retour content (NL)
     const retourContent = `
-        <h2>Retourneren & Ruilen</h2>
-        <h3>Recht van Teruggave</h3>
-        <p>U kunt de ontvangen artikelen binnen de 10 dagen aan ons retourneren. Deze termijn gaat in op het moment dat de artikelen door u zijn ontvangen. De kosten van de retourzending zijn voor rekening van de klant. Bij het retourneren kunt u gebruik maken van het meegestuurde retourformulier.</p>
-        <p>Na ontvangst van het retourpakket storten wij het aankoopbedrag op uw rekening.</p>
-        <p>Wanneer u via bankoverschrijving heeft betaald, noteer dan bij de retourzending uw bankgegevens. Bankgegevens worden door ons niet opgeslagen.</p>
-        
-        <h3>Ruilen</h3>
-        <p>Een artikel kan niet omgeruild worden tegen een ander artikel.</p>
-        
-        <h3>Retourvoorwaarden</h3>
+        <h2>Retour & Ruilen</h2>
+        <p><strong>Cadeau of toch niet helemaal wat je zocht?</strong><br>
+        Geen probleem! We ruilen graag om voor een ander exemplaar, zodat je helemaal tevreden bent.</p>
+        <p><strong>Let op:</strong></p>
         <ul>
-            <li>Bij het retourneren van de artikelen dient een volledig ingevuld formulier te worden bijgevoegd.</li>
-            <li>Retourneringen dienen gefrankeerd verzonden te worden, ongefrankeerde retourneringen worden niet geaccepteerd.</li>
-            <li>De artikelen dienen ongebruikt en in de originele verpakking te worden verzonden.</li>
-            <li>De kosten van de retourzending zijn ten laste van de klant.</li>
+            <li>We nemen geen gebruikte producten terug om hygiënische redenen (bijvoorbeeld oorbellen die al gedragen zijn).</li>
+            <li>Vergeet je kasticket niet, zo kunnen we alles snel regelen.</li>
         </ul>
-        
-        <h3>Retourneren in verband met een klacht</h3>
-        <p>Met de grootst mogelijke zorgvuldigheid behandelen wij de producten en verwerken wij de bestelling. Toch kan er wel eens iets misgaan:</p>
-        <ul>
-            <li>Per ongeluk is het verkeerde artikel toegezonden</li>
-            <li>Uw bestelling is tijdens de verzending beschadigd geraakt.</li>
-            <li>Een artikel vertoont een fabricagefout</li>
-        </ul>
-        <p>Meld ons een eventuele klacht zo snel mogelijk en in ieder geval binnen de 5 werkdagen. Neem voordat u het artikel terugzendt even contact met ons op, want de klacht moet wel duidelijk zichtbaar en kenbaar worden gemaakt. U kunt bij een gegronde klacht het artikel gratis terugsturen. Vanzelfsprekend sturen wij een eventueel vervangend item kosteloos naar u toe.</p>
-        <p>Bent u te laat met het indienen van de klacht, zijn wij gerechtigd alle kosten voor reparatie of vervanging, inclusief administratie en verzendkosten, in rekening te brengen.</p>
-        
-        <p><strong>Terugbetaalverplichtingen worden door ons binnen de 30 dagen volbracht. De termijn gaat in vanaf het moment dat het retourpakket door ons ontvangen en verwerkt is.</strong></p>
-        
-        <h3>Het retourpakket kunt u sturen naar:</h3>
-        <p>Oriento webshop<br>
-        Otegemstraat 31<br>
-        8550 Zwevegem<br>
-        België<br><br>
-        E-Mail: info@oriento.net</p>
+        <p><strong>Wettelijke info:</strong><br>
+        Bij aankopen in de winkel is er geen verplicht recht op retour (behalve bij defecten), maar wij doen dit graag als service.</p>
+        <p>Bedankt voor je begrip en veel plezier met je aankoop!</p>
     `;
     
-    // Algemene voorwaarden content
-    const algemeneVoorwaardenContent = `
-        <h2>Algemene Voorwaarden</h2>
-        <h3>Koopovereenkomst</h3>
-        <p>Zodra u een bevestigingsmail van ons ontvangen heeft, gaat de koopovereenkomst van start. De leveringstermijn gebeurt binnen de 5 werkdagen na ontvangst van uw betaling. Mocht het van onze kant toch tot een langere leveringstermijn komen, dan wordt u door ons geïnformeerd.</p>
-        <p>U bent verplicht de gekochte producten af te nemen op het moment waarop deze u ter beschikking worden gesteld.</p>
-        <p>Indien u de afname weigert of nalatig bent met het verstrekken van informatie of instructies, noodzakelijk voor de levering, zullen de voor de levering bestemde producten worden opgeslagen voor uw risico en rekening.</p>
-        <p>Indien u zelf een verkeerd adres heeft opgegeven voor de levering, dan zijn de extra verzendkosten voor uw rekening.</p>
-        <p>Bij overschrijding van de maximale levertijd van 30 dagen hebt u het recht de overeenkomst kosteloos te ontbinden. Hiervoor dient u een e-mail of brief aan Oriento webshop te sturen. Eventuele betalingen worden in dat geval binnen de 30 dagen na de kennisgeving aan u geretourneerd.</p>
-        
-        <h3>Eigendomsvoorbehoud</h3>
-        <p>Zolang geen volledige betaling van het ons uit welken hoofde ook van koper toekomende heeft plaatsgevonden, blijft het geleverde ons voor rekening en risico van koper in eigendom toebehoren.</p>
-        
-        <h3>Klachten</h3>
-        <p>Klachten moeten binnen de 5 werkdagen na levering per aangetekende brief ingediend worden. Alle prijzen zijn gebaseerd op de actueel in voege zijnde reglementeringen en kunnen aangepast worden bij wijziging of ingevolge overmacht.</p>
-        
-        <h3>Betwistingen</h3>
-        <p>In geval van betwisting is alleen de handelsrechtbank van ons rechtsgebied bevoegd.</p>
+    // Privacy content
+    const privacyContent = `
+        <h2>Privacy</h2>
+        <p>Welkom op onze website! Deze pagina geeft informatie over onze winkel en producten.</p>
+        <h3>1. Doel van de website</h3>
+        <p>Onze website is uitsluitend bedoeld om informatie te delen over onze fysieke winkel en producten. Er is geen online verkoop en we vragen geen persoonlijke gegevens via deze site.</p>
+        <h3>2. Privacy</h3>
+        <p>Wij respecteren jouw privacy.</p>
+        <ul>
+            <li>We verzamelen geen persoonsgegevens via deze website.</li>
+            <li>Voor statistieken gebruiken we Umami, een cookieloos systeem dat geen persoonlijke data opslaat.</li>
+        </ul>
     `;
     
            // Modal trigger logic
@@ -423,7 +393,7 @@ function initModal() {
                    if (modalType === 'retour') {
                        modalContent.innerHTML = retourContent;
                    } else if (modalType === 'algemene-voorwaarden') {
-                       modalContent.innerHTML = algemeneVoorwaardenContent;
+                       modalContent.innerHTML = privacyContent;
                    }
                    
                    // Use flex for mobile bottom sheet, block for desktop

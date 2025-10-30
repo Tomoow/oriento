@@ -1,3 +1,5 @@
+/* (Reverted helper and shared container rules) */
+
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap');
 
 :root {
@@ -2180,23 +2182,7 @@ a.gallery-item {
     font-style: italic;
 }
 
-.modal-navigation {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
 
-@media (max-width: 768px) {
-    .modal-navigation {
-        flex-direction: column;
-    }
-    
-    .modal-navigation .btn {
-        width: 100%;
-    }
-}
 
 /* Responsive Footer */
 @media (max-width: 768px) {
