@@ -9,27 +9,7 @@ media_folder: "static/img/uploads" # Media files will be stored in static/img/up
 public_folder: "img/uploads" # The src attribute for uploaded media will begin with img/uploads
 
 collections:
-  - name: "pages" # Used in routes, e.g., /admin/collections/blog
-    label: "Pages" # Used in the UI
-    folder: "content/pages" # The path to the folder where the documents are stored
-    create: true # Allow users to create new documents in this collection
-    slug: "{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
-    fields: # The fields for each document, usually in front matter
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Body", name: "body", widget: "markdown"}
-      - {label: "Date", name: "date", widget: "datetime", required: false}
-  
-  - name: "posts" # Used in routes, e.g., /admin/collections/blog
-    label: "Posts" # Used in the UI
-    folder: "content/posts" # The path to the folder where the documents are stored
-    create: true # Allow users to create new documents in this collection
-    slug: "{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
-    fields: # The fields for each document, usually in front matter
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Publish Date", name: "date", widget: "datetime"}
-      - {label: "Description", name: "description", widget: "text", required: false}
-      - {label: "Featured Image", name: "image", widget: "image", required: false}
-      - {label: "Body", name: "body", widget: "markdown"}
+  # pages and posts collections removed
   
   - name: "brands" # Brands collection
     label: "Brands" # Used in the UI
@@ -154,4 +134,29 @@ collections:
               - {label: "Review Text", name: "text", widget: "text", required: true}
               - {label: "Rating", name: "rating", widget: "number", min: 1, max: 5, default: 5, required: true}
               - {label: "Date", name: "date", widget: "string", required: false, hint: "e.g., '2 weken geleden' or 'November 2024'"}
+
+  - name: "hero" # Homepage hero content
+    label: "Homepage Hero"
+    files:
+      - label: "Hero"
+        name: "hero"
+        file: "content/hero.json"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Subtitel", name: "subtitle", widget: "string"}
+
+  - name: "openingsuren" # Store hours once, used across site
+    label: "Openingsuren"
+    files:
+      - label: "Openingsuren"
+        name: "hours"
+        file: "content/openingsuren.json"
+        fields:
+          - label: "Dagen"
+            name: "days"
+            widget: "list"
+            fields:
+              - {label: "Dag", name: "day", widget: "string"}
+              - {label: "Uren", name: "hours", widget: "string"}
+              - {label: "Gesloten", name: "closed", widget: "boolean", default: false, required: false}
 

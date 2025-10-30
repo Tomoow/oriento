@@ -1,3 +1,13 @@
+/* Waze button visible only on mobile in openingsuren modal */
+.waze-mobile {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .waze-mobile {
+        display: inline-flex !important;
+    }
+}
 /* (Reverted helper and shared container rules) */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap');
@@ -97,10 +107,11 @@ body {
 .announcement-content {
     max-width: 1400px;
     margin: 0 auto;
+    padding: 0 3rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    gap: 0.75rem;
+    justify-content: center;
 }
 
 .announcement-text {
@@ -109,6 +120,13 @@ body {
     line-height: 1.5;
     flex: 1;
     text-align: center;
+}
+
+.announcement-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--color-text);
+    flex-shrink: 0;
 }
 
 .announcement-close {
@@ -122,6 +140,7 @@ body {
     justify-content: center;
     transition: color 0.3s ease;
     flex-shrink: 0;
+    margin-left: auto;
 }
 
 .announcement-close:hover {
@@ -452,6 +471,14 @@ a.gallery-item {
     padding: 0 2rem;
 }
 
+@media (max-width: 1023px) {
+    .review-card {
+        width: calc(100% - 2rem); /* 1 card visible, accounting for padding */
+        max-width: 100%;
+        min-width: 280px;
+    }
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -670,6 +697,8 @@ a.gallery-item {
     padding: 0 3rem;
     box-sizing: border-box;
 }
+
+
 
 
 /* Mobile/Tablet button behaviors */
@@ -1265,16 +1294,7 @@ a.gallery-item {
     }
 }
 
-@media (max-width: 1023px) {
-    .review-card {
-        width: calc(100% - 2rem); /* 1 card visible, accounting for padding */
-        max-width: 100%;
-        min-width: 280px;
-    }
-    .announcement-content {
-        padding: 0 2rem;
-    }
-}
+
 
 .review-header {
     display: flex;
@@ -2161,6 +2181,14 @@ a.gallery-item {
     gap: 2rem;
 }
 
+.modal-day-hours.is-today .modal-day,
+.modal-day-hours.is-today .modal-hours-text,
+.day-hours.is-today .day,
+.day-hours.is-today .hours {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
 .modal-day-hours:last-child {
     border-bottom: none;
 }
@@ -2231,7 +2259,6 @@ a.gallery-item {
     
     .announcement-text {
         font-size: 0.85rem;
-        text-align: center;
     }
     
     .footer-bottom-content {

@@ -1114,8 +1114,10 @@ function initCollectionSidebar() {
 document.addEventListener('DOMContentLoaded', function() {
     initModal();
     initOpeningsurenModal();
+    loadOpeningsurenFooter();
     initScrollAnimations();
     loadGallery(); // Load homepage gallery from CMS
+    loadHeroContent(); // Load homepage hero text from CMS
     loadAnnouncements();
     initScrollProgress();
     initCollectionSidebar();
@@ -1125,6 +1127,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ensure page starts at top to show header
     window.scrollTo(0, 0);
 });
+// Load homepage hero content (title & subtitle) from CMS
+function loadHeroContent() {
+    const titleEl = document.querySelector('.hero-content h1');
+    const subtitleEl = document.querySelector('.hero-content .hero-subtitle');
+    if (!titleEl && !subtitleEl) return; // not on homepage
+    fetch('content/hero.json')
+        .then(r => r.json())
+        .then(data => {
+            if (titleEl && data.title) titleEl.textContent = data.title;
+            if (subtitleEl && data.subtitle) subtitleEl.textContent = data.subtitle;
+        })
+        .catch(() => {});
+}
+// Populate all footer hours grids from CMS
+function loadOpeningsurenFooter() {
+    const grids = document.querySelectorAll('.hours-grid');
+    if (grids.length === 0) return;
+    fetch('content/openingsuren.json')
+        .then(r => r.json())
+        .then(data => {
+            const days = data.days || [];
+            const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
+            const html = days.map(d => {
+                const isToday = String(d.day).trim().toLowerCase().includes(todayName);
+                return `
+                    <div class="day-hours${isToday ? ' is-today' : ''}" ${isToday ? 'aria-current="date"' : ''}>
+                        <span class="day">${d.day}</span>
+                        <span class="hours ${d.closed ? 'closed' : ''}">${d.hours}</span>
+                    </div>
+                `;
+            }).join('');
+            grids.forEach(g => g.innerHTML = html);
+        })
+        .catch(() => {});
+}
 
 // Initialize openingsuren modal
 function initOpeningsurenModal() {
@@ -1134,39 +1171,50 @@ function initOpeningsurenModal() {
     const openBtn = document.getElementById('openingsuren-btn');
     const closeBtn = modal.querySelector('.openingsuren-close');
     
+    // Inject hours into modal
+    function renderModalHours(days) {
+        const container = modal.querySelector('.modal-hours');
+        if (!container) return;
+        const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
+        container.innerHTML = days.map(d => {
+            const isToday = String(d.day).trim().toLowerCase().includes(todayName);
+            return `
+                <div class="modal-day-hours${isToday ? ' is-today' : ''}" ${isToday ? 'aria-current="date"' : ''}>
+                    <span class="modal-day">${d.day}</span>
+                    <span class="modal-hours-text ${d.closed ? 'closed' : ''}">${d.hours}</span>
+                </div>
+            `;
+        }).join('');
+    }
+    
     // Open modal
     if (openBtn) {
         openBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            // Use flex for mobile bottom sheet, block for desktop
             const isMobile = window.innerWidth <= 768;
             modal.style.display = isMobile ? 'flex' : 'block';
-            // force reflow before adding class to ensure transition
-            // eslint-disable-next-line no-unused-expressions
             modal.offsetHeight;
             modal.classList.add('show');
         });
     }
     
-    // Close modal helper with slide-down
     function closeModal() {
         modal.classList.remove('show');
-        // wait for transition to finish before hiding
         setTimeout(() => {
             modal.style.display = 'none';
         }, 300);
     }
     
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
-    }
-    
-    // Close modal when clicking outside content
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
     window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-            closeModal();
-        }
+        if (event.target === modal) closeModal();
     });
+    
+    // Load hours and render into modal
+    fetch('content/openingsuren.json')
+      .then(r => r.json())
+      .then(data => renderModalHours(data.days || []))
+      .catch(() => {});
 }
 
 // Load homepage gallery (bento box) from JSON and render
