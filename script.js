@@ -486,30 +486,42 @@ function loadProducts() {
     fetch('content/products.json')
         .then(response => {
             if (!response.ok) {
-                // If file doesn't exist, keep static content
                 console.log('Products file not found, using static content');
                 initProductScrollAnimations();
-                return;
+                return null;
             }
             return response.json();
         })
         .then(data => {
-            const products = data.products || [];
+            if (!data) return;
             
-            if (products.length === 0) {
+            // New schema: nested objects per category -> subcategory -> list of products
+            // Example: data.juwelen.oorbellen = [{ image, alt, new, cadeautip }, ...]
+            const categoryMap = {};
+            const categories = ['juwelen', 'accessoires', 'wonen'];
+            categories.forEach(cat => {
+                if (!data[cat]) return;
+                categoryMap[cat] = {};
+                Object.keys(data[cat]).forEach(sub => {
+                    const items = Array.isArray(data[cat][sub]) ? data[cat][sub] : [];
+                    categoryMap[cat][sub] = items.map(item => ({
+                        category: cat,
+                        subcategory: sub,
+                        image: item.image,
+                        alt: item.alt,
+                        brand: item.brand,
+                        new: !!item.new,
+                        cadeautip: !!item.cadeautip
+                    }));
+                });
+            });
+            
+            const hasAny = Object.keys(categoryMap).some(cat => Object.keys(categoryMap[cat]).some(sub => (categoryMap[cat][sub] || []).length > 0));
+            if (!hasAny) {
                 initProductScrollAnimations();
+                initProductModal();
                 return;
             }
-            
-            // Build category -> subcategory structure dynamically
-            const categoryMap = {};
-            products.forEach(product => {
-                const category = product.category;
-                const subcategory = product.subcategory;
-                if (!categoryMap[category]) categoryMap[category] = {};
-                if (!categoryMap[category][subcategory]) categoryMap[category][subcategory] = [];
-                categoryMap[category][subcategory].push(product);
-            });
 
             // Rebuild sidebar and content dynamically (configurable sections)
             const sidebarList = document.querySelector('.category-list');
@@ -561,19 +573,15 @@ function loadProducts() {
 
                     const html = categoryMap[category][subcategory].map(product => {
                         // Normalize image path like in loadBrands
-                        let imagePath = product.image;
-                        if (imagePath.startsWith('/')) {
-                            imagePath = imagePath.substring(1);
-                        }
+                        let imagePath = product.image || '';
+                        if (imagePath.startsWith('/')) imagePath = imagePath.substring(1);
                         if (imagePath.startsWith('img/uploads/')) {
                             imagePath = imagePath.replace('img/uploads/', 'static/img/uploads/');
                         }
-                        
                         const newBadge = product.new ? '<span class="product-new-badge">NEW</span>' : '';
                         const cadeautipBadge = product.cadeautip ? '<span class="product-cadeautip-badge">CADEAUTIP</span>' : '';
-                        
                         return `
-                            <div class="product-item">
+                            <div class="product-item" data-image="${encodeURI(imagePath)}" data-alt="${product.alt || ''}" data-brand="${(product.alt || '').replace(/"/g, '&quot;')}" data-new="${product.new ? 'true' : 'false'}" data-cadeautip="${product.cadeautip ? 'true' : 'false'}">
                                 <img src="${encodeURI(imagePath)}" alt="${product.alt || 'Product'}">
                                 ${newBadge}
                                 ${cadeautipBadge}
@@ -587,12 +595,14 @@ function loadProducts() {
             // Initialize scroll animations after products are loaded
             setTimeout(() => {
                 initProductScrollAnimations();
+                initProductModal();
             }, 100);
         })
         .catch(error => {
             console.error('Error loading products:', error);
             // Fallback: use static content
             initProductScrollAnimations();
+            initProductModal();
         });
 }
 
@@ -623,6 +633,76 @@ function initProductScrollAnimations() {
     
     productItems.forEach(item => {
         observer.observe(item);
+    });
+}
+
+// Product detail modal
+function initProductModal() {
+    const modal = document.getElementById('product-modal');
+    if (!modal) return;
+    const closeBtn = document.getElementById('product-modal-close');
+    const closeLinkBtn = document.getElementById('product-modal-close-btn');
+    const imgEl = document.getElementById('product-modal-image');
+    const brandEl = document.getElementById('product-modal-brand');
+    const badgesEl = document.getElementById('product-modal-badges');
+    const items = document.querySelectorAll('.product-item');
+    
+    function open() {
+        const isMobile = window.innerWidth <= 768;
+        modal.style.display = isMobile ? 'flex' : 'block';
+        // force reflow
+        // eslint-disable-next-line no-unused-expressions
+        modal.offsetHeight;
+        modal.classList.add('show');
+    }
+    
+    function close() {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+    
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            let image = item.getAttribute('data-image') || '';
+            let alt = item.getAttribute('data-alt') || '';
+            let brand = item.getAttribute('data-brand') || '';
+
+            // Fallback to the actual IMG element inside the card when CMS data is not present
+            if (!image) {
+                const imgElInCard = item.querySelector('img');
+                if (imgElInCard) {
+                    image = imgElInCard.getAttribute('src') || '';
+                    alt = alt || imgElInCard.getAttribute('alt') || 'Product';
+                }
+            }
+            // If brand still missing, reuse alt (Brand name in CMS maps to alt)
+            if (!brand) {
+                brand = alt || '';
+            }
+            const isNew = item.getAttribute('data-new') === 'true';
+            const isCadeautip = item.getAttribute('data-cadeautip') === 'true';
+            
+            if (imgEl) {
+                imgEl.src = image;
+                imgEl.alt = alt;
+            }
+            if (brandEl) {
+                brandEl.textContent = brand || 'Product';
+            }
+            if (badgesEl) {
+                badgesEl.innerHTML = `${isNew ? '<span class="product-new-badge">NEW</span>' : ''}${isCadeautip ? '<span class="product-cadeautip-badge">CADEAUTIP</span>' : ''}`;
+            }
+            
+            open();
+        });
+    });
+    
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (closeLinkBtn) closeLinkBtn.addEventListener('click', close);
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) close();
     });
 }
 

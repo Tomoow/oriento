@@ -273,6 +273,7 @@ body {
 
 .hero-subtitle {
     font-size: 1.3rem;
+    line-height: 150%;
     margin-bottom: 2rem;
     color: var(--color-text);
     max-width: 600px;
@@ -826,8 +827,17 @@ a.gallery-item {
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
+    /* Always at least two columns */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Switch to responsive auto-fill only when there's ample width,
+   avoiding the 1-column edge case on mid-width layouts */
+@media (min-width: 900px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
 }
 
 .product-item {
@@ -838,6 +848,7 @@ a.gallery-item {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.6s ease, transform 0.6s ease;
+    cursor: pointer;
 }
 
 .product-item.visible {
@@ -1014,12 +1025,12 @@ a.gallery-item {
     }
     
     .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
     
     .product-item {
-        min-width: 200px;
+        min-width: 0;
     }
     
     /* Overlay for click-outside-to-close */
@@ -1344,6 +1355,7 @@ a.gallery-item {
 /* Team Section */
 .team-section {
     background-color: var(--color-bg);
+    margin-bottom: 3rem; /* ensure spacing to next section on smaller screens */
 }
 
 .team-container {
@@ -1363,8 +1375,8 @@ a.gallery-item {
 
 .team-grid {
     display: grid;
-    grid-template-columns: 1fr;
     gap: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* wrap gracefully */
 }
 
 .team-member {
@@ -1438,7 +1450,7 @@ a.gallery-item {
     }
     
     .team-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 2rem;
     }
     
@@ -1454,9 +1466,7 @@ a.gallery-item {
 
 /* Desktop - 1024px and above */
 @media (min-width: 1024px) {
-    .team-section {
-        padding: 5rem 0;
-    }
+
     
     .team-container {
         padding: 0 3rem;
@@ -1917,12 +1927,105 @@ a.gallery-item {
     backdrop-filter: blur(5px);
 }
 
+/* Product modal layout */
+.product-modal-content {
+    max-width: 1000px;
+    padding: 2rem; /* keep padding so media stays within modal */
+}
+
+.product-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.product-modal-media {
+    width: 100%;
+    aspect-ratio: 4 / 3; /* consistent rectangle */
+    border-radius: 8px;
+    overflow: hidden; /* crop overflow to keep rectangle */
+    container-type: size; /* enable container query units for focal crop */
+}
+.product-modal-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* crop without distortion, no stretching */
+    /* Focal-point cropping (defaults to center). Uses container query units. */
+    --crop-focus-x: 0.5;
+    --crop-focus-y: 0.5;
+    --container-width: 100cqw;
+    --container-height: 100cqh;
+    --image-width: calc(var(--container-width) - 100%);
+    --image-height: calc(var(--container-height) - 100%);
+    object-position:
+      clamp(100%, calc(0.5 * var(--container-width) - var(--crop-focus-x) * var(--image-width)), 0%)
+      clamp(100%, calc(0.5 * var(--container-height) - var(--crop-focus-y) * var(--image-height)), 0%);
+    display: block;
+}
+
+.product-modal-info h3 {
+    margin: 0 0 0.5rem 0;
+}
+
+.product-modal-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+    .product-modal-body {
+        flex-direction: row;
+    }
+    .product-modal-media {
+        flex: 1;
+    }
+    .product-modal-info {
+        flex: 1;
+        padding: 0 0 0 2rem; /* spacing between media and info */
+    }
+}
+
+/* Modal actions layout */
+.modal-navigation {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: flex-start; /* left aligned */
+    margin-top: 1rem;
+    flex-wrap: nowrap; /* keep buttons on one line on desktop */
+}
+
+/* Ensure our modal nav rule wins over any generic modal-navigation rules */
+.product-modal-content .modal-navigation {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+@media (max-width: 768px) {
+    .product-modal-media {
+        width: 100%;
+        aspect-ratio: 1 / 1; /* ensure width >= height (square) */
+        height: auto;
+        max-height: 400px; /* enforce 400px cap on mobile */
+        overflow: hidden; /* crop overflow */
+    }
+    .product-modal-media img {
+        height: 100%;
+        object-fit: cover;
+    }
+    .modal-navigation {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
 .modal-content {
     background-color: var(--color-surface);
     margin: 5% auto;
     padding: 2rem;
     border-radius: 12px;
-    max-width: 800px;
+    max-width: 900px;
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
