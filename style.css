@@ -1945,6 +1945,7 @@ a.gallery-item {
     border-radius: 8px;
     overflow: hidden; /* crop overflow to keep rectangle */
     container-type: size; /* enable container query units for focal crop */
+    position: relative; /* for overlay badges */
 }
 .product-modal-media img {
     width: 100%;
@@ -1970,7 +1971,11 @@ a.gallery-item {
 .product-modal-badges {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    margin: 0;
+    z-index: 2;
 }
 
 @media (min-width: 768px) {

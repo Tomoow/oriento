@@ -665,25 +665,15 @@ function initProductModal() {
     
     items.forEach(item => {
         item.addEventListener('click', () => {
-            let image = item.getAttribute('data-image') || '';
-            let alt = item.getAttribute('data-alt') || '';
-            let brand = item.getAttribute('data-brand') || '';
+            // Always derive from clicked card image to prevent stale data
+            const cardImg = item.querySelector('img');
+            const image = cardImg ? (cardImg.getAttribute('src') || '') : '';
+            const alt = cardImg ? (cardImg.getAttribute('alt') || 'Product') : 'Product';
+            const brand = alt; // CMS brand stored as alt
 
-            // Fallback to the actual IMG element inside the card when CMS data is not present
-            if (!image) {
-                const imgElInCard = item.querySelector('img');
-                if (imgElInCard) {
-                    image = imgElInCard.getAttribute('src') || '';
-                    alt = alt || imgElInCard.getAttribute('alt') || 'Product';
-                }
-            }
-            // If brand still missing, reuse alt (Brand name in CMS maps to alt)
-            if (!brand) {
-                brand = alt || '';
-            }
-            const isNew = item.getAttribute('data-new') === 'true';
-            const isCadeautip = item.getAttribute('data-cadeautip') === 'true';
-            
+            const isNew = !!item.querySelector('.product-new-badge');
+            const isCadeautip = !!item.querySelector('.product-cadeautip-badge');
+
             if (imgEl) {
                 imgEl.src = image;
                 imgEl.alt = alt;
@@ -694,7 +684,7 @@ function initProductModal() {
             if (badgesEl) {
                 badgesEl.innerHTML = `${isNew ? '<span class="product-new-badge">NEW</span>' : ''}${isCadeautip ? '<span class="product-cadeautip-badge">CADEAUTIP</span>' : ''}`;
             }
-            
+
             open();
         });
     });
