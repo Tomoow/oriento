@@ -660,8 +660,16 @@ a.gallery-item {
 }
 
 .collection-page {
+    display: flex;
+    min-height: calc(100vh - 80px);
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
     padding: 0 3rem;
+    box-sizing: border-box;
 }
+
+
 /* Mobile/Tablet button behaviors */
 @media (max-width: 768px) {
     .hero-buttons {
@@ -688,18 +696,13 @@ a.gallery-item {
         background-color: rgb(213, 210, 202); /* Tertiary + 15% black */
         color: var(--color-text);
     }
+    .collection-page {
+        padding: 0 1rem;
+    }
 }
 
 /* Collection Page Styles */
-.collection-page {
-    display: flex;
-    min-height: calc(100vh - 80px);
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
-    padding: 0 1rem;
-    box-sizing: border-box;
-}
+
 
 /* Sidebar Navigation */
 .collection-sidebar {
@@ -726,6 +729,58 @@ a.gallery-item {
 
 .sidebar-nav {
     padding: 0.5rem 1.5rem 2rem;
+}
+
+/* Sidebar filters */
+.sidebar-filters {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(227, 183, 160, 0.4);
+}
+
+.sidebar-filters h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.95rem;
+    color: var(--color-text);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    appearance: none;
+    border: 1px solid var(--color-secondary);
+    background: transparent;
+    color: var(--color-text);
+    padding: 0.25rem 0.5rem; /* match badge padding */
+    border-radius: 4px; /* match badge corner radius */
+    font-size: 0.75rem; /* match badge font size */
+    font-weight: 600; /* match badge weight */
+    font-family: 'Lato', sans-serif; /* match badge font */
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.filter-btn.active[data-filter="new"] {
+    background-color: rgba(201, 79, 79, 0.85); /* match NEW badge */
+    color: var(--color-surface);
+    border-color: rgba(201, 79, 79, 0.85);
+}
+
+.filter-btn.active[data-filter="cadeautip"] {
+    background-color: rgba(245, 215, 110, 0.85); /* match CADEAUTIP badge */
+    color: var(--color-text);
+    border-color: rgba(245, 215, 110, 0.85);
 }
 
 .category-list {
@@ -1962,6 +2017,8 @@ a.gallery-item {
       clamp(100%, calc(0.5 * var(--container-width) - var(--crop-focus-x) * var(--image-width)), 0%)
       clamp(100%, calc(0.5 * var(--container-height) - var(--crop-focus-y) * var(--image-height)), 0%);
     display: block;
+    position: relative;
+    z-index: 1; /* keep image beneath badges and close icon */
 }
 
 .product-modal-info h3 {
@@ -1975,7 +2032,15 @@ a.gallery-item {
     top: 0.75rem;
     left: 0.75rem;
     margin: 0;
-    z-index: 2;
+    z-index: 3; /* above image */
+}
+
+/* Override card badge absolute positioning inside the modal */
+.product-modal-media .product-new-badge,
+.product-modal-media .product-cadeautip-badge {
+    position: static;
+    top: auto;
+    right: auto;
 }
 
 @media (min-width: 768px) {
@@ -2045,6 +2110,7 @@ a.gallery-item {
     color: var(--color-text);
     cursor: pointer;
     transition: color 0.3s ease;
+    z-index: 4; /* ensure on top of media/image */
 }
 
 .modal-close:hover {

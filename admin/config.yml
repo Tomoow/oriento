@@ -71,112 +71,58 @@ collections:
             name: "juwelen"
             widget: "object"
             fields:
-              - label: "Oorbellen"
-                name: "oorbellen"
+              - label: "Subcategorieën"
+                name: "subcategories"
                 widget: "list"
+                summary: "{{fields.subcategory}} ({{fields.items.length}} items)"
                 fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Ringen"
-                name: "ringen"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Kettingen"
-                name: "kettingen"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
+                  - {label: "Subcategory name", name: "subcategory", widget: "string", required: true}
+                  - label: "Items"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - {label: "Image", name: "image", widget: "image", required: true}
+                      - {label: "Brand name", name: "alt", widget: "string", required: false}
+                      - {label: "New", name: "new", widget: "boolean", default: false, required: false}
+                      - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
 
           - label: "Accessoires"
             name: "accessoires"
             widget: "object"
             fields:
-              - label: "Handtassen"
-                name: "handtassen"
+              - label: "Subcategorieën"
+                name: "subcategories"
                 widget: "list"
+                summary: "{{fields.subcategory}} ({{fields.items.length}} items)"
                 fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Uurwerken"
-                name: "uurwerken"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Sjaals"
-                name: "sjaals"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Brillen"
-                name: "brillen"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Armbanden"
-                name: "armbanden"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
+                  - {label: "Subcategory name", name: "subcategory", widget: "string", required: true}
+                  - label: "Items"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - {label: "Image", name: "image", widget: "image", required: true}
+                      - {label: "Brand name", name: "alt", widget: "string", required: false}
+                      - {label: "New", name: "new", widget: "boolean", default: false, required: false}
+                      - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
 
           - label: "Wonen"
             name: "wonen"
             widget: "object"
             fields:
-              - label: "Kussens en plaids"
-                name: "kussens-plaids"
+              - label: "Subcategorieën"
+                name: "subcategories"
                 widget: "list"
+                summary: "{{fields.subcategory}} ({{fields.items.length}} items)"
                 fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Decoratie"
-                name: "decoratie"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Stijlvol tafelen"
-                name: "stijlvol-tafelen"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-              - label: "Huisparfums"
-                name: "huisparfums"
-                widget: "list"
-                fields:
-                  - {label: "Image", name: "image", widget: "image", required: true}
-                  - {label: "Brand name", name: "alt", widget: "string", required: false}
-                  - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                  - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
+                  - {label: "Subcategory name", name: "subcategory", widget: "string", required: true}
+                  - label: "Items"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - {label: "Image", name: "image", widget: "image", required: true}
+                      - {label: "Brand name", name: "alt", widget: "string", required: false}
+                      - {label: "New", name: "new", widget: "boolean", default: false, required: false}
+                      - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
   
   - name: "gallery" # Gallery (bento box on homepage)
     label: "Homepage Gallery"

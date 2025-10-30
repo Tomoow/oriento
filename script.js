@@ -502,8 +502,11 @@ function loadProducts() {
             categories.forEach(cat => {
                 if (!data[cat]) return;
                 categoryMap[cat] = {};
-                Object.keys(data[cat]).forEach(sub => {
-                    const items = Array.isArray(data[cat][sub]) ? data[cat][sub] : [];
+                const subs = Array.isArray(data[cat].subcategories) ? data[cat].subcategories : [];
+                subs.forEach(entry => {
+                    const sub = entry && entry.subcategory;
+                    if (!sub) return;
+                    const items = Array.isArray(entry.items) ? entry.items : [];
                     categoryMap[cat][sub] = items.map(item => ({
                         category: cat,
                         subcategory: sub,
@@ -664,7 +667,7 @@ function initProductModal() {
     }
     
     items.forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', async () => {
             // Always derive from clicked card image to prevent stale data
             const cardImg = item.querySelector('img');
             const image = cardImg ? (cardImg.getAttribute('src') || '') : '';
@@ -675,8 +678,13 @@ function initProductModal() {
             const isCadeautip = !!item.querySelector('.product-cadeautip-badge');
 
             if (imgEl) {
-                imgEl.src = image;
+                // Prevent showing previous image while switching
+                imgEl.style.visibility = 'hidden';
+                // Cancel previous listeners
+                imgEl.onload = null;
+                imgEl.onerror = null;
                 imgEl.alt = alt;
+                imgEl.src = image;
             }
             if (brandEl) {
                 brandEl.textContent = brand || 'Product';
@@ -684,8 +692,29 @@ function initProductModal() {
             if (badgesEl) {
                 badgesEl.innerHTML = `${isNew ? '<span class="product-new-badge">NEW</span>' : ''}${isCadeautip ? '<span class="product-cadeautip-badge">CADEAUTIP</span>' : ''}`;
             }
+            // Open modal only once image is ready to prevent brief old-image flash
+            const reveal = () => {
+                if (imgEl) imgEl.style.visibility = '';
+                open();
+            };
 
-            open();
+            if (imgEl && typeof imgEl.decode === 'function') {
+                try {
+                    await imgEl.decode();
+                    reveal();
+                } catch (e) {
+                    // Fallback to onload if decode fails
+                    imgEl.onload = reveal;
+                    imgEl.onerror = reveal;
+                }
+            } else {
+                if (imgEl) {
+                    imgEl.onload = reveal;
+                    imgEl.onerror = reveal;
+                } else {
+                    open();
+                }
+            }
         });
     });
     
@@ -889,6 +918,7 @@ function initCollectionSidebar() {
     // Get current links (they may have been rebuilt)
     const subcategoryLinks = document.querySelectorAll('.subcategory-link');
     const categoryLinks = document.querySelectorAll('.category-link');
+    // filter buttons will be handled via delegation on sidebar nav
     
     // Dynamically calculate header height and set sidebar position
     function updateSidebarPosition() {
@@ -985,13 +1015,85 @@ function initCollectionSidebar() {
         const newNav = sidebar.querySelector('.sidebar-nav');
         if (newNav) {
             newNav.addEventListener('click', function(e) {
+                // Handle category/subcategory links
                 const link = e.target.closest('.subcategory-link, .category-link');
                 if (link) {
                     handleLinkClick.call(link, e);
+                    return;
+                }
+                // Handle filter buttons
+                const filterBtn = e.target.closest('.filter-btn');
+                if (filterBtn) {
+                    filterBtn.classList.toggle('active');
+                    // Recompute active filter buttons from the live DOM
+                    window.filterButtons = newNav.querySelectorAll('.filter-btn');
+                    applyFilters();
                 }
             });
         }
     }
+
+    // Filters: NEW / CADEAUTIP
+    function applyFilters() {
+        const currentFilterButtons = sidebar.querySelectorAll('.filter-btn');
+        const activeFilters = Array.from(currentFilterButtons).filter(b => b.classList.contains('active')).map(b => b.getAttribute('data-filter'));
+        const items = document.querySelectorAll('.product-item');
+        if (activeFilters.length === 0) {
+            items.forEach(it => (it.style.display = ''));
+            // Show all subcategory sections again
+            document.querySelectorAll('.subcategory-section').forEach(sec => {
+                sec.style.display = '';
+            });
+            // Show all main category sections again
+            document.querySelectorAll('.category-section').forEach(cat => {
+                cat.style.display = '';
+            });
+            // Restore sidebar links
+            document.querySelectorAll('.subcategory-link, .category-link').forEach(link => {
+                link.style.display = '';
+            });
+            return;
+        }
+        items.forEach(it => {
+            const isNew = it.getAttribute('data-new') === 'true' || !!it.querySelector('.product-new-badge');
+            const isCadeautip = it.getAttribute('data-cadeautip') === 'true' || !!it.querySelector('.product-cadeautip-badge');
+            let show = true;
+            if (activeFilters.includes('new') && !isNew) show = false;
+            if (activeFilters.includes('cadeautip') && !isCadeautip) show = false;
+            it.style.display = show ? '' : 'none';
+        });
+
+        // Hide subcategory sections that have 0 visible items
+        document.querySelectorAll('.subcategory-section').forEach(sec => {
+            const visibleCount = Array.from(sec.querySelectorAll('.product-grid .product-item'))
+                .filter(it => it.style.display !== 'none').length;
+            sec.style.display = visibleCount > 0 ? '' : 'none';
+        });
+
+        // Hide main categories that have 0 visible subcategory sections
+        document.querySelectorAll('.category-section').forEach(cat => {
+            const hasVisibleSub = Array.from(cat.querySelectorAll('.subcategory-section'))
+                .some(sec => sec.style.display !== 'none');
+            cat.style.display = hasVisibleSub ? '' : 'none';
+        });
+
+        // Sync sidebar visibility with filtered content
+        // Subcategory links
+        document.querySelectorAll('.subcategory-link').forEach(link => {
+            const targetId = link.getAttribute('href')?.substring(1);
+            const target = targetId ? document.getElementById(targetId) : null;
+            if (!target) return;
+            link.style.display = (target.style.display === 'none') ? 'none' : '';
+        });
+        // Category links (hide if all its subcategory links are hidden)
+        document.querySelectorAll('.category-link').forEach(catLink => {
+            const category = catLink.getAttribute('data-category');
+            const subLinks = document.querySelectorAll(`.subcategory-link[data-category="${category}"]`);
+            const anyVisible = Array.from(subLinks).some(l => l.style.display !== 'none');
+            catLink.style.display = anyVisible ? '' : 'none';
+        });
+    }
+
     
     // Update active state on scroll
     function updateActiveOnScroll() {

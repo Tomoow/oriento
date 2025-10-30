@@ -1,139 +1,91 @@
 {
   "juwelen": {
-    "oorbellen": [
+    "subcategories": [
       {
-        "new": true,
-        "cadeautip": false,
-        "image": "img/uploads/juwelen-01.png",
-        "alt": "Christine Bekaert"
+        "subcategory": "oorbellen",
+        "items": [
+          { "new": true,  "cadeautip": false, "image": "img/uploads/juwelen-01.png", "alt": "Christine Bekaert" },
+          { "new": true,  "cadeautip": false, "image": "img/uploads/juwelen-02.png", "alt": "Christine Bekaert" },
+          { "new": false, "cadeautip": false, "image": "img/uploads/juwelen-08.png", "alt": "Souviner De Pomme" },
+          { "new": false, "cadeautip": false, "image": "img/uploads/juwelen-07.png", "alt": "Souvenirs De Pomme" },
+          { "new": false, "cadeautip": true,  "image": "img/uploads/juwelen-06.png", "alt": "Christine Bekaert" }
+        ]
       },
       {
-        "new": true,
-        "cadeautip": false,
-        "image": "img/uploads/juwelen-02.png",
-        "alt": "Christine Bekaert"
+        "subcategory": "ringen",
+        "items": [
+          { "new": true, "cadeautip": true, "image": "img/uploads/juwelen-03.png", "alt": "Melano" }
+        ]
       },
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/juwelen-08.png",
-        "alt": "Souviner De Pomme"
-      },
-      {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/juwelen-07.png",
-        "alt": "Souvenirs De Pomme"
-      },
-      {
-        "new": false,
-        "cadeautip": true,
-        "image": "img/uploads/juwelen-06.png",
-        "alt": "Christine Bekaert"
-      }
-    ],
-    "ringen": [
-      {
-        "new": true,
-        "cadeautip": true,
-        "image": "img/uploads/juwelen-03.png",
-        "alt": "Melano"
-      }
-    ],
-    "kettingen": [
-      {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/juwelen-05.png",
-        "alt": "Rebecca"
+        "subcategory": "kettingen",
+        "items": [
+          { "new": false, "cadeautip": false, "image": "img/uploads/juwelen-05.png", "alt": "Rebecca" }
+        ]
       }
     ]
   },
   "accessoires": {
-    "handtassen": [
+    "subcategories": [
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/accessoire-06.png",
-        "alt": "Marie Martens"
+        "subcategory": "handtassen",
+        "items": [
+          { "new": false, "cadeautip": false, "image": "img/uploads/accessoire-06.png", "alt": "Marie Martens" },
+          { "new": false, "cadeautip": false, "image": "img/uploads/accessoire-02.png", "alt": "Marie Martens" }
+        ]
       },
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/accessoire-02.png",
-        "alt": "Marie Martens"
-      }
-    ],
-    "uurwerken": [
-      {
-        "new": false,
-        "cadeautip": true,
-        "image": "img/uploads/accessoire-03.png",
-        "alt": "Souvenirs De Pomme"
+        "subcategory": "uurwerken",
+        "items": [
+          { "new": false, "cadeautip": true,  "image": "img/uploads/accessoire-03.png", "alt": "Souvenirs De Pomme" },
+          { "new": false, "cadeautip": false, "image": "img/uploads/accessoire-04.png", "alt": "Souvenirs De Pomme" }
+        ]
       },
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/accessoire-04.png",
-        "alt": "Souvenirs De Pomme"
-      }
-    ],
-    "sjaals": [
+        "subcategory": "sjaals",
+        "items": [
+          { "new": false, "cadeautip": false, "image": "img/uploads/accessoire-07.png", "alt": "Bufandy" }
+        ]
+      },
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/accessoire-07.png",
-        "alt": "Bufandy"
-      }
-    ],
-    "brillen": [
+        "subcategory": "brillen",
+        "items": [
+          { "new": false, "cadeautip": false, "image": "img/uploads/bril.png", "alt": "Izipizi" }
+        ]
+      },
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/bril.png",
-        "alt": "Izipizi"
-      }
-    ],
-    "armbanden": [
-      {
-        "new": false,
-        "cadeautip": false,
-        "alt": "Steel & Barnett",
-        "image": "img/uploads/armband.png"
+        "subcategory": "armbanden",
+        "items": [
+          { "new": false, "cadeautip": false, "image": "img/uploads/armband.png", "alt": "Steel & Barnett" }
+        ]
       }
     ]
   },
   "wonen": {
-    "kussens-plaids": [
+    "subcategories": [
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/wonen-02.png",
-        "alt": "Kussens & Plaids"
-      }
-    ],
-    "decoratie": [
+        "subcategory": "kussens-plaids",
+        "items": [
+          { "new": false, "cadeautip": false, "image": "img/uploads/wonen-02.png", "alt": "Kussens & Plaids" }
+        ]
+      },
       {
-        "new": false,
-        "cadeautip": true,
-        "image": "img/uploads/wonen-01.png",
-        "alt": "Alessi"
-      }
-    ],
-    "stijlvol-tafelen": [
+        "subcategory": "decoratie",
+        "items": [
+          { "new": false, "cadeautip": true, "image": "img/uploads/wonen-01.png", "alt": "Alessi" }
+        ]
+      },
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/wonen-05.png",
-        "alt": "Onderlegger"
-      }
-    ],
-    "huisparfums": [
+        "subcategory": "stijlvol-tafelen",
+        "items": [
+          { "new": false, "cadeautip": false, "image": "img/uploads/wonen-05.png", "alt": "Onderlegger" }
+        ]
+      },
       {
-        "new": false,
-        "cadeautip": false,
-        "image": "img/uploads/huisparfums.png",
-        "alt": "Geurstokjes - Oxygen"
+        "subcategory": "huisparfums",
+        "items": [
+          { "new": false, "cadeautip": false, "image": "img/uploads/huisparfums.png", "alt": "Geurstokjes - Oxygen" }
+        ]
       }
     ]
   }
