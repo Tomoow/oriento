@@ -16,7 +16,7 @@
             <div class="announcement-content">
                 <i data-lucide="alert-triangle" class="announcement-icon"></i>
                 <div class="announcement-text" id="announcement-text"></div>
-                <button class="announcement-close" id="announcement-close" aria-label="Close announcement">
+                <button class="icon-button announcement-close" id="announcement-close" aria-label="Close announcement">
                     <i data-lucide="x"></i>
                 </button>
             </div>
@@ -125,7 +125,9 @@
     <!-- Modal for retour information -->
     <div id="retour-modal" class="modal">
         <div class="modal-content">
-            <span class="modal-close">&times;</span>
+            <button class="icon-button modal-close" aria-label="Close modal">
+                <i data-lucide="x"></i>
+            </button>
             <div id="retour-content"></div>
         </div>
     </div>
@@ -133,7 +135,9 @@
     <!-- Modal for opening hours -->
     <div id="openingsuren-modal" class="modal">
         <div class="modal-content">
-            <span class="modal-close openingsuren-close">&times;</span>
+            <button class="icon-button modal-close openingsuren-close" aria-label="Close openingsuren">
+                <i data-lucide="x"></i>
+            </button>
             <h2>Openingsuren</h2>
             <div class="modal-hours">
                 <div class="modal-day-hours">
@@ -237,6 +241,13 @@
         <div class="footer-bottom">
             <div class="footer-bottom-content">
                 <div class="footer-bottom-left">
+                    <button type="button" id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode" role="switch" aria-checked="false">
+                        <span class="toggle-slider">
+                            <span class="toggle-thumb"></span>
+                        </span>
+                        <span class="toggle-label">Dark mode</span>
+                    </button>
+                    <span class="footer-separator">|</span>
                     <a href="#" class="footer-bottom-link" data-modal="retour">Retour</a>
                     <span class="footer-separator">|</span>
                     <a href="#" class="footer-bottom-link" data-modal="algemene-voorwaarden">Privacy</a>

@@ -14,12 +14,60 @@
 
 :root {
   --color-bg: #FFFFFF;        /* White */
-  --color-primary: #C94F4F;   /* Muted Terracotta Red */
+  --color-primary: #C94D4D;   /* Muted Terracotta Red */
+  --color-primary-hover: #B54747;   /* Darker red for hover */
+  --color-primary-active: #A13D3D;  /* Even darker red for active */
   --color-surface: #FFFFFF;   /* White */
   --color-secondary: #E3B7A0; /* Dusty Rose */
   --color-tertiary: #FBF7EE; /* Cream */
   --color-text: #34201b;
   --color-text-white: #ffffff;        /* Deep Brown */
+  --color-cadeautip: #F5D76E;         /* Soft golden yellow for CADEAUTIP badge */
+  --color-accent: #FFBFBF;             /* Light pink accent for nav stroke */
+  
+  /* Opacity tokens */
+  --opacity-10: 0.1;
+  --opacity-15: 0.15;
+  --opacity-20: 0.2;
+  --opacity-25: 0.25;
+  --opacity-30: 0.3;
+  --opacity-40: 0.4;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-70: 0.7;
+  --opacity-85: 0.85;
+  --opacity-08: 0.08;
+  
+  /* RGB values only for borders/backgrounds that need rgba (since CSS doesn't support border-opacity) */
+  --color-secondary-rgb: 227, 183, 160;
+  --color-text-rgb: 90, 62, 54;
+  --color-primary-rgb: 201, 79, 79;
+  --color-cadeautip-rgb: 245, 215, 110;
+  --color-surface-rgb: 255, 255, 255;
+  --color-bg-rgb: 0, 0, 0; /* For overlay backgrounds */
+}
+
+/* Dark mode color scheme */
+[data-theme="dark"] {
+  --color-bg: #1a1a1a;        /* Dark background (inverted from white) */
+  --color-primary: #D96B6B;   /* Lighter red for contrast on dark */
+  --color-primary-hover: #C25555;   /* Darker red for hover in dark mode */
+  --color-primary-active: #B04545;  /* Even darker red for active in dark mode */
+  --color-surface: #2a2a2a;   /* Dark surface (inverted from white) */
+  --color-secondary: #922825; /* Custom dark mode secondary color */
+  --color-tertiary: #23211A;  /* Dark tertiary (inverted from cream) */
+  --color-text: #FAF3E0;      /* Light text (inverted from dark brown) */
+  --color-text-white: #FAF3E0; /* Dark text where white was used */
+  --color-cadeautip: #B8941F;  /* Darker muted gold for dark mode CADEAUTIP badge */
+  --color-accent: #4D0D0D;     /* Dark red accent for dark mode nav stroke */
+  
+  /* RGB values only for borders/backgrounds that need rgba in dark mode */
+  --color-secondary-rgb: 146, 40, 37;
+  --color-text-rgb: 250, 243, 224;
+  --color-primary-rgb: 217, 107, 107;
+  --color-cadeautip-rgb: 184, 148, 31;
+  --color-surface-rgb: 42, 42, 42;
+  --color-bg-rgb: 0, 0, 0; /* For overlay backgrounds */
 }
 
 * {
@@ -58,14 +106,14 @@ body {
     left: 0;
     right: 0;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, var(--opacity-10));
 }
 
 /* Announcement Banner */
 .announcement-banner {
     width: 100%;
     background-color: var(--color-tertiary);
-    border-bottom: 1px solid rgba(227, 183, 160, 0.2);
+    border-bottom: 1px solid rgba(var(--color-secondary-rgb), var(--opacity-20));
     padding: 0.5rem 0;
     box-sizing: border-box;
 }
@@ -74,7 +122,7 @@ body {
 .site-header {
     position: relative;
     width: 100%;
-    background-color: #FFFFFF;
+    background-color: var(--color-bg);
     border-bottom: 2px solid transparent;
     z-index: 1000;
 }
@@ -129,27 +177,86 @@ body {
     flex-shrink: 0;
 }
 
-.announcement-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color-text);
-    padding: 0.25rem;
+/* Icon Button Component - Reusable for close buttons and other icon actions */
+.icon-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.3s ease;
+    background-color: var(--color-tertiary);
+    color: var(--color-text);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, color 0.3s ease;
     flex-shrink: 0;
-    margin-left: auto;
 }
 
-.announcement-close:hover {
-    color: var(--color-primary);
+.icon-button:hover {
+    background-color: rgb(238, 235, 226); /* Tertiary + 5% black - same as btn-link */
+    color: var(--color-text);
+}
+
+.icon-button:active {
+    background-color: rgb(213, 210, 202); /* Tertiary + 15% black - same as btn-link */
+    color: var(--color-text);
+}
+
+/* Dark mode icon-button states */
+[data-theme="dark"] .icon-button {
+    background-color: var(--color-tertiary); /* #23211A */
+    color: var(--color-text); /* Light text for readability */
+}
+
+[data-theme="dark"] .icon-button:hover {
+    background-color: #3D3B32; /* Lighter variant of tertiary */
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .icon-button:active {
+    background-color: #1A1813; /* Darker variant of tertiary */
+    color: var(--color-text);
+}
+
+.icon-button i {
+    display: block;
+    margin: 0;
+}
+
+/* Size variations for icon buttons */
+.announcement-close {
+    width: 32px;
+    height: 32px;
+    margin-left: auto;
 }
 
 .announcement-close i {
     width: 18px;
     height: 18px;
+}
+
+.sidebar-close {
+    width: 40px;
+    height: 40px;
+}
+
+.sidebar-close i {
+    width: 24px;
+    height: 24px;
+}
+
+.modal-close {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    z-index: 4;
+}
+
+.modal-close i {
+    width: 20px;
+    height: 20px;
 }
 
 .logo img {
@@ -242,7 +349,7 @@ body {
     left: -2%;
     width: 0;
     height: 10px;
-    background-color: rgba(255, 0, 0, 0.25);
+    background-color: var(--color-accent);
     border-radius: 5px;
     transition: width 0.3s ease;
     z-index: -1;
@@ -273,8 +380,15 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--color-bg);
+    opacity: var(--opacity-50);
     pointer-events: none;
+}
+
+/* Dark mode hero overlay - darker overlay for text readability */
+[data-theme="dark"] .hero-section::after {
+    background-color: rgba(var(--color-bg-rgb), var(--opacity-50));
+    opacity: 1; /* Override the opacity property since rgba already includes it */
 }
 
 .hero-content {
@@ -443,6 +557,12 @@ a.gallery-item {
     opacity: 1;
 }
 
+.gallery-overlay > * {
+    position: relative;
+    z-index: 1;
+    color: var(--color-text-white);
+}
+
 /* Create varied sizes for bento box effect with dynamic filling */
 .gallery-grid .gallery-item:nth-child(1),
 .gallery-grid .gallery-item:nth-child(6),
@@ -518,7 +638,7 @@ a.gallery-item {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease, top 0.3s ease;
-        box-shadow: 0 4px 10px rgba(90, 62, 54, 0.1);
+        box-shadow: 0 4px 10px rgba(var(--color-text-rgb), var(--opacity-10));
         z-index: 1002;
         padding-top: 0;
         top: 80px; /* Start below header by default */
@@ -642,16 +762,17 @@ a.gallery-item {
     background-color: var(--color-primary);
     color: var(--color-surface);
     border: 2px solid var(--color-primary);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: rgb(206, 97, 97);
-    border-color: rgb(206, 97, 97);
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
 }
 
 .btn-primary:active {
-    background-color: rgb(181, 71, 71);
-    border-color: rgb(181, 71, 71);
+    background-color: var(--color-primary-active);
+    border-color: var(--color-primary-active);
 }
 
 .btn-link {
@@ -671,21 +792,38 @@ a.gallery-item {
     color: var(--color-text);
 }
 
+/* Dark mode btn-link states */
+[data-theme="dark"] .btn-link {
+    background-color: transparent;
+    color: var(--color-text); /* Light text for readability */
+}
+
+[data-theme="dark"] .btn-link:hover {
+    background-color: #3D3B32; /* Lighter variant of tertiary */
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .btn-link:active {
+    background-color: #1A1813; /* Darker variant of tertiary */
+    color: var(--color-text);
+}
+
 .btn-outline {
     background-color: transparent;
     color: var(--color-primary);
     border: 2px solid var(--color-primary);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-outline:hover {
-    background-color: rgb(206, 97, 97);
-    border-color: rgb(206, 97, 97);
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
     color: var(--color-surface);
 }
 
 .btn-outline:active {
-    background-color: rgb(181, 71, 71);
-    border-color: rgb(181, 71, 71);
+    background-color: var(--color-primary-active);
+    border-color: var(--color-primary-active);
 }
 
 .collection-page {
@@ -727,6 +865,22 @@ a.gallery-item {
         background-color: rgb(213, 210, 202); /* Tertiary + 15% black */
         color: var(--color-text);
     }
+    
+    /* Dark mode btn-link states on mobile */
+    [data-theme="dark"] .btn-link {
+        background-color: var(--color-tertiary); /* #23211A */
+        color: var(--color-text); /* Light text for readability */
+    }
+    
+    [data-theme="dark"] .btn-link:hover {
+        background-color: #3D3B32; /* Lighter variant of tertiary */
+        color: var(--color-text);
+    }
+    
+    [data-theme="dark"] .btn-link:active {
+        background-color: #1A1813; /* Darker variant of tertiary */
+        color: var(--color-text);
+    }
     .collection-page {
         padding: 0 1rem;
     }
@@ -744,7 +898,7 @@ a.gallery-item {
     top: 110px; /* Account for header height with extra spacing */
     height: calc(100vh - 110px); /* Adjust height for header */
     overflow-y: auto;
-    border-right: 1px solid rgba(227, 183, 160, 0.3);
+    border-right: 1px solid rgba(var(--color-secondary-rgb), var(--opacity-30));
     z-index: 100;
     flex-shrink: 0;
 }
@@ -766,7 +920,7 @@ a.gallery-item {
 .sidebar-filters {
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(227, 183, 160, 0.4);
+    border-bottom: 1px solid rgba(var(--color-secondary-rgb), var(--opacity-40));
 }
 
 .sidebar-filters h4 {
@@ -803,15 +957,15 @@ a.gallery-item {
 }
 
 .filter-btn.active[data-filter="new"] {
-    background-color: rgba(201, 79, 79, 0.85); /* match NEW badge */
+    background-color: var(--color-primary);
     color: var(--color-surface);
-    border-color: rgba(201, 79, 79, 0.85);
+    border-color: rgba(var(--color-primary-rgb), var(--opacity-85));
 }
 
 .filter-btn.active[data-filter="cadeautip"] {
-    background-color: rgba(245, 215, 110, 0.85); /* match CADEAUTIP badge */
+    background-color: var(--color-cadeautip);
     color: var(--color-text);
-    border-color: rgba(245, 215, 110, 0.85);
+    border-color: rgba(var(--color-cadeautip-rgb), var(--opacity-85));
 }
 
 .category-list {
@@ -960,7 +1114,7 @@ a.gallery-item {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    background-color: rgba(201, 79, 79, 0.85); /* Terracotta red with opacity */
+    background-color: rgba(var(--color-primary-rgb), var(--opacity-85));
     color: var(--color-surface);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -970,7 +1124,7 @@ a.gallery-item {
     letter-spacing: 0.5px;
     text-transform: uppercase;
     z-index: 2;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, var(--opacity-10));
 }
 
 /* CADEAUTIP Badge */
@@ -978,7 +1132,7 @@ a.gallery-item {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    background-color: rgba(245, 215, 110, 0.85); /* Soft golden yellow with opacity */
+    background-color: rgba(var(--color-cadeautip-rgb), var(--opacity-85));
     color: var(--color-text);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -988,7 +1142,7 @@ a.gallery-item {
     letter-spacing: 0.5px;
     text-transform: uppercase;
     z-index: 2;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, var(--opacity-10));
 }
 
 /* When both badges are present, position them side by side */
@@ -1016,18 +1170,18 @@ a.gallery-item {
     width: 56px;
     height: 56px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, var(--opacity-15));
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
 }
 
 .sidebar-toggle-mobile:hover {
-    background-color: rgb(206, 97, 97);
+    background-color: var(--color-primary-hover);
 }
 
 .sidebar-toggle-mobile:active {
-    background-color: rgb(181, 71, 71);
+    background-color: var(--color-primary-active);
 }
 
 .sidebar-toggle-mobile i {
@@ -1036,23 +1190,13 @@ a.gallery-item {
     color: inherit;
 }
 
-/* Sidebar Close Button */
+/* Sidebar Close Button - specific positioning and sizing */
 .sidebar-close {
     display: none;
     position: absolute;
     top: 1rem;
     right: 1rem;
-    background: none;
-    border: none;
-    color: var(--color-text);
-    cursor: pointer;
-    padding: 0.5rem;
     z-index: 1;
-    transition: color 0.3s ease;
-}
-
-.sidebar-close:hover {
-    color: var(--color-primary);
 }
 
 .sidebar-close i {
@@ -1080,7 +1224,7 @@ a.gallery-item {
         background-color: var(--color-surface);
         z-index: 1002;
         transition: left 0.3s ease;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, var(--opacity-10));
         overflow-y: auto;
         overflow-x: hidden;
         padding-top: 2rem; /* Account for header + announcement on mobile */
@@ -1092,7 +1236,7 @@ a.gallery-item {
     }
     
     .sidebar-close {
-        display: block;
+        display: flex;
     }
     
     .sidebar-toggle-mobile {
@@ -1127,7 +1271,7 @@ a.gallery-item {
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(var(--color-bg-rgb), var(--opacity-50));
         z-index: 1001;
     }
     
@@ -1202,20 +1346,21 @@ a.gallery-item {
     display: flex;
     gap: 2rem;
     overflow-x: auto;
-    overflow-y: visible; /* Allow shadows to show */
+    overflow-y: visible;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-    padding: 0.5rem 0; /* Only vertical padding for shadows */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0.5rem 0;
     scroll-snap-type: x mandatory;
     width: 100%;
     box-sizing: border-box;
-    justify-content: space-between;
+    justify-content: flex-start; /* Start cards from the left */
+    align-items: stretch;
 }
 
 .reviews-carousel::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
 }
 
 .reviews-arrow {
@@ -1225,14 +1370,19 @@ a.gallery-item {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2); /* White with 0.2 opacity */
+    background-color: rgba(var(--color-surface-rgb), var(--opacity-20));
     border: 2px solid var(--color-primary);
     color: var(--color-primary);
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, var(--opacity-15));
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+}
+
+/* Dark mode reviews arrow */
+[data-theme="dark"] .reviews-arrow {
+    background-color: rgba(var(--color-surface-rgb), var(--opacity-30));
 }
 
 .reviews-arrow.hidden {
@@ -1260,38 +1410,17 @@ a.gallery-item {
 
 .review-card {
     width: 100%;
-    max-width: 500px;
+    max-width: 400px;
     min-width: 280px;
+    flex: 0 0 auto;
     background-color: var(--color-surface);
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, var(--opacity-08));
     display: flex;
     flex-direction: column;
     scroll-snap-align: center;
-    flex-shrink: 0;
     box-sizing: border-box;
-    margin: 0.5rem; /* Margin to create space for shadow */
-}
-
-
-  
-
-@media (min-width: 1400px) {
-    .review-card {
-        width: calc((100% - 9rem) / 3); /* 3 cards: 2 gaps (4rem) + margins (1rem × 3 = 3rem) + carousel padding (1rem) + extra buffer (1rem) */
-        max-width: 500px;
-        flex: 0 0 calc((100% - 9rem) / 3);
-        min-width: 300px;
-    }
-}
-
-@media (min-width: 1024px) and (max-width: 1399px) {
-    .review-card {
-        width: calc((100% - 6rem) / 2); /* 2 cards visible, accounting for 1 gap (2rem) + margins (2rem) + padding (1rem) */
-        max-width: 500px;
-        flex: 0 0 auto;
-    }
 }
 
 
@@ -1313,7 +1442,7 @@ a.gallery-item {
     justify-content: center;
     font-family: 'Playfair Display', serif;
     font-size: 1.2rem;
-    color: var(--color-surface);
+    color: var(--color-text-white);
     flex-shrink: 0;
 }
 
@@ -1344,7 +1473,8 @@ a.gallery-item {
 }
 
 .review-date {
-    color: rgba(90, 62, 54, 0.6);
+    color: var(--color-text);
+    opacity: var(--opacity-60);
     font-size: 0.85rem;
     margin-top: auto;
     padding-top: 1rem;
@@ -1464,15 +1594,15 @@ a.gallery-item {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(90, 62, 54, 0.08);
+    box-shadow: 0 4px 20px rgba(var(--color-text-rgb), var(--opacity-08));
     transition: all 0.3s ease;
-    border: 1px solid rgba(227, 183, 160, 0.2);
+    border: 1px solid rgba(var(--color-secondary-rgb), var(--opacity-20));
     position: relative;
 }
 
 .team-member:hover {
     transform: translateY(-8px);
-    box-shadow: 0 8px 30px rgba(90, 62, 54, 0.15);
+    box-shadow: 0 8px 30px rgba(var(--color-text-rgb), var(--opacity-15));
 }
 
 .team-image {
@@ -1482,7 +1612,7 @@ a.gallery-item {
     overflow: hidden;
     margin-bottom: 1.5rem;
     border: 4px solid var(--color-bg);
-    box-shadow: 0 4px 15px rgba(90, 62, 54, 0.1);
+    box-shadow: 0 4px 15px rgba(var(--color-text-rgb), var(--opacity-10));
 }
 
 .team-image img {
@@ -1885,7 +2015,7 @@ a.gallery-item {
     justify-content: space-between;
     align-items: center;
     padding: 0.25rem 0;
-    border-bottom: 1px solid rgba(227, 183, 160, 0.2);
+    border-bottom: 1px solid rgba(var(--color-secondary-rgb), var(--opacity-20));
     gap: 2rem;
 }
 
@@ -1973,6 +2103,99 @@ a.gallery-item {
     font-size: 0.9rem;
 }
 
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: inherit;
+    padding: 0;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.dark-mode-toggle:hover {
+    color: var(--color-primary);
+}
+
+.dark-mode-toggle:hover .toggle-slider {
+    background-color: var(--color-secondary);
+}
+
+[data-theme="dark"] .dark-mode-toggle:hover .toggle-slider {
+    background-color: var(--color-accent);
+}
+
+/* Reset hover state on active/focus to prevent stuck state */
+.dark-mode-toggle:active,
+.dark-mode-toggle:focus {
+    color: var(--color-text);
+}
+
+.dark-mode-toggle:active .toggle-slider,
+.dark-mode-toggle:focus .toggle-slider {
+    background-color: var(--color-secondary);
+}
+
+[data-theme="dark"] .dark-mode-toggle:active .toggle-slider,
+[data-theme="dark"] .dark-mode-toggle:focus .toggle-slider {
+    background-color: var(--color-primary);
+}
+
+/* Use focus-visible for keyboard navigation only */
+.dark-mode-toggle:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Toggle switch slider */
+.toggle-slider {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background-color: var(--color-secondary);
+    border-radius: 12px;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* Dark mode active - slider uses primary color */
+[data-theme="dark"] .toggle-slider {
+    background-color: var(--color-primary);
+}
+
+/* Toggle switch thumb */
+.toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-bg);
+    border-radius: 50%;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, var(--opacity-10));
+}
+
+/* Dark mode - toggle is on (thumb moved to right) */
+[data-theme="dark"] .toggle-thumb {
+    transform: translateX(20px);
+}
+
+/* Toggle label */
+.toggle-label {
+    user-select: none;
+}
+
 .footer-copyright {
     display: flex;
     flex-direction: column;
@@ -2000,7 +2223,7 @@ a.gallery-item {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(var(--color-bg-rgb), var(--opacity-50));
     backdrop-filter: blur(5px);
 }
 
@@ -2072,10 +2295,12 @@ a.gallery-item {
     .product-modal-media {
         flex: 1;
     }
-    .product-modal-info {
-        flex: 1;
-        padding: 0 0 0 2rem; /* spacing between media and info */
-    }
+.product-modal-info {
+    flex: 1;
+    padding: 0 0 0 2rem; /* spacing between media and info */
+    display: flex;
+    flex-direction: column;
+}
 }
 
 /* Modal actions layout */
@@ -2083,9 +2308,10 @@ a.gallery-item {
     display: flex;
     gap: 0.75rem;
     align-items: center;
-    justify-content: flex-start; /* left aligned */
-    margin-top: 1rem;
-    flex-wrap: nowrap; /* keep buttons on one line on desktop */
+    justify-content: flex-start;
+    margin-top: auto; /* Push buttons to bottom */
+    flex-wrap: nowrap;
+    padding-top: 1.5rem;
 }
 
 /* Ensure our modal nav rule wins over any generic modal-navigation rules */
@@ -2123,21 +2349,6 @@ a.gallery-item {
     position: relative;
 }
 
-.modal-close {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--color-text);
-    cursor: pointer;
-    transition: color 0.3s ease;
-    z-index: 4; /* ensure on top of media/image */
-}
-
-.modal-close:hover {
-    color: var(--color-primary);
-}
 
 .modal h2 {
     font-family: 'Playfair Display', serif;
@@ -2148,9 +2359,7 @@ a.gallery-item {
 .modal h3 {
     font-family: 'Playfair Display', serif;
     color: var(--color-text);
-    margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    font-size: 1.1rem;
 }
 
 .modal p,
@@ -2177,7 +2386,7 @@ a.gallery-item {
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(227, 183, 160, 0.2);
+    border-bottom: 1px solid rgba(var(--color-secondary-rgb), var(--opacity-20));
     gap: 2rem;
 }
 

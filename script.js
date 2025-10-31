@@ -170,7 +170,7 @@ function loadBrands() {
         });
 }
 
-// Load reviews from JSON and render carousel
+// Load reviews from JSON and render carousel (simplified - show 3 cards)
 function loadReviews() {
     const carousel = document.getElementById('reviews-carousel');
     if (!carousel) return;
@@ -178,7 +178,6 @@ function loadReviews() {
     fetch('content/reviews.json')
         .then(response => {
             if (!response.ok) {
-                // If file doesn't exist, show placeholder message
                 carousel.innerHTML = '<p style="text-align: center; color: var(--color-text); padding: 2rem;">Reviews worden binnenkort toegevoegd...</p>';
                 return;
             }
@@ -192,19 +191,16 @@ function loadReviews() {
                 return;
             }
             
-            // Sort reviews: 5-star reviews first, then by date (most recent first)
+            // Sort reviews: 5-star reviews first
             const sortedReviews = [...reviews].sort((a, b) => {
-                if (b.rating !== a.rating) {
-                    return b.rating - a.rating; // Higher rating first
-                }
-                return 0; // Keep original order for same rating
+                return (b.rating || 5) - (a.rating || 5);
             });
             
-            const html = sortedReviews.map(review => {
-                // Generate initials from name
+            // Show only first 3 reviews
+            const displayReviews = sortedReviews.slice(0, 3);
+            
+            const html = displayReviews.map(review => {
                 const initials = review.author ? review.author.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??';
-                
-                // Generate stars HTML
                 const stars = '★'.repeat(review.rating || 5);
                 
                 return `
@@ -224,7 +220,6 @@ function loadReviews() {
             
             carousel.innerHTML = html;
             
-            // Initialize Lucide icons for arrow buttons and CTA
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
@@ -232,10 +227,6 @@ function loadReviews() {
             // Initialize carousel navigation after content is loaded
             setTimeout(() => {
                 initReviewsCarousel();
-                // Re-initialize icons after carousel is set up
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
             }, 100);
         })
         .catch(error => {
@@ -249,17 +240,88 @@ function initReviewsCarousel() {
     const carousel = document.getElementById('reviews-carousel');
     const leftArrow = document.getElementById('reviews-arrow-left');
     const rightArrow = document.getElementById('reviews-arrow-right');
-    const titleWrapper = document.querySelector('.reviews-title-wrapper');
     
-    if (!carousel || !leftArrow || !rightArrow || !titleWrapper) return;
+    if (!carousel || !leftArrow || !rightArrow) return;
     
-    // Function to check if arrows should be visible
-    function checkArrowVisibility() {
-        const scrollWidth = carousel.scrollWidth;
-        const clientWidth = carousel.clientWidth;
-        const canScroll = scrollWidth > clientWidth;
+    const cards = carousel.querySelectorAll('.review-card');
+    if (cards.length === 0) return;
+    
+    // Function to scroll to a card by index
+    function scrollToCard(index) {
+        if (index < 0 || index >= cards.length) return;
         
-        if (canScroll) {
+        const card = cards[index];
+        const carouselRect = carousel.getBoundingClientRect();
+        const containerWidth = carouselRect.width;
+        
+        let finalPosition;
+        
+        if (index === 0) {
+            // First card: scroll to position 0
+            finalPosition = 0;
+        } else {
+            // Other cards: center them in the viewport
+            const cardRect = card.getBoundingClientRect();
+            const cardWidth = cardRect.width;
+            const cardLeft = cardRect.left - carouselRect.left + carousel.scrollLeft;
+            const scrollPosition = cardLeft - (containerWidth / 2) + (cardWidth / 2);
+            
+            // Clamp to valid range
+            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+            finalPosition = Math.max(0, Math.min(scrollPosition, maxScroll));
+        }
+        
+        carousel.scrollTo({
+            left: finalPosition,
+            behavior: 'smooth'
+        });
+    }
+    
+    // Find current card index
+    function getCurrentCardIndex() {
+        let currentIndex = 0;
+        let minDistance = Infinity;
+        const carouselRect = carousel.getBoundingClientRect();
+        const viewportCenter = carouselRect.left + carouselRect.width / 2;
+        
+        cards.forEach((card, index) => {
+            const cardRect = card.getBoundingClientRect();
+            const cardCenter = cardRect.left + cardRect.width / 2;
+            const distance = Math.abs(viewportCenter - cardCenter);
+            
+            if (distance < minDistance) {
+                minDistance = distance;
+                currentIndex = index;
+            }
+        });
+        
+        return currentIndex;
+    }
+    
+    // Initialize: Scroll to first card (position 0) on load
+    // This ensures we start at the first card, not the centered middle card
+    carousel.scrollTo({
+        left: 0,
+        behavior: 'auto' // Instant, no animation on initial load
+    });
+    
+    // Arrow click handlers
+    leftArrow.addEventListener('click', () => {
+        const currentIndex = getCurrentCardIndex();
+        const prevIndex = Math.max(0, currentIndex - 1);
+        scrollToCard(prevIndex);
+    });
+    
+    rightArrow.addEventListener('click', () => {
+        const currentIndex = getCurrentCardIndex();
+        const nextIndex = Math.min(cards.length - 1, currentIndex + 1);
+        scrollToCard(nextIndex);
+    });
+    
+    // Hide arrows if all cards fit
+    function updateArrowVisibility() {
+        const needsScroll = carousel.scrollWidth > carousel.clientWidth;
+        if (needsScroll) {
             leftArrow.style.display = 'flex';
             rightArrow.style.display = 'flex';
         } else {
@@ -268,83 +330,8 @@ function initReviewsCarousel() {
         }
     }
     
-    // Simple scroll functions
-    leftArrow.addEventListener('click', () => {
-        carousel.scrollBy({
-            left: -400,
-            behavior: 'smooth'
-        });
-    });
-    
-    rightArrow.addEventListener('click', () => {
-        carousel.scrollBy({
-            left: 400,
-            behavior: 'smooth'
-        });
-    });
-    
-    // Check visibility on load and resize
-    checkArrowVisibility();
-    window.addEventListener('resize', checkArrowVisibility);
-    
-    // Also check after images load
-    carousel.querySelectorAll('img').forEach(img => {
-        img.addEventListener('load', checkArrowVisibility);
-    });
-    
-    
-    // Touch/swipe gesture support
-    let isDown = false;
-    let startX;
-    let scrollLeftStart;
-    
-    carousel.addEventListener('mousedown', (e) => {
-        isDown = true;
-        carousel.style.cursor = 'grabbing';
-        startX = e.pageX - carousel.offsetLeft;
-        scrollLeftStart = carousel.scrollLeft;
-    });
-    
-    carousel.addEventListener('mouseleave', () => {
-        isDown = false;
-        carousel.style.cursor = 'grab';
-    });
-    
-    carousel.addEventListener('mouseup', () => {
-        isDown = false;
-        carousel.style.cursor = 'grab';
-    });
-    
-    carousel.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - carousel.offsetLeft;
-        const walk = (x - startX) * 2; // Scroll speed
-        carousel.scrollLeft = scrollLeftStart - walk;
-    });
-    
-    // Touch events for mobile
-    let touchStartX = 0;
-    let touchScrollLeft = 0;
-    
-    carousel.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].pageX - carousel.offsetLeft;
-        touchScrollLeft = carousel.scrollLeft;
-    }, { passive: true });
-    
-    carousel.addEventListener('touchmove', (e) => {
-        if (!touchStartX) return;
-        const x = e.touches[0].pageX - carousel.offsetLeft;
-        const walk = (touchStartX - x) * 2; // Scroll speed
-        carousel.scrollLeft = touchScrollLeft + walk;
-    }, { passive: true });
-    
-    carousel.addEventListener('touchend', () => {
-        touchStartX = 0;
-    });
-    
-    // Set initial cursor style
-    carousel.style.cursor = 'grab';
+    updateArrowVisibility();
+    window.addEventListener('resize', updateArrowVisibility);
 }
 
 // Modal functionality
@@ -760,17 +747,45 @@ function initScrollProgress() {
     let headerTop = headerWrapper.offsetTop;
     const heroSection = document.querySelector('.hero-section');
     
+    // Find the first main content element (skip buttons, overlays, etc.)
+    function findMainContent() {
+        if (heroSection) return null; // Don't need it if hero exists
+        let next = headerWrapper.nextElementSibling;
+        while (next) {
+            // Skip buttons, overlays, and other utility elements
+            if (!next.classList.contains('sidebar-toggle-mobile') && 
+                !next.classList.contains('sidebar-overlay') &&
+                next.tagName !== 'BUTTON') {
+                return next;
+            }
+            next = next.nextElementSibling;
+        }
+        return null;
+    }
+    
+    const mainContent = findMainContent();
+    
     // Function to update header height
     function updateHeaderHeight() {
         headerWrapperHeight = headerWrapper.offsetHeight;
         headerTop = headerWrapper.offsetTop;
         
         // Add spacer to prevent content jump when header becomes sticky
-        if (heroSection) {
-            if (headerWrapper.classList.contains('is-sticky')) {
+        if (headerWrapper.classList.contains('is-sticky')) {
+            if (heroSection) {
+                // For pages with hero section, add margin to hero
                 heroSection.style.marginTop = headerWrapperHeight + 'px';
-            } else {
+            } else if (mainContent) {
+                // For pages without hero section, add padding to first content element
+                mainContent.style.paddingTop = headerWrapperHeight + 'px';
+            }
+        } else {
+            // Remove spacers when not sticky
+            if (heroSection) {
                 heroSection.style.marginTop = '';
+            }
+            if (mainContent) {
+                mainContent.style.paddingTop = '';
             }
         }
     }
@@ -795,9 +810,7 @@ function initScrollProgress() {
         } else {
             if (wasSticky) {
                 headerWrapper.classList.remove('is-sticky');
-                if (heroSection) {
-                    heroSection.style.marginTop = '';
-                }
+                updateHeaderHeight(); // Update to remove spacers
             }
         }
         
@@ -1256,3 +1269,54 @@ function loadGallery() {
             // Silent fallback to static gallery
         });
 }
+
+// Dark mode toggle functionality
+(function() {
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply theme on page load
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    
+    // Update toggle button state and label
+    function updateToggleButton(theme) {
+        const toggle = document.getElementById('dark-mode-toggle');
+        const label = toggle?.querySelector('.toggle-label');
+        
+        if (toggle && label) {
+            const isDark = theme === 'dark';
+            toggle.setAttribute('aria-checked', isDark ? 'true' : 'false');
+            label.textContent = isDark ? 'Light mode' : 'Dark mode';
+        }
+    }
+    
+    // Initialize toggle button
+    function initDarkModeToggle() {
+        const toggle = document.getElementById('dark-mode-toggle');
+        if (!toggle) return;
+        
+        // Set initial state
+        const initialTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        updateToggleButton(initialTheme);
+        
+        toggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update toggle state and label
+            updateToggleButton(newTheme);
+        });
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDarkModeToggle);
+    } else {
+        initDarkModeToggle();
+    }
+})();
