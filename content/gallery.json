@@ -1,104 +1,119 @@
 {
   "gallery": [
     {
-      "image": "img/uploads/juwelen-01.png",
+      "image": "img/uploads/collectie-04.webp",
       "alt": "Gallery item",
       "href": "/collectie.html"
     },
     {
-      "image": "img/uploads/accessoire-07.png",
+      "image": "img/uploads/collectie-01.webp",
       "alt": "Gallery item",
       "href": "/collectie.html"
     },
     {
       "href": "/collectie.html",
       "alt": "Gallery item",
-      "image": "img/uploads/juwelen-05.png"
+      "image": "img/uploads/collectie-17.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/juwelen-06.png"
+      "image": "img/uploads/collectie-18.webp"
     },
     {
       "href": "/collectie.html",
       "alt": "Gallery item",
-      "image": "img/uploads/juwelen-07.png"
+      "image": "img/uploads/collectie-19.webp"
     },
     {
       "href": "/collectie.html",
       "alt": "Gallery item",
-      "image": "img/uploads/juwelen-04.png"
+      "image": "img/uploads/collectie-16.webp"
     },
     {
       "href": "/collectie.html",
       "alt": "Gallery item",
-      "image": "img/uploads/accessoire-06.png"
+      "image": "img/uploads/collectie-13.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/wonen-06.png"
+      "image": "img/uploads/collectie-22.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/juwelen-02.png"
+      "image": "img/uploads/collectie-14.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/juwelen-03.png"
+      "image": "img/uploads/collectie-15.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/accessoire-05.png"
+      "image": "img/uploads/collectie-12.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/accessoire-04.png"
+      "image": "img/uploads/collectie-11.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/accessoire-03.png"
+      "image": "img/uploads/collectie-10.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/wonen-02.png"
+      "image": "img/uploads/collectie-08.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/wonen-03.png"
+      "image": "img/uploads/collectie-09.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/accessoire-02.png"
+      "image": "img/uploads/collectie-07.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/accessoire-01.png"
+      "image": "img/uploads/collectie-05.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/wonen-01.png"
+      "image": "img/uploads/collectie-06.webp"
     },
     {
       "alt": "Gallery item",
       "href": "/collectie.html",
-      "image": "img/uploads/wonen-08.png"
+      "image": "img/uploads/collectie-02.webp"
     },
     {
       "href": "/collectie.html",
       "alt": "Gallery item",
-      "image": "img/uploads/juwelen-08.png"
+      "image": "img/uploads/collectie-03.webp"
+    },
+    {
+      "image": "img/uploads/collectie-20.webp",
+      "alt": "Gallery item",
+      "href": "/collectie.html"
+    },
+    {
+      "image": "img/uploads/collectie-21.webp",
+      "alt": "Gallery item",
+      "href": "/collectie.html"
+    },
+    {
+      "image": "img/uploads/collectie-23.webp",
+      "alt": "Gallery item",
+      "href": "/collectie.html"
     }
   ]
 }
