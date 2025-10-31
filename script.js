@@ -63,6 +63,60 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initial position update
         updateMenuPosition();
     }
+    
+    // Instagram deep link handler with fallback
+    const instagramLinks = document.querySelectorAll('.instagram-link');
+    instagramLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const fallbackUrl = this.getAttribute('data-fallback');
+            if (!fallbackUrl) return;
+            
+            // Try to open Instagram app
+            const appUrl = this.getAttribute('href');
+            
+            // Check if we're on mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                e.preventDefault();
+                
+                // Try to open the app
+                window.location.href = appUrl;
+                
+                // Set a timeout to check if app opened
+                // If the app opened, the page will lose focus or navigate away
+                // If it didn't open, we fall back to web version
+                let appOpened = false;
+                const timeout = setTimeout(() => {
+                    if (!appOpened) {
+                        // App didn't open, use fallback
+                        window.open(fallbackUrl, '_blank');
+                    }
+                }, 500);
+                
+                // Detect if app opened by checking if page loses focus
+                const handleBlur = () => {
+                    appOpened = true;
+                    clearTimeout(timeout);
+                    window.removeEventListener('blur', handleBlur);
+                };
+                
+                window.addEventListener('blur', handleBlur);
+                
+                // Also clear timeout if page visibility changes
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        appOpened = true;
+                        clearTimeout(timeout);
+                    }
+                });
+            } else {
+                // On desktop, just open web version in new tab
+                e.preventDefault();
+                window.open(fallbackUrl, '_blank');
+            }
+        });
+    });
 });
 
 // Load brands from JSON and render carousel
@@ -1136,6 +1190,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCollectionSidebar();
     loadProducts(); // Load products from CMS
     loadReviews(); // Load Google reviews
+    loadModalText(); // Load modal text from CMS
     
     // Ensure page starts at top to show header
     window.scrollTo(0, 0);
@@ -1150,6 +1205,20 @@ function loadHeroContent() {
         .then(data => {
             if (titleEl && data.title) titleEl.textContent = data.title;
             if (subtitleEl && data.subtitle) subtitleEl.textContent = data.subtitle;
+        })
+        .catch(() => {});
+}
+
+// Load modal text for product modal on collectie page
+function loadModalText() {
+    const modalTextEl = document.getElementById('product-modal-text');
+    if (!modalTextEl) return; // not on collectie page
+    fetch('content/modal-text.json')
+        .then(r => r.json())
+        .then(data => {
+            if (data.text) {
+                modalTextEl.innerHTML = data.text;
+            }
         })
         .catch(() => {});
 }

@@ -12,7 +12,7 @@ collections:
   # pages and posts collections removed
   
   - name: "announcements" # Announcements collection
-    label: "Aankondingen" # Used in the UI
+    label: "Aankondigingen" # Used in the UI
     files: # File-based collection for a single JSON file
       - label: "Plaats een aankondiging"
         name: "announcements"
@@ -159,4 +159,10 @@ collections:
                       - {label: "Brand name", name: "alt", widget: "string", required: false}
                       - {label: "New", name: "new", widget: "boolean", default: false, required: false}
                       - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
+
+      - label: "Pop-up tekstje wijzigen"
+        name: "modal-text"
+        file: "content/modal-text.json"
+        fields:
+          - {label: "Modal Tekst", name: "text", widget: "markdown", required: true, hint: "De tekst die wordt getoond in de product pop-up. Je kunt <br> gebruiken voor nieuwe regels."}
 
