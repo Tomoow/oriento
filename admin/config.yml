@@ -11,24 +11,10 @@ public_folder: "img/uploads" # The src attribute for uploaded media will begin w
 collections:
   # pages and posts collections removed
   
-  - name: "brands" # Brands collection
-    label: "Brands" # Used in the UI
-    files: # File-based collection for a single JSON file
-      - label: "Brands List"
-        name: "brands"
-        file: "content/brands.json"
-        fields:
-          - label: "Brands"
-            name: "brands"
-            widget: "list"
-            fields:
-              - {label: "Brand Name", name: "name", widget: "string", required: true}
-              - {label: "Logo", name: "logo", widget: "image", required: true}
-  
   - name: "announcements" # Announcements collection
-    label: "Announcements" # Used in the UI
+    label: "Aankondingen" # Used in the UI
     files: # File-based collection for a single JSON file
-      - label: "Announcements"
+      - label: "Plaats een aankondiging"
         name: "announcements"
         file: "content/announcements.json"
         fields:
@@ -40,10 +26,80 @@ collections:
               - {label: "Text", name: "text", widget: "text", required: true}
               - {label: "Active", name: "active", widget: "boolean", default: true}
   
-  - name: "products" # Products collection
-    label: "Products" # Used in the UI
+  - name: "hero" # Homepage hero content
+    label: "Welkom tekstje"
+    files:
+      - label: "Titel en ondertitel van de website"
+        name: "hero"
+        file: "content/hero.json"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Subtitel", name: "subtitle", widget: "string"}
+
+  - name: "openingsuren" # Store hours once, used across site
+    label: "Openingsuren"
+    files:
+      - label: "Openingsuren aanpassen"
+        name: "hours"
+        file: "content/openingsuren.json"
+        fields:
+          - label: "Dagen"
+            name: "days"
+            widget: "list"
+            fields:
+              - {label: "Dag", name: "day", widget: "string"}
+              - {label: "Uren", name: "hours", widget: "string"}
+              - {label: "Gesloten", name: "closed", widget: "boolean", default: false, required: false}
+  
+  - name: "brands" # Brands collection
+    label: "Carrousel met merken" # Used in the UI
     files: # File-based collection for a single JSON file
-      - label: "Products"
+      - label: "Afbeeldingen van merken"
+        name: "brands"
+        file: "content/brands.json"
+        fields:
+          - label: "Brands"
+            name: "brands"
+            widget: "list"
+            fields:
+              - {label: "Brand Name", name: "name", widget: "string", required: true}
+              - {label: "Logo", name: "logo", widget: "image", required: true}
+  
+  - name: "gallery" # Gallery (bento box on homepage)
+    label: "Gallerij afbeeldingen"
+    files:
+      - label: "Wijzig de afbeeldingen in de gallerij"
+        name: "gallery"
+        file: "content/gallery.json"
+        fields:
+          - label: "Gallery"
+            name: "gallery"
+            widget: "list"
+            fields:
+              - {label: "Image", name: "image", widget: "image", required: true}
+              - {label: "Alt Text", name: "alt", widget: "string", required: false}
+              - {label: "Link", name: "href", widget: "string", required: false, hint: "Optional link when clicking the image"}
+  
+  - name: "reviews" # Reviews collection
+    label: "Google reviews" # Used in the UI
+    files: # File-based collection for a single JSON file
+      - label: "Reviews aanpassen"
+        name: "reviews"
+        file: "content/reviews.json"
+        fields:
+          - label: "Reviews"
+            name: "reviews"
+            widget: "list"
+            fields:
+              - {label: "Author Name", name: "author", widget: "string", required: true}
+              - {label: "Review Text", name: "text", widget: "text", required: true}
+              - {label: "Rating", name: "rating", widget: "number", min: 1, max: 5, default: 5, required: true}
+              - {label: "Date", name: "date", widget: "string", required: false, hint: "e.g., '2 weken geleden' or 'November 2024'"}
+
+  - name: "products" # Products collection
+    label: "Collectie" # Used in the UI
+    files: # File-based collection for a single JSON file
+      - label: "Collectie wijzigen"
         name: "products"
         file: "content/products.json"
         fields:
@@ -103,60 +159,4 @@ collections:
                       - {label: "Brand name", name: "alt", widget: "string", required: false}
                       - {label: "New", name: "new", widget: "boolean", default: false, required: false}
                       - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
-  
-  - name: "gallery" # Gallery (bento box on homepage)
-    label: "Homepage Gallery"
-    files:
-      - label: "Gallery Items"
-        name: "gallery"
-        file: "content/gallery.json"
-        fields:
-          - label: "Gallery"
-            name: "gallery"
-            widget: "list"
-            fields:
-              - {label: "Image", name: "image", widget: "image", required: true}
-              - {label: "Alt Text", name: "alt", widget: "string", required: false}
-              - {label: "Link", name: "href", widget: "string", required: false, hint: "Optional link when clicking the image"}
-  
-  - name: "reviews" # Reviews collection
-    label: "Google Reviews" # Used in the UI
-    files: # File-based collection for a single JSON file
-      - label: "Reviews List"
-        name: "reviews"
-        file: "content/reviews.json"
-        fields:
-          - label: "Reviews"
-            name: "reviews"
-            widget: "list"
-            fields:
-              - {label: "Author Name", name: "author", widget: "string", required: true}
-              - {label: "Review Text", name: "text", widget: "text", required: true}
-              - {label: "Rating", name: "rating", widget: "number", min: 1, max: 5, default: 5, required: true}
-              - {label: "Date", name: "date", widget: "string", required: false, hint: "e.g., '2 weken geleden' or 'November 2024'"}
-
-  - name: "hero" # Homepage hero content
-    label: "Homepage Hero"
-    files:
-      - label: "Hero"
-        name: "hero"
-        file: "content/hero.json"
-        fields:
-          - {label: "Titel", name: "title", widget: "string"}
-          - {label: "Subtitel", name: "subtitle", widget: "string"}
-
-  - name: "openingsuren" # Store hours once, used across site
-    label: "Openingsuren"
-    files:
-      - label: "Openingsuren"
-        name: "hours"
-        file: "content/openingsuren.json"
-        fields:
-          - label: "Dagen"
-            name: "days"
-            widget: "list"
-            fields:
-              - {label: "Dag", name: "day", widget: "string"}
-              - {label: "Uren", name: "hours", widget: "string"}
-              - {label: "Gesloten", name: "closed", widget: "boolean", default: false, required: false}
 

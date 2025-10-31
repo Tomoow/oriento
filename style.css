@@ -455,12 +455,26 @@ body {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    filter: grayscale(100%);
-    transition: filter 0.3s ease;
+    /* Make logos dark to match text color token in light mode */
+    filter: grayscale(100%) brightness(0);
+    opacity: 0.7;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+/* Dark mode: invert to light color to match light text color token */
+[data-theme="dark"] .brand-item img {
+    filter: grayscale(100%) brightness(0) invert(1);
+    opacity: 0.8;
 }
 
 .brand-item:hover img {
     filter: grayscale(0%);
+    opacity: 1;
+}
+
+[data-theme="dark"] .brand-item:hover img {
+    filter: grayscale(0%);
+    opacity: 1;
 }
 
 @keyframes scroll {
@@ -531,6 +545,7 @@ a.gallery-item {
     object-fit: cover;
     display: block;
     border-radius: 8px;
+    object-position: center;
 }
 
 .gallery-overlay {
@@ -564,20 +579,48 @@ a.gallery-item {
 }
 
 /* Create varied sizes for bento box effect with dynamic filling */
-.gallery-grid .gallery-item:nth-child(1),
-.gallery-grid .gallery-item:nth-child(6),
-.gallery-grid .gallery-item:nth-child(10),
-.gallery-grid .gallery-item:nth-child(14),
-.gallery-grid .gallery-item:nth-child(18) {
-    grid-row: span 2;
+/* On desktop: reduced heights to make section less tall - max 2 rows for vertical items */
+@media (min-width: 1024px) {
+    .gallery-grid {
+        grid-auto-rows: 280px; /* Fixed row height for consistent layout */
+    }
+    
+    /* Regular items fill exactly 1 row */
+    .gallery-item {
+        height: 280px;
+    }
+    
+    /* Some items can be vertical (span 2 rows) but not more */
+    /* Height = 2 rows (280px each) + 1 gap (1rem = 16px) = 576px */
+    .gallery-grid .gallery-item:nth-child(1),
+    .gallery-grid .gallery-item:nth-child(6),
+    .gallery-grid .gallery-item:nth-child(10),
+    .gallery-grid .gallery-item:nth-child(14),
+    .gallery-grid .gallery-item:nth-child(18) {
+        grid-row: span 2;
+        height: calc(280px * 2 + 1rem); /* Exactly 2 rows + gap */
+    }
+    
+    /* Horizontal items (span 2 columns) still fill 1 row height */
+    .gallery-grid .gallery-item:nth-child(3),
+    .gallery-grid .gallery-item:nth-child(7),
+    .gallery-grid .gallery-item:nth-child(11),
+    .gallery-grid .gallery-item:nth-child(15),
+    .gallery-grid .gallery-item:nth-child(19) {
+        grid-column: span 2;
+        height: 280px; /* Same as regular items */
+    }
 }
 
-.gallery-grid .gallery-item:nth-child(3),
-.gallery-grid .gallery-item:nth-child(7),
-.gallery-grid .gallery-item:nth-child(11),
-.gallery-grid .gallery-item:nth-child(15),
-.gallery-grid .gallery-item:nth-child(19) {
-    grid-column: span 2;
+/* Keep original spans for smaller screens */
+@media (max-width: 1023px) {
+    .gallery-grid .gallery-item:nth-child(1),
+    .gallery-grid .gallery-item:nth-child(6),
+    .gallery-grid .gallery-item:nth-child(10),
+    .gallery-grid .gallery-item:nth-child(14),
+    .gallery-grid .gallery-item:nth-child(18) {
+        grid-row: span 2;
+    }
 }
 
 /* Main Content */
