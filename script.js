@@ -1187,7 +1187,9 @@ function loadPopupModal() {
             }
             
             // Create a content hash based on image, title, and text to detect changes
-            const contentHash = btoa((data.image || '') + '|' + (data.title || '') + '|' + (data.text || '')).substring(0, 16);
+            // Use encodeURIComponent to handle Unicode characters before btoa
+            const contentString = (data.image || '') + '|' + (data.title || '') + '|' + (data.text || '');
+            const contentHash = btoa(encodeURIComponent(contentString)).substring(0, 16);
             
             // Check if this specific popup content was already dismissed
             const dismissedHash = localStorage.getItem('popup-dismissed-hash');
@@ -1260,6 +1262,12 @@ function loadPopupModal() {
             localStorage.setItem('popup-dismissed-hash', contentHash);
         }, 300);
     }
+    
+    // Helper function for debugging - can be called from console: clearPopupDismissal()
+    window.clearPopupDismissal = function() {
+        localStorage.removeItem('popup-dismissed-hash');
+        console.log('Popup dismissal cleared. Refresh the page to see the popup again.');
+    };
 }
 
 // Initialize modal when DOM is loaded
