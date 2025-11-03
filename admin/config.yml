@@ -2,6 +2,11 @@ backend:
   name: git-gateway
   branch: main # Branch to update (optional; defaults to master)
 
+# Enable local backend for development (set to false for production)
+# When true, allows local development without Netlify Identity
+# When false, use 'netlify dev' command to run locally with Identity
+local_backend: true
+
 # Uncomment below to enable drafts
 # publish_mode: editorial_workflow
 
@@ -18,13 +23,21 @@ collections:
         name: "announcements"
         file: "content/announcements.json"
         fields:
-          - {label: "Enable Announcements", name: "enabled", widget: "boolean", default: false}
           - label: "Announcements"
             name: "announcements"
             widget: "list"
             fields:
-              - {label: "Text", name: "text", widget: "text", required: true}
-              - {label: "Active", name: "active", widget: "boolean", default: true}
+              - {label: "Text", name: "text", widget: "markdown", required: true, hint: "Gebruik de toolbar voor bold, italic, underline en andere opmaak"}
+              - {label: "Active", name: "active", widget: "boolean", default: true, hint: "Schakel deze toggle aan om deze aankondiging weer te geven"}
+      
+      - label: "Plaats een afbeelding aankondiging"
+        name: "popup"
+        file: "content/popup.json"
+        fields:
+          - {label: "Popup inschakelen", name: "enabled", widget: "boolean", default: false, hint: "Schakel deze popup in om deze weer te geven aan bezoekers"}
+          - {label: "Afbeelding", name: "image", widget: "image", required: false}
+          - {label: "Titel", name: "title", widget: "string", required: false}
+          - {label: "Tekst", name: "text", widget: "markdown", required: false, hint: "Je kunt <br> gebruiken voor nieuwe regels"}
   
   - name: "hero" # Homepage hero content
     label: "Welkom tekstje"
@@ -34,7 +47,7 @@ collections:
         file: "content/hero.json"
         fields:
           - {label: "Titel", name: "title", widget: "string"}
-          - {label: "Subtitel", name: "subtitle", widget: "string"}
+          - {label: "Subtitel", name: "subtitle", widget: "markdown", required: false, hint: "Gebruik de toolbar voor bold, italic, underline en andere opmaak"}
 
   - name: "openingsuren" # Store hours once, used across site
     label: "Openingsuren"
@@ -43,13 +56,41 @@ collections:
         name: "hours"
         file: "content/openingsuren.json"
         fields:
-          - label: "Dagen"
-            name: "days"
-            widget: "list"
-            fields:
-              - {label: "Dag", name: "day", widget: "string"}
-              - {label: "Uren", name: "hours", widget: "string"}
-              - {label: "Gesloten", name: "closed", widget: "boolean", default: false, required: false}
+          - label: "Maandag"
+            name: "maandag"
+            widget: "string"
+            required: false
+            hint: "Bijvoorbeeld: '10:00 - 12:00 en 14:00 - 18:00' of 'Gesloten'"
+          - label: "Dinsdag"
+            name: "dinsdag"
+            widget: "string"
+            required: false
+            hint: "Bijvoorbeeld: '10:00 - 12:00 en 14:00 - 18:00' of 'Gesloten'"
+          - label: "Woensdag"
+            name: "woensdag"
+            widget: "string"
+            required: false
+            hint: "Bijvoorbeeld: '10:00 - 12:00 en 14:00 - 18:00' of 'Gesloten'"
+          - label: "Donderdag"
+            name: "donderdag"
+            widget: "string"
+            required: false
+            hint: "Bijvoorbeeld: '10:00 - 12:00 en 14:00 - 18:00' of 'Gesloten'"
+          - label: "Vrijdag"
+            name: "vrijdag"
+            widget: "string"
+            required: false
+            hint: "Bijvoorbeeld: '10:00 - 12:00 en 14:00 - 18:00' of 'Gesloten'"
+          - label: "Zaterdag"
+            name: "zaterdag"
+            widget: "string"
+            required: false
+            hint: "Bijvoorbeeld: '10:00 - 12:00 en 14:00 - 18:00' of 'Gesloten'"
+          - label: "Zondag"
+            name: "zondag"
+            widget: "string"
+            required: false
+            hint: "Bijvoorbeeld: '10:00 - 12:00 en 14:00 - 18:00' of 'Gesloten'"
   
   - name: "brands" # Brands collection
     label: "Carrousel met merken" # Used in the UI
@@ -66,9 +107,9 @@ collections:
               - {label: "Logo", name: "logo", widget: "image", required: true}
   
   - name: "gallery" # Gallery (bento box on homepage)
-    label: "Gallerij afbeeldingen"
+    label: "Moodboard afbeeldingen"
     files:
-      - label: "Wijzig de afbeeldingen in de gallerij"
+      - label: "Wijzig de afbeeldingen op het moodboard"
         name: "gallery"
         file: "content/gallery.json"
         fields:
@@ -80,21 +121,6 @@ collections:
               - {label: "Alt Text", name: "alt", widget: "string", required: false}
               - {label: "Link", name: "href", widget: "string", required: false, hint: "Optional link when clicking the image"}
   
-  - name: "reviews" # Reviews collection
-    label: "Google reviews" # Used in the UI
-    files: # File-based collection for a single JSON file
-      - label: "Reviews aanpassen"
-        name: "reviews"
-        file: "content/reviews.json"
-        fields:
-          - label: "Reviews"
-            name: "reviews"
-            widget: "list"
-            fields:
-              - {label: "Author Name", name: "author", widget: "string", required: true}
-              - {label: "Review Text", name: "text", widget: "text", required: true}
-              - {label: "Rating", name: "rating", widget: "number", min: 1, max: 5, default: 5, required: true}
-              - {label: "Date", name: "date", widget: "string", required: false, hint: "e.g., '2 weken geleden' or 'November 2024'"}
 
   - name: "products" # Products collection
     label: "Collectie" # Used in the UI
@@ -102,67 +128,39 @@ collections:
       - label: "Collectie wijzigen"
         name: "products"
         file: "content/products.json"
+        create: true
         fields:
           - label: "Juwelen"
             name: "juwelen"
-            widget: "object"
+            widget: "list"
+            default: []
+            summary: "{{fields.alt}}"
             fields:
-              - label: "Subcategorieën"
-                name: "subcategories"
-                widget: "list"
-                summary: "{{fields.subcategory}} ({{fields.items.length}} items)"
-                fields:
-                  - {label: "Subcategory name", name: "subcategory", widget: "string", required: true}
-                  - label: "Items"
-                    name: "items"
-                    widget: "list"
-                    fields:
-                      - {label: "Image", name: "image", widget: "image", required: true}
-                      - {label: "Brand name", name: "alt", widget: "string", required: false}
-                      - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                      - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
+              - {label: "Image", name: "image", widget: "image", required: true, hint: "Upload de productafbeelding"}
+              - {label: "Brand name", name: "alt", widget: "string", required: false, hint: "Naam van het merk"}
+              - {label: "New", name: "new", widget: "boolean", default: false, required: false, hint: "Markeer als nieuw product"}
+              - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false, hint: "Markeer als cadeautip"}
 
           - label: "Accessoires"
             name: "accessoires"
-            widget: "object"
+            widget: "list"
+            default: []
+            summary: "{{fields.alt}}"
             fields:
-              - label: "Subcategorieën"
-                name: "subcategories"
-                widget: "list"
-                summary: "{{fields.subcategory}} ({{fields.items.length}} items)"
-                fields:
-                  - {label: "Subcategory name", name: "subcategory", widget: "string", required: true}
-                  - label: "Items"
-                    name: "items"
-                    widget: "list"
-                    fields:
-                      - {label: "Image", name: "image", widget: "image", required: true}
-                      - {label: "Brand name", name: "alt", widget: "string", required: false}
-                      - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                      - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
+              - {label: "Image", name: "image", widget: "image", required: true, hint: "Upload de productafbeelding"}
+              - {label: "Brand name", name: "alt", widget: "string", required: false, hint: "Naam van het merk"}
+              - {label: "New", name: "new", widget: "boolean", default: false, required: false, hint: "Markeer als nieuw product"}
+              - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false, hint: "Markeer als cadeautip"}
 
           - label: "Wonen"
             name: "wonen"
-            widget: "object"
+            widget: "list"
+            default: []
+            summary: "{{fields.alt}}"
             fields:
-              - label: "Subcategorieën"
-                name: "subcategories"
-                widget: "list"
-                summary: "{{fields.subcategory}} ({{fields.items.length}} items)"
-                fields:
-                  - {label: "Subcategory name", name: "subcategory", widget: "string", required: true}
-                  - label: "Items"
-                    name: "items"
-                    widget: "list"
-                    fields:
-                      - {label: "Image", name: "image", widget: "image", required: true}
-                      - {label: "Brand name", name: "alt", widget: "string", required: false}
-                      - {label: "New", name: "new", widget: "boolean", default: false, required: false}
-                      - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false}
+              - {label: "Image", name: "image", widget: "image", required: true, hint: "Upload de productafbeelding"}
+              - {label: "Brand name", name: "alt", widget: "string", required: false, hint: "Naam van het merk"}
+              - {label: "New", name: "new", widget: "boolean", default: false, required: false, hint: "Markeer als nieuw product"}
+              - {label: "Cadeautip", name: "cadeautip", widget: "boolean", default: false, required: false, hint: "Markeer als cadeautip"}
 
-      - label: "Pop-up tekstje wijzigen"
-        name: "modal-text"
-        file: "content/modal-text.json"
-        fields:
-          - {label: "Modal Tekst", name: "text", widget: "markdown", required: true, hint: "De tekst die wordt getoond in de product pop-up. Je kunt <br> gebruiken voor nieuwe regels."}
 

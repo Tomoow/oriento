@@ -1,11 +1,9 @@
 {
-  "days": [
-    { "day": "Maandag", "hours": "Gesloten", "closed": true },
-    { "day": "Dinsdag", "hours": "10:00 - 12:00 en 14:00 - 18:00", "closed": false },
-    { "day": "Woensdag", "hours": "10:00 - 12:00 en 14:00 - 18:00", "closed": false },
-    { "day": "Donderdag", "hours": "14:00 - 18:00", "closed": false },
-    { "day": "Vrijdag", "hours": "10:00 - 12:00 en 14:00 - 18:00", "closed": false },
-    { "day": "Zaterdag", "hours": "10:00 - 12:00 en 14:00 - 18:00", "closed": false },
-    { "day": "Zondag", "hours": "Gesloten", "closed": true }
-  ]
+  "maandag": "Gesloten",
+  "dinsdag": "10:00 - 12:00 en 14:00 - 18:00",
+  "woensdag": "10:00 - 12:00 en 14:00 - 18:00",
+  "donderdag": "14:00 - 18:00",
+  "vrijdag": "10:00 - 12:00 en 14:00 - 18:00",
+  "zaterdag": "10:00 - 12:00 en 14:00 - 18:00",
+  "zondag": "Gesloten"
 }

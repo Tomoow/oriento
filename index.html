@@ -16,7 +16,7 @@
             <div class="announcement-content">
                 <i data-lucide="alert-triangle" class="announcement-icon"></i>
                 <div class="announcement-text" id="announcement-text"></div>
-                <button class="icon-button announcement-close" id="announcement-close" aria-label="Close announcement">
+                <button class="icon-button announcement-close" id="announcement-close" aria-label="Close announcement" data-umami-event="Close Announcement">
                     <i data-lucide="x"></i>
                 </button>
             </div>
@@ -28,15 +28,23 @@
                     <img src="img/logo.svg" alt="Oriento Logo">
                 </a>
                 <nav class="main-nav">
-                    <button class="hamburger" aria-label="Menu">
+                    <div class="header-social">
+                        <a href="https://www.facebook.com/profile.php?id=100063604631891" target="_blank" aria-label="Facebook" data-umami-event="Social - Facebook">
+                            <i data-lucide="facebook"></i>
+                        </a>
+                        <a href="instagram://user?username=oriento_home.fashion" data-fallback="https://www.instagram.com/oriento_home.fashion/" class="instagram-link" aria-label="Instagram" data-umami-event="Social - Instagram">
+                            <i data-lucide="instagram"></i>
+                        </a>
+                    </div>
+                    <button class="hamburger" aria-label="Menu" data-umami-event="Toggle Menu">
                         <span></span>
                         <span></span>
                         <span></span>
                     </button>
                     <ul class="nav-menu">
-                        <li><a href="/" class="active"><i data-lucide="home"></i> Home</a></li>
-                        <li><a href="/collectie.html"><i data-lucide="shopping-bag"></i> Collectie</a></li>
-                        <li><a href="/about.html"><i data-lucide="users"></i> Over ons</a></li>
+                        <li><a href="/" class="active" data-umami-event="Nav - Home"><i data-lucide="home"></i> Home</a></li>
+                        <li><a href="/collectie.html" data-umami-event="Nav - Collectie"><i data-lucide="shopping-bag"></i> Collectie</a></li>
+                        <li><a href="/about.html" data-umami-event="Nav - Over ons"><i data-lucide="users"></i> Over ons</a></li>
                     </ul>
                 </nav>
             </div>
@@ -48,8 +56,8 @@
             <h1>Welkom bij Oriento</h1>
             <p class="hero-subtitle">Laat je inspireren door onze verfijnde collectie juwelen, accessoires en woondecoratie. Kom langs in onze winkel in Zwevegem en ontdek het volledige aanbod.</p>
             <div class="hero-buttons">
-                <a href="/collectie.html" class="btn btn-primary">Ontdek onze favorieten</a>
-                <button class="btn btn-link" id="openingsuren-btn">Openingsuren</button>
+                <a href="/collectie.html" class="btn btn-primary" data-umami-event="Hero - Ontdek onze favorieten">Ontdek onze favorieten</a>
+                <button class="btn btn-link" id="openingsuren-btn" data-umami-event="Hero - Openingsuren">Openingsuren</button>
             </div>
         </div>
     </div>
@@ -65,28 +73,28 @@
             <h2>Shop our Instagram</h2>
         </div>
         <div class="gallery-grid">
-            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/accessoire 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/juwelen 08.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
-            <a href="/collectie.html" class="gallery-item"><img src="img/wonen 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/juwelen 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/juwelen 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/juwelen 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/juwelen 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/juwelen 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/juwelen 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/juwelen 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/accessoire 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/accessoire 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/accessoire 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/accessoire 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/accessoire 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/accessoire 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/accessoire 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/juwelen 08.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/wonen 01.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/wonen 02.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/wonen 03.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/wonen 04.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/wonen 05.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/wonen 06.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
+            <a href="/collectie.html" class="gallery-item" data-umami-event="Gallery - Bekijk collectie"><img src="img/wonen 07.png" alt="Gallery"><div class="gallery-overlay">Bekijk onze collectie</div></a>
 
         </div>
     </section>
@@ -95,11 +103,11 @@
     <section class="reviews-section">
         <div class="reviews-container">
             <div class="reviews-title-wrapper">
-                <button class="reviews-arrow reviews-arrow-left" id="reviews-arrow-left" aria-label="Vorige reviews">
+                <button class="reviews-arrow reviews-arrow-left" id="reviews-arrow-left" aria-label="Vorige reviews" data-umami-event="Reviews - Previous">
                     <i data-lucide="chevron-left"></i>
                 </button>
                 <h2 class="reviews-title">Wat onze klanten zeggen</h2>
-                <button class="reviews-arrow reviews-arrow-right" id="reviews-arrow-right" aria-label="Volgende reviews">
+                <button class="reviews-arrow reviews-arrow-right" id="reviews-arrow-right" aria-label="Volgende reviews" data-umami-event="Reviews - Next">
                     <i data-lucide="chevron-right"></i>
                 </button>
             </div>
@@ -109,7 +117,7 @@
                 </div>
             </div>
             <div class="reviews-cta">
-                <a href="https://www.google.com/search?sca_esv=4371f740622c0d3e&sxsrf=AE3TifPc0r9fVjbLYAj7dl53oH7vtdg8Yw:1761746015380&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-Exy8w2iexJ7Dw5ArklsCM_ToAhp0EfLw9WPoLhGnfW67JBSFsQz5SXsifFouY8GTXH6tKbcD7cu4MWC-cdJ6e1esfekA&q=Oriento+Reviews&sa=X&ved=2ahUKEwjul7mrx8mQAxVCQ6QEHQ1uEhAQ0bkNegQIKhAE&biw=2327&bih=902&dpr=1.1" target="_blank" class="btn btn-link">
+                <a href="https://www.google.com/search?sca_esv=4371f740622c0d3e&sxsrf=AE3TifPc0r9fVjbLYAj7dl53oH7vtdg8Yw:1761746015380&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-Exy8w2iexJ7Dw5ArklsCM_ToAhp0EfLw9WPoLhGnfW67JBSFsQz5SXsifFouY8GTXH6tKbcD7cu4MWC-cdJ6e1esfekA&q=Oriento+Reviews&sa=X&ved=2ahUKEwjul7mrx8mQAxVCQ6QEHQ1uEhAQ0bkNegQIKhAE&biw=2327&bih=902&dpr=1.1" target="_blank" class="btn btn-link" data-umami-event="Reviews - Leave Review">
                     Laat een review achter <i data-lucide="arrow-right"></i>
                 </a>
             </div>
@@ -122,27 +130,43 @@
         </div>
     </main>
 
-    <!-- Modal for retour information -->
-    <div id="retour-modal" class="modal">
-        <div class="modal-content">
-            <button class="icon-button modal-close" aria-label="Close modal">
+    <!-- Popup Modal (shown on page load if enabled) -->
+    <div id="popup-modal" class="modal">
+        <div class="modal-content popup-modal-content">
+            <button class="icon-button modal-close popup-close" aria-label="Close popup" data-umami-event="Close Popup Modal">
                 <i data-lucide="x"></i>
             </button>
-            <div id="retour-content"></div>
+            <div class="popup-modal-body">
+                <div class="popup-image-wrapper" id="popup-image-wrapper">
+                    <img id="popup-image" src="" alt="Popup">
+                </div>
+                <h2 id="popup-title"></h2>
+                <div id="popup-text" class="popup-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Privacy -->
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <button class="icon-button modal-close" aria-label="Close modal" data-umami-event="Close Privacy Modal">
+                <i data-lucide="x"></i>
+            </button>
+            <div id="privacy-content"></div>
         </div>
     </div>
 
     <!-- Modal for opening hours -->
     <div id="openingsuren-modal" class="modal">
         <div class="modal-content">
-            <button class="icon-button modal-close openingsuren-close" aria-label="Close openingsuren">
+            <button class="icon-button modal-close openingsuren-close" aria-label="Close openingsuren" data-umami-event="Close Openingsuren Modal">
                 <i data-lucide="x"></i>
             </button>
             <h2>Openingsuren</h2>
             <div class="modal-hours">
                 <div class="modal-day-hours">
                     <span class="modal-day">Maandag</span>
-                    <span class="modal-hours-text closed">Gesloten</span>
+                    <span class="modal-hours-text">Gesloten</span>
                 </div>
                 <div class="modal-day-hours">
                     <span class="modal-day">Dinsdag</span>
@@ -166,12 +190,12 @@
                 </div>
                 <div class="modal-day-hours">
                     <span class="modal-day">Zondag</span>
-                    <span class="modal-hours-text closed">Gesloten</span>
+                    <span class="modal-hours-text">Gesloten</span>
                 </div>
             </div>
             <div class="modal-navigation">
-                <a href="https://waze.com/ul?q=Otegemstraat%2031,%208550%20Zwevegem,%20Belgium" target="_blank" class="btn btn-outline waze-mobile">Open in Waze</a>
-                <a href="https://www.google.com/maps/search/?api=1&query=Otegemstraat+31,+8550+Zwevegem,+Belgium" target="_blank" class="btn btn-outline">Open in Google Maps</a>
+                <a href="https://waze.com/ul?q=Otegemstraat%2031,%208550%20Zwevegem,%20Belgium" target="_blank" class="btn btn-outline waze-mobile" data-umami-event="Open Waze">Open in Waze</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=Otegemstraat+31,+8550+Zwevegem,+Belgium" target="_blank" class="btn btn-outline" data-umami-event="Open Google Maps">Open in Google Maps</a>
             </div>
         </div>
     </div>
@@ -201,7 +225,7 @@
                 <div class="hours-grid">
                     <div class="day-hours">
                         <span class="day">Maandag</span>
-                        <span class="hours closed">Gesloten</span>
+                        <span class="hours">Gesloten</span>
                     </div>
                     <div class="day-hours">
                         <span class="day">Dinsdag</span>
@@ -225,7 +249,7 @@
                     </div>
                     <div class="day-hours">
                         <span class="day">Zondag</span>
-                        <span class="hours closed">Gesloten</span>
+                        <span class="hours">Gesloten</span>
                     </div>
                 </div>
             </div>
@@ -241,16 +265,14 @@
         <div class="footer-bottom">
             <div class="footer-bottom-content">
                 <div class="footer-bottom-left">
-                    <button type="button" id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode" role="switch" aria-checked="false">
+                    <button type="button" id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode" role="switch" aria-checked="false" data-umami-event="Toggle Dark Mode">
                         <span class="toggle-slider">
                             <span class="toggle-thumb"></span>
                         </span>
                         <span class="toggle-label">Dark mode</span>
                     </button>
                     <span class="footer-separator">|</span>
-                    <a href="#" class="footer-bottom-link" data-modal="retour">Retour</a>
-                    <span class="footer-separator">|</span>
-                    <a href="#" class="footer-bottom-link" data-modal="algemene-voorwaarden">Privacy</a>
+                    <a href="#" class="footer-bottom-link" data-modal="algemene-voorwaarden" data-umami-event="Open Privacy Modal">Privacy</a>
                 </div>
                 <div class="footer-copyright">
                     <p>© Oriento 2025</p>

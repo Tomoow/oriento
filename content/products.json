@@ -1,188 +1,122 @@
 {
-  "juwelen": {
-    "subcategories": [
-      {
-        "subcategory": "oorbellen",
-        "items": [
-          {
-            "new": true,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-04.webp",
-            "alt": "Christine Bekaert"
-          },
-          {
-            "new": true,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-14.webp",
-            "alt": "Christine Bekaert"
-          },
-          {
-            "new": true,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-03.webp",
-            "alt": "Souviner De Pomme"
-          },
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-19.webp",
-            "alt": "Souvenirs De Pomme"
-          },
-          {
-            "new": false,
-            "cadeautip": true,
-            "image": "img/uploads/collectie-18.webp",
-            "alt": "Christine Bekaert"
-          }
-        ]
-      },
-      {
-        "subcategory": "ringen",
-        "items": [
-          {
-            "new": true,
-            "cadeautip": true,
-            "image": "img/uploads/collectie-15.webp",
-            "alt": "Melano"
-          }
-        ]
-      },
-      {
-        "subcategory": "kettingen",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-17.webp",
-            "alt": "Rebecca"
-          }
-        ]
-      }
-    ]
-  },
-  "accessoires": {
-    "subcategories": [
-      {
-        "subcategory": "handtassen",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-13.webp",
-            "alt": "Marie Martens"
-          },
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-07.webp",
-            "alt": "Marie Martens"
-          }
-        ]
-      },
-      {
-        "subcategory": "uurwerken",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": true,
-            "image": "img/uploads/collectie-10.webp",
-            "alt": "Souvenirs De Pomme"
-          },
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-11.webp",
-            "alt": "Souvenirs De Pomme"
-          }
-        ]
-      },
-      {
-        "subcategory": "sjaals",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-01.webp",
-            "alt": "Bufandy"
-          }
-        ]
-      },
-      {
-        "subcategory": "brillen",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-26.webp",
-            "alt": "Izipizi"
-          }
-        ]
-      },
-      {
-        "subcategory": "armbanden",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-24.webp",
-            "alt": "Steel & Barnett"
-          }
-        ]
-      }
-    ]
-  },
-  "wonen": {
-    "subcategories": [
-      {
-        "subcategory": "kussens-plaids",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-08.webp",
-            "alt": "Kussens & Plaids"
-          }
-        ]
-      },
-      {
-        "subcategory": "decoratie",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": true,
-            "image": "img/uploads/collectie-06.webp",
-            "alt": "Alessi"
-          }
-        ]
-      },
-      {
-        "subcategory": "stijlvol-tafelen",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-21.webp",
-            "alt": "Onderlegger"
-          },
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-22.webp",
-            "alt": "Keukenschort"
-          }
-        ]
-      },
-      {
-        "subcategory": "huisparfums",
-        "items": [
-          {
-            "new": false,
-            "cadeautip": false,
-            "image": "img/uploads/collectie-25.webp",
-            "alt": "Geurstokjes - Oxygen"
-          }
-        ]
-      }
-    ]
-  }
+  "juwelen": [
+    {
+      "new": true,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-04.webp",
+      "alt": "Christine Bekaert"
+    },
+    {
+      "new": true,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-14.webp",
+      "alt": "Christine Bekaert"
+    },
+    {
+      "new": true,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-03.webp",
+      "alt": "Souviner De Pomme"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-19.webp",
+      "alt": "Souvenirs De Pomme"
+    },
+    {
+      "new": false,
+      "cadeautip": true,
+      "image": "img/uploads/collectie-18.webp",
+      "alt": "Christine Bekaert"
+    },
+    {
+      "new": true,
+      "cadeautip": true,
+      "image": "img/uploads/collectie-15.webp",
+      "alt": "Melano"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-17.webp",
+      "alt": "Rebecca"
+    }
+  ],
+  "accessoires": [
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-13.webp",
+      "alt": "Marie Martens"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-07.webp",
+      "alt": "Marie Martens"
+    },
+    {
+      "new": false,
+      "cadeautip": true,
+      "image": "img/uploads/collectie-10.webp",
+      "alt": "Souvenirs De Pomme"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-11.webp",
+      "alt": "Souvenirs De Pomme"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-01.webp",
+      "alt": "Bufandy"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-26.webp",
+      "alt": "Izipizi"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-24.webp",
+      "alt": "Steel & Barnett"
+    }
+  ],
+  "wonen": [
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-08.webp",
+      "alt": "Kussens & Plaids"
+    },
+    {
+      "new": false,
+      "cadeautip": true,
+      "image": "img/uploads/collectie-06.webp",
+      "alt": "Alessi"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-21.webp",
+      "alt": "Onderlegger"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-22.webp",
+      "alt": "Keukenschort"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/collectie-25.webp",
+      "alt": "Geurstokjes - Oxygen"
+    }
+  ]
 }

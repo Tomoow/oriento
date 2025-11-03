@@ -14,15 +14,20 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateMenuPosition() {
         if (!navMenu || !headerWrapper) return;
         
-        const announcement = document.getElementById('announcement-banner');
-        const isAnnouncementVisible = announcement && announcement.style.display !== 'none';
-        const siteHeader = document.querySelector('.site-header');
-        const headerHeight = siteHeader ? siteHeader.offsetHeight : 80;
-        const announcementHeight = isAnnouncementVisible ? announcement.offsetHeight : 0;
-        const totalHeight = headerHeight + announcementHeight;
+        // Only set top position on mobile screens
+        const isMobile = window.innerWidth <= 768;
         
-        // Position menu below header/announcement instead of using padding
-        navMenu.style.top = totalHeight + 'px';
+        if (isMobile) {
+            // Get the exact bottom position of the header wrapper (includes header + announcement)
+            const headerRect = headerWrapper.getBoundingClientRect();
+            const headerBottom = headerRect.bottom;
+            
+            // Position menu exactly at the bottom of header wrapper with no gap
+            navMenu.style.top = headerBottom + 'px';
+        } else {
+            // Remove top style on desktop
+            navMenu.style.top = '';
+        }
     }
     
     if (hamburger && navMenu) {
@@ -388,28 +393,13 @@ function initReviewsCarousel() {
     window.addEventListener('resize', updateArrowVisibility);
 }
 
-// Modal functionality
+// Modal functionality - Privacy modal only
 function initModal() {
-    const modal = document.getElementById('retour-modal');
-    if (!modal) return;
+    const privacyModal = document.getElementById('privacy-modal');
+    const modalContent = document.getElementById('privacy-content');
+    if (!privacyModal || !modalContent) return;
     
-    const modalContent = document.getElementById('retour-content');
-    const closeBtn = modal.querySelector('.modal-close');
-    
-    // Retour content (NL)
-    const retourContent = `
-        <h2>Retour & Ruilen</h2>
-        <p><strong>Cadeau of toch niet helemaal wat je zocht?</strong><br>
-        Geen probleem! We ruilen graag om voor een ander exemplaar, zodat je helemaal tevreden bent.</p>
-        <p><strong>Let op:</strong></p>
-        <ul>
-            <li>We nemen geen gebruikte producten terug om hygiënische redenen (bijvoorbeeld oorbellen die al gedragen zijn).</li>
-            <li>Vergeet je kasticket niet, zo kunnen we alles snel regelen.</li>
-        </ul>
-        <p><strong>Wettelijke info:</strong><br>
-        Bij aankopen in de winkel is er geen verplicht recht op retour (behalve bij defecten), maar wij doen dit graag als service.</p>
-        <p>Bedankt voor je begrip en veel plezier met je aankoop!</p>
-    `;
+    const closeBtn = privacyModal.querySelector('.modal-close');
     
     // Privacy content
     const privacyContent = `
@@ -425,42 +415,40 @@ function initModal() {
         </ul>
     `;
     
-           // Modal trigger logic
-           document.querySelectorAll('.footer-link, .footer-bottom-link').forEach(link => {
-               link.addEventListener('click', function(e) {
-                   e.preventDefault();
-                   const modalType = this.getAttribute('data-modal');
-                   
-                   if (modalType === 'retour') {
-                       modalContent.innerHTML = retourContent;
-                   } else if (modalType === 'algemene-voorwaarden') {
-                       modalContent.innerHTML = privacyContent;
-                   }
-                   
-                   // Use flex for mobile bottom sheet, block for desktop
-                   const isMobile = window.innerWidth <= 768;
-                   modal.style.display = isMobile ? 'flex' : 'block';
-                   // force reflow before adding class to ensure transition
-                   // eslint-disable-next-line no-unused-expressions
-                   modal.offsetHeight;
-                   modal.classList.add('show');
-               });
-           });
-    
-           // Close modal
-           function closeModal() {
-               modal.classList.remove('show');
-               // wait for transition to finish before hiding
-               setTimeout(() => {
-                   modal.style.display = 'none';
-               }, 300);
-           }
-    
+    // Modal trigger logic
+    document.querySelectorAll('.footer-link, .footer-bottom-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const modalType = this.getAttribute('data-modal');
+            
+            if (modalType === 'algemene-voorwaarden') {
+                modalContent.innerHTML = privacyContent;
+                
+                // Use flex for mobile bottom sheet, block for desktop
+                const isMobile = window.innerWidth <= 768;
+                privacyModal.style.display = isMobile ? 'flex' : 'block';
+                // force reflow before adding class to ensure transition
+                // eslint-disable-next-line no-unused-expressions
+                privacyModal.offsetHeight;
+                privacyModal.classList.add('show');
+            }
+        });
+    });
+
+    // Close modal
+    function closeModal() {
+        privacyModal.classList.remove('show');
+        // wait for transition to finish before hiding
+        setTimeout(() => {
+            privacyModal.style.display = 'none';
+        }, 300);
+    }
+
     closeBtn.addEventListener('click', closeModal);
     
     // Close modal when clicking outside
     window.addEventListener('click', function(event) {
-        if (event.target === modal) {
+        if (event.target === privacyModal) {
             closeModal();
         }
     });
@@ -506,108 +494,92 @@ function loadProducts() {
         .then(data => {
             if (!data) return;
             
-            // New schema: nested objects per category -> subcategory -> list of products
-            // Example: data.juwelen.oorbellen = [{ image, alt, new, cadeautip }, ...]
+            // Support multiple schema formats for backward compatibility:
+            // 1. New simplified: data.juwelen = [{ image, alt, new, cadeautip }, ...] (direct array)
+            // 2. Intermediate: data.juwelen.items = [{ image, alt, new, cadeautip }, ...]
+            // 3. Old: data.juwelen.subcategories = [{ subcategory, items: [...] }, ...]
             const categoryMap = {};
             const categories = ['juwelen', 'accessoires', 'wonen'];
+            
             categories.forEach(cat => {
                 if (!data[cat]) return;
-                categoryMap[cat] = {};
-                const subs = Array.isArray(data[cat].subcategories) ? data[cat].subcategories : [];
-                subs.forEach(entry => {
-                    const sub = entry && entry.subcategory;
-                    if (!sub) return;
-                    const items = Array.isArray(entry.items) ? entry.items : [];
-                    categoryMap[cat][sub] = items.map(item => ({
-                        category: cat,
-                        subcategory: sub,
-                        image: item.image,
-                        alt: item.alt,
-                        brand: item.brand,
-                        new: !!item.new,
-                        cadeautip: !!item.cadeautip
-                    }));
-                });
+                
+                let items = [];
+                
+                // Check if category is directly an array (new simplified structure)
+                if (Array.isArray(data[cat])) {
+                    items = data[cat];
+                }
+                // Check for items property (intermediate structure)
+                else if (Array.isArray(data[cat].items)) {
+                    items = data[cat].items;
+                }
+                // Fall back to old structure: items nested in subcategories
+                else if (Array.isArray(data[cat].subcategories)) {
+                    data[cat].subcategories.forEach(entry => {
+                        if (entry && Array.isArray(entry.items)) {
+                            items = items.concat(entry.items);
+                        }
+                    });
+                }
+                
+                categoryMap[cat] = items.map(item => ({
+                    category: cat,
+                    image: item.image,
+                    alt: item.alt,
+                    brand: item.brand,
+                    new: !!item.new,
+                    cadeautip: !!item.cadeautip
+                }));
             });
             
-            const hasAny = Object.keys(categoryMap).some(cat => Object.keys(categoryMap[cat]).some(sub => (categoryMap[cat][sub] || []).length > 0));
+            const hasAny = Object.keys(categoryMap).some(cat => categoryMap[cat].length > 0);
             if (!hasAny) {
                 initProductScrollAnimations();
                 initProductModal();
                 return;
             }
 
-            // Rebuild sidebar and content dynamically (configurable sections)
-            const sidebarList = document.querySelector('.category-list');
+            // Ensure category sections exist in HTML (they should already be there)
             const collectionMain = document.querySelector('.collection-main');
-            if (sidebarList && collectionMain) {
-                // Sidebar
-                sidebarList.innerHTML = Object.keys(categoryMap).map(category => {
-                    const subLinks = Object.keys(categoryMap[category]).map(sub => (
-                        `<li><a href="#${category}-${sub}" class="subcategory-link" data-category="${category}" data-subcategory="${sub}">${formatLabel(sub)}</a></li>`
-                    )).join('');
-                    return `
-                        <li class="category-item">
-                            <a href="#${category}" class="category-link" data-category="${category}">
-                                <h3>${formatLabel(category)}</h3>
-                            </a>
-                            <ul class="subcategory-list">${subLinks}</ul>
-                        </li>
-                    `;
-                }).join('');
-
-                // Content sections
-                collectionMain.innerHTML = Object.keys(categoryMap).map(category => {
-                    const subSections = Object.keys(categoryMap[category]).map(sub => (
-                        `
-                        <div id="${category}-${sub}" class="subcategory-section" data-subcategory="${sub}">
-                            <h2>${formatLabel(sub)}</h2>
-                            <div class="product-grid"></div>
-                        </div>
-                        `
-                    )).join('');
-                    return `
-                        <section id="${category}" class="category-section" data-category="${category}">
-                            <h1>${formatLabel(category)}</h1>
-                            ${subSections}
-                        </section>
-                    `;
-                }).join('');
-
-                // Re-init sidebar interactions after rebuilding
-                initCollectionSidebar();
-            }
+            if (!collectionMain) return;
             
-            // Render products in their respective grids
+            // Render products in their respective category sections
             Object.keys(categoryMap).forEach(category => {
-                Object.keys(categoryMap[category]).forEach(subcategory => {
-                    const section = document.getElementById(`${category}-${subcategory}`);
-                    const grid = section ? section.querySelector('.product-grid') : null;
-                    if (!grid) return;
+                const section = document.getElementById(category);
+                if (!section) return;
+                
+                // Find or create product grid in this section
+                let grid = section.querySelector('.product-grid');
+                if (!grid) {
+                    grid = document.createElement('div');
+                    grid.className = 'product-grid';
+                    section.appendChild(grid);
+                }
 
-                    const html = categoryMap[category][subcategory].map(product => {
-                        // Normalize image path like in loadBrands
-                        let imagePath = product.image || '';
-                        if (imagePath.startsWith('/')) imagePath = imagePath.substring(1);
-                        if (imagePath.startsWith('img/uploads/')) {
-                            imagePath = imagePath.replace('img/uploads/', 'static/img/uploads/');
-                        }
-                        const newBadge = product.new ? '<span class="product-new-badge">NEW</span>' : '';
-                        const cadeautipBadge = product.cadeautip ? '<span class="product-cadeautip-badge">CADEAUTIP</span>' : '';
-                        return `
-                            <div class="product-item" data-image="${encodeURI(imagePath)}" data-alt="${product.alt || ''}" data-brand="${(product.alt || '').replace(/"/g, '&quot;')}" data-new="${product.new ? 'true' : 'false'}" data-cadeautip="${product.cadeautip ? 'true' : 'false'}">
-                                <img src="${encodeURI(imagePath)}" alt="${product.alt || 'Product'}">
-                                ${newBadge}
-                                ${cadeautipBadge}
-                            </div>
-                        `;
-                    }).join('');
-                    grid.innerHTML = html;
-                });
+                const html = categoryMap[category].map(product => {
+                    // Normalize image path like in loadBrands
+                    let imagePath = product.image || '';
+                    if (imagePath.startsWith('/')) imagePath = imagePath.substring(1);
+                    if (imagePath.startsWith('img/uploads/')) {
+                        imagePath = imagePath.replace('img/uploads/', 'static/img/uploads/');
+                    }
+                    const newBadge = product.new ? '<span class="product-new-badge">NEW</span>' : '';
+                    const cadeautipBadge = product.cadeautip ? '<span class="product-cadeautip-badge">CADEAUTIP</span>' : '';
+                    return `
+                        <div class="product-item" data-image="${encodeURI(imagePath)}" data-alt="${product.alt || ''}" data-brand="${(product.alt || '').replace(/"/g, '&quot;')}" data-new="${product.new ? 'true' : 'false'}" data-cadeautip="${product.cadeautip ? 'true' : 'false'}">
+                            <img src="${encodeURI(imagePath)}" alt="${product.alt || 'Product'}">
+                            ${newBadge}
+                            ${cadeautipBadge}
+                        </div>
+                    `;
+                }).join('');
+                grid.innerHTML = html;
             });
             
-            // Initialize scroll animations after products are loaded
+            // Initialize icons for category links if not already initialized
             setTimeout(() => {
+                lucide.createIcons();
                 initProductScrollAnimations();
                 initProductModal();
             }, 100);
@@ -679,6 +651,12 @@ function initProductModal() {
     
     items.forEach(item => {
         item.addEventListener('click', async () => {
+            // Track product click in Umami
+            if (typeof umami !== 'undefined') {
+                const brand = item.querySelector('img')?.getAttribute('alt') || 'Product';
+                umami.track('Product Click', { brand: brand });
+            }
+            
             // Always derive from clicked card image to prevent stale data
             const cardImg = item.querySelector('img');
             const image = cardImg ? (cardImg.getAttribute('src') || '') : '';
@@ -757,8 +735,8 @@ function loadAnnouncements() {
             return response.json();
         })
         .then(data => {
-            // Check if announcements are enabled
-            if (!data.enabled || !data.announcements || data.announcements.length === 0) {
+            // Check if announcements exist
+            if (!data.announcements || data.announcements.length === 0) {
                 return;
             }
             
@@ -771,24 +749,66 @@ function loadAnnouncements() {
             
             // Combine all active announcements on one line (replace line breaks with spaces)
             const combinedText = activeAnnouncements.map(ann => ann.text.replace(/\n/g, ' ').trim()).join(' • ');
-            textElement.textContent = combinedText;
+            
+            // Create a content hash based on the announcement text to detect changes
+            const contentHash = btoa(combinedText).substring(0, 16);
+            
+            // Check if this specific announcement content was dismissed in this session
+            const dismissedHash = sessionStorage.getItem('announcement-dismissed-hash');
+            if (dismissedHash === contentHash) {
+                // This exact announcement was already dismissed in this session, don't show
+                banner.style.display = 'none';
+                return;
+            }
+            
+            // Convert markdown to HTML for rich text formatting
+            function markdownToHtml(text) {
+                if (!text) return '';
+                // Check if already HTML (contains tags)
+                if (text.includes('<')) {
+                    return text;
+                }
+                // Convert markdown syntax to HTML
+                return text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold **text**
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic *text*
+                    .replace(/__(.*?)__/g, '<strong>$1</strong>') // Bold __text__
+                    .replace(/_(.*?)_/g, '<em>$1</em>') // Italic _text_
+                    .replace(/~~(.*?)~~/g, '<del>$1</del>') // Strikethrough ~~text~~
+                    .replace(/<u>(.*?)<\/u>/g, '<u>$1</u>') // Underline (if using HTML)
+                    .replace(/`(.*?)`/g, '<code>$1</code>'); // Inline code `text`
+            }
+            
+            // Combine announcements with markdown conversion
+            const combinedHtml = activeAnnouncements.map(ann => markdownToHtml(ann.text.replace(/\n/g, ' ').trim())).join(' • ');
+            textElement.innerHTML = combinedHtml;
             
             // Show banner
             banner.style.display = 'block';
             
             // Initialize Lucide icons for close button
             lucide.createIcons();
+            
+            // Handle close button - set up listener here to access contentHash
+            // Use event delegation or ensure single listener by removing old one first
+            const actualCloseBtn = document.getElementById('announcement-close');
+            if (actualCloseBtn) {
+                // Remove old listeners by replacing with a clone
+                const newCloseBtn = actualCloseBtn.cloneNode(true);
+                actualCloseBtn.parentNode.replaceChild(newCloseBtn, actualCloseBtn);
+                
+                newCloseBtn.addEventListener('click', function() {
+                    banner.style.display = 'none';
+                    // Remember that this specific announcement content was dismissed in this session
+                    sessionStorage.setItem('announcement-dismissed-hash', contentHash);
+                    // Re-initialize icons after DOM change
+                    lucide.createIcons();
+                });
+            }
         })
         .catch(error => {
             console.log('Announcements not available:', error);
         });
-    
-    // Handle close button
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            banner.style.display = 'none';
-        });
-    }
 }
 
 // Initialize scroll progress bar and sticky header
@@ -933,6 +953,9 @@ function initCollectionSidebar() {
         // Mobile toggle functionality
         if (sidebarToggle) {
             sidebarToggle.addEventListener('click', function() {
+                if (typeof umami !== 'undefined') {
+                    umami.track('Sidebar Toggle');
+                }
                 if (sidebar.classList.contains('active')) {
                     closeSidebar();
                 } else {
@@ -943,7 +966,12 @@ function initCollectionSidebar() {
         
         // Close button functionality
         if (sidebarClose) {
-            sidebarClose.addEventListener('click', closeSidebar);
+            sidebarClose.addEventListener('click', function() {
+                if (typeof umami !== 'undefined') {
+                    umami.track('Sidebar Close');
+                }
+                closeSidebar();
+            });
         }
         
         // Click outside to close (on overlay)
@@ -952,10 +980,8 @@ function initCollectionSidebar() {
         }
     }
     
-    // Get current links (they may have been rebuilt)
-    const subcategoryLinks = document.querySelectorAll('.subcategory-link');
+    // Get current category links
     const categoryLinks = document.querySelectorAll('.category-link');
-    // filter buttons will be handled via delegation on sidebar nav
     
     // Dynamically calculate header height and set sidebar position
     function updateSidebarPosition() {
@@ -1002,28 +1028,12 @@ function initCollectionSidebar() {
         
         e.preventDefault();
         
-        // Get current links (they may have been rebuilt)
-        const currentSubLinks = document.querySelectorAll('.subcategory-link');
+        // Get current category links
         const currentCatLinks = document.querySelectorAll('.category-link');
         
         // Update active states
-        if (link.classList.contains('subcategory-link')) {
-            currentSubLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            
-            // Also update category link
-            const category = link.getAttribute('data-category');
-            currentCatLinks.forEach(l => {
-                if (l.getAttribute('data-category') === category) {
-                    l.classList.add('active');
-                } else {
-                    l.classList.remove('active');
-                }
-            });
-        } else {
-            currentCatLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-        }
+        currentCatLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
         
         // Close mobile sidebar
         if (window.innerWidth <= 768 && typeof closeSidebar === 'function') {
@@ -1055,12 +1065,23 @@ function initCollectionSidebar() {
                 // Handle category/subcategory links
                 const link = e.target.closest('.subcategory-link, .category-link');
                 if (link) {
+                    // Track category link click in Umami
+                    if (typeof umami !== 'undefined') {
+                        const category = link.getAttribute('data-category') || link.getAttribute('href');
+                        umami.track('Category Click', { category: category });
+                    }
                     handleLinkClick.call(link, e);
                     return;
                 }
                 // Handle filter buttons
                 const filterBtn = e.target.closest('.filter-btn');
                 if (filterBtn) {
+                    // Track filter click in Umami
+                    if (typeof umami !== 'undefined') {
+                        const filterType = filterBtn.getAttribute('data-filter');
+                        const isActive = filterBtn.classList.contains('active');
+                        umami.track('Filter Toggle', { filter: filterType, action: isActive ? 'deactivate' : 'activate' });
+                    }
                     filterBtn.classList.toggle('active');
                     // Recompute active filter buttons from the live DOM
                     window.filterButtons = newNav.querySelectorAll('.filter-btn');
@@ -1077,16 +1098,12 @@ function initCollectionSidebar() {
         const items = document.querySelectorAll('.product-item');
         if (activeFilters.length === 0) {
             items.forEach(it => (it.style.display = ''));
-            // Show all subcategory sections again
-            document.querySelectorAll('.subcategory-section').forEach(sec => {
-                sec.style.display = '';
-            });
-            // Show all main category sections again
+            // Show all category sections again
             document.querySelectorAll('.category-section').forEach(cat => {
                 cat.style.display = '';
             });
             // Restore sidebar links
-            document.querySelectorAll('.subcategory-link, .category-link').forEach(link => {
+            document.querySelectorAll('.category-link').forEach(link => {
                 link.style.display = '';
             });
             return;
@@ -1100,44 +1117,28 @@ function initCollectionSidebar() {
             it.style.display = show ? '' : 'none';
         });
 
-        // Hide subcategory sections that have 0 visible items
-        document.querySelectorAll('.subcategory-section').forEach(sec => {
-            const visibleCount = Array.from(sec.querySelectorAll('.product-grid .product-item'))
-                .filter(it => it.style.display !== 'none').length;
-            sec.style.display = visibleCount > 0 ? '' : 'none';
-        });
-
-        // Hide main categories that have 0 visible subcategory sections
+        // Hide category sections that have 0 visible items
         document.querySelectorAll('.category-section').forEach(cat => {
-            const hasVisibleSub = Array.from(cat.querySelectorAll('.subcategory-section'))
-                .some(sec => sec.style.display !== 'none');
-            cat.style.display = hasVisibleSub ? '' : 'none';
+            const visibleCount = Array.from(cat.querySelectorAll('.product-grid .product-item'))
+                .filter(it => it.style.display !== 'none').length;
+            cat.style.display = visibleCount > 0 ? '' : 'none';
         });
 
         // Sync sidebar visibility with filtered content
-        // Subcategory links
-        document.querySelectorAll('.subcategory-link').forEach(link => {
+        document.querySelectorAll('.category-link').forEach(link => {
             const targetId = link.getAttribute('href')?.substring(1);
             const target = targetId ? document.getElementById(targetId) : null;
             if (!target) return;
             link.style.display = (target.style.display === 'none') ? 'none' : '';
-        });
-        // Category links (hide if all its subcategory links are hidden)
-        document.querySelectorAll('.category-link').forEach(catLink => {
-            const category = catLink.getAttribute('data-category');
-            const subLinks = document.querySelectorAll(`.subcategory-link[data-category="${category}"]`);
-            const anyVisible = Array.from(subLinks).some(l => l.style.display !== 'none');
-            catLink.style.display = anyVisible ? '' : 'none';
         });
     }
 
     
     // Update active state on scroll
     function updateActiveOnScroll() {
-        // Get fresh references to links (they may have been rebuilt)
-        const currentSubLinks = document.querySelectorAll('.subcategory-link');
+        // Get fresh references to category links
         const currentCatLinks = document.querySelectorAll('.category-link');
-        const sections = document.querySelectorAll('.category-section, .subcategory-section');
+        const sections = document.querySelectorAll('.category-section');
         const headerHeight = document.querySelector('.header-wrapper')?.offsetHeight || 80;
         const scrollPosition = window.pageYOffset + headerHeight + 100;
         
@@ -1152,7 +1153,6 @@ function initCollectionSidebar() {
         });
         
         // Remove active state from ALL links first
-        currentSubLinks.forEach(link => link.classList.remove('active'));
         currentCatLinks.forEach(link => link.classList.remove('active'));
         
         if (activeSection) {
@@ -1160,21 +1160,106 @@ function initCollectionSidebar() {
             const matchingLink = document.querySelector(`[href="#${sectionId}"]`);
             if (matchingLink) {
                 matchingLink.classList.add('active');
-                
-                // If it's a subcategory, also highlight parent category
-                if (matchingLink.classList.contains('subcategory-link')) {
-                    const category = matchingLink.getAttribute('data-category');
-                    const categoryLink = document.querySelector(`.category-link[data-category="${category}"]`);
-                    if (categoryLink) {
-                        categoryLink.classList.add('active');
-                    }
-                }
             }
         }
     }
     
     window.addEventListener('scroll', updateActiveOnScroll, { passive: true });
     updateActiveOnScroll(); // Initial check
+}
+
+// Load and show popup modal
+function loadPopupModal() {
+    const popupModal = document.getElementById('popup-modal');
+    const popupClose = document.querySelector('.popup-close');
+    if (!popupModal || !popupClose) return; // Not on this page
+    
+    fetch('content/popup.json')
+        .then(response => {
+            if (!response.ok) {
+                return null;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data || !data.enabled) {
+                return; // Popup not enabled
+            }
+            
+            // Create a content hash based on image, title, and text to detect changes
+            const contentHash = btoa((data.image || '') + '|' + (data.title || '') + '|' + (data.text || '')).substring(0, 16);
+            
+            // Check if this specific popup content was already dismissed
+            const dismissedHash = localStorage.getItem('popup-dismissed-hash');
+            if (dismissedHash === contentHash) {
+                return; // This exact popup was already dismissed, don't show again
+            }
+            
+            // Populate modal content
+            const popupImage = document.getElementById('popup-image');
+            const popupImageWrapper = document.getElementById('popup-image-wrapper');
+            const popupTitle = document.getElementById('popup-title');
+            const popupText = document.getElementById('popup-text');
+            
+            // Set image
+            if (data.image && popupImage) {
+                let imagePath = data.image;
+                if (imagePath.startsWith('/')) imagePath = imagePath.substring(1);
+                if (imagePath.startsWith('img/uploads/')) {
+                    imagePath = imagePath.replace('img/uploads/', 'static/img/uploads/');
+                }
+                popupImage.src = imagePath;
+                popupImage.alt = data.title || 'Popup';
+                if (popupImageWrapper) {
+                    popupImageWrapper.style.display = 'block';
+                }
+            } else if (popupImageWrapper) {
+                popupImageWrapper.style.display = 'none';
+            }
+            
+            // Set title
+            if (data.title && popupTitle) {
+                popupTitle.textContent = data.title;
+            }
+            
+            // Set text
+            if (data.text && popupText) {
+                popupText.innerHTML = data.text;
+            }
+            
+            // Show modal after a short delay
+            setTimeout(() => {
+                const isMobile = window.innerWidth <= 768;
+                popupModal.style.display = isMobile ? 'flex' : 'block';
+                // Force reflow
+                popupModal.offsetHeight;
+                popupModal.classList.add('show');
+            }, 300);
+            
+            // Handle close button
+            popupClose.addEventListener('click', function() {
+                closePopup(contentHash);
+            });
+            
+            // Close when clicking outside
+            popupModal.addEventListener('click', function(event) {
+                if (event.target === popupModal) {
+                    closePopup(contentHash);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading popup:', error);
+        });
+    
+    function closePopup(contentHash) {
+        popupModal.classList.remove('show');
+        setTimeout(() => {
+            popupModal.style.display = 'none';
+            // Remember that this specific popup content was dismissed
+            localStorage.setItem('popup-dismissed-hash', contentHash);
+        }, 300);
+    }
 }
 
 // Initialize modal when DOM is loaded
@@ -1190,7 +1275,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCollectionSidebar();
     loadProducts(); // Load products from CMS
     loadReviews(); // Load Google reviews
-    loadModalText(); // Load modal text from CMS
+    loadPopupModal(); // Load and show popup modal if enabled
     
     // Ensure page starts at top to show header
     window.scrollTo(0, 0);
@@ -1204,24 +1289,29 @@ function loadHeroContent() {
         .then(r => r.json())
         .then(data => {
             if (titleEl && data.title) titleEl.textContent = data.title;
-            if (subtitleEl && data.subtitle) subtitleEl.textContent = data.subtitle;
-        })
-        .catch(() => {});
-}
-
-// Load modal text for product modal on collectie page
-function loadModalText() {
-    const modalTextEl = document.getElementById('product-modal-text');
-    if (!modalTextEl) return; // not on collectie page
-    fetch('content/modal-text.json')
-        .then(r => r.json())
-        .then(data => {
-            if (data.text) {
-                modalTextEl.innerHTML = data.text;
+            if (subtitleEl && data.subtitle) {
+                // Convert markdown to HTML for rich text formatting
+                function markdownToHtml(text) {
+                    if (!text) return '';
+                    // Check if already HTML (contains tags)
+                    if (text.includes('<')) {
+                        return text;
+                    }
+                    // Convert markdown syntax to HTML
+                    return text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold **text**
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic *text*
+                        .replace(/__(.*?)__/g, '<strong>$1</strong>') // Bold __text__
+                        .replace(/_(.*?)_/g, '<em>$1</em>') // Italic _text_
+                        .replace(/~~(.*?)~~/g, '<del>$1</del>') // Strikethrough ~~text~~
+                        .replace(/`(.*?)`/g, '<code>$1</code>'); // Inline code `text`
+                }
+                subtitleEl.innerHTML = markdownToHtml(data.subtitle);
             }
         })
         .catch(() => {});
 }
+
 // Populate all footer hours grids from CMS
 function loadOpeningsurenFooter() {
     const grids = document.querySelectorAll('.hours-grid');
@@ -1229,14 +1319,23 @@ function loadOpeningsurenFooter() {
     fetch('content/openingsuren.json')
         .then(r => r.json())
         .then(data => {
-            const days = data.days || [];
+            // Convert new structure (individual day fields) to array format
+            const daysArray = [
+                { day: 'Maandag', hours: data.maandag || '' },
+                { day: 'Dinsdag', hours: data.dinsdag || '' },
+                { day: 'Woensdag', hours: data.woensdag || '' },
+                { day: 'Donderdag', hours: data.donderdag || '' },
+                { day: 'Vrijdag', hours: data.vrijdag || '' },
+                { day: 'Zaterdag', hours: data.zaterdag || '' },
+                { day: 'Zondag', hours: data.zondag || '' }
+            ];
             const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
-            const html = days.map(d => {
+            const html = daysArray.map(d => {
                 const isToday = String(d.day).trim().toLowerCase().includes(todayName);
                 return `
                     <div class="day-hours${isToday ? ' is-today' : ''}" ${isToday ? 'aria-current="date"' : ''}>
                         <span class="day">${d.day}</span>
-                        <span class="hours ${d.closed ? 'closed' : ''}">${d.hours}</span>
+                        <span class="hours">${d.hours}</span>
                     </div>
                 `;
             }).join('');
@@ -1254,16 +1353,28 @@ function initOpeningsurenModal() {
     const closeBtn = modal.querySelector('.openingsuren-close');
     
     // Inject hours into modal
-    function renderModalHours(days) {
+    function renderModalHours(data) {
         const container = modal.querySelector('.modal-hours');
         if (!container) return;
+        
+        // Convert new structure (individual day fields) to array format
+        const daysArray = [
+            { day: 'Maandag', hours: data.maandag || '' },
+            { day: 'Dinsdag', hours: data.dinsdag || '' },
+            { day: 'Woensdag', hours: data.woensdag || '' },
+            { day: 'Donderdag', hours: data.donderdag || '' },
+            { day: 'Vrijdag', hours: data.vrijdag || '' },
+            { day: 'Zaterdag', hours: data.zaterdag || '' },
+            { day: 'Zondag', hours: data.zondag || '' }
+        ];
+        
         const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
-        container.innerHTML = days.map(d => {
+        container.innerHTML = daysArray.map(d => {
             const isToday = String(d.day).trim().toLowerCase().includes(todayName);
             return `
                 <div class="modal-day-hours${isToday ? ' is-today' : ''}" ${isToday ? 'aria-current="date"' : ''}>
                     <span class="modal-day">${d.day}</span>
-                    <span class="modal-hours-text ${d.closed ? 'closed' : ''}">${d.hours}</span>
+                    <span class="modal-hours-text">${d.hours}</span>
                 </div>
             `;
         }).join('');
@@ -1295,7 +1406,7 @@ function initOpeningsurenModal() {
     // Load hours and render into modal
     fetch('content/openingsuren.json')
       .then(r => r.json())
-      .then(data => renderModalHours(data.days || []))
+      .then(data => renderModalHours(data))
       .catch(() => {});
 }
 
@@ -1333,6 +1444,16 @@ function loadGallery() {
             grid.innerHTML = html;
             // Re-init animations after injecting
             initScrollAnimations();
+            
+            // Add Umami tracking to gallery items
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (typeof umami !== 'undefined') {
+                        umami.track('Gallery Item Click');
+                    }
+                });
+            });
         })
         .catch(() => {
             // Silent fallback to static gallery
