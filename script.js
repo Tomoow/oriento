@@ -393,7 +393,7 @@ function initReviewsCarousel() {
     window.addEventListener('resize', updateArrowVisibility);
 }
 
-// Modal functionality - Privacy modal only
+// Modal functionality - Privacy and Algemene Voorwaarden
 function initModal() {
     const privacyModal = document.getElementById('privacy-modal');
     const modalContent = document.getElementById('privacy-content');
@@ -404,15 +404,86 @@ function initModal() {
     // Privacy content
     const privacyContent = `
         <h2>Privacy</h2>
-        <p>Welkom op onze website! Deze pagina geeft informatie over onze winkel en producten.</p>
+        
         <h3>1. Doel van de website</h3>
-        <p>Onze website is uitsluitend bedoeld om informatie te delen over onze fysieke winkel en producten. Er is geen online verkoop en we vragen geen persoonlijke gegevens via deze site.</p>
+        <p>Onze website is uitsluitend bedoeld om informatie te delen over onze fysieke winkel en producten. Er is geen online verkoop van producten via deze site.</p>
+        
         <h3>2. Privacy</h3>
         <p>Wij respecteren jouw privacy.</p>
         <ul>
-            <li>We verzamelen geen persoonsgegevens via deze website.</li>
+            <li>We verzamelen geen persoonsgegevens via deze website, behalve wanneer je gebruikmaakt van specifieke functionaliteiten zoals cadeaubonnen.</li>
             <li>Voor statistieken gebruiken we Umami, een cookieloos systeem dat geen persoonlijke data opslaat.</li>
+            <li>We plaatsen geen trackingcookies en gebruiken geen advertentienetwerken.</li>
         </ul>
+        
+        <h3>3. Cadeaubonnen (binnenkort beschikbaar)</h3>
+        <p>Wanneer je een cadeaubon koopt via onze website, verwerken wij persoonsgegevens om de bestelling correct uit te voeren.</p>
+        
+        <p><strong>Welke gegevens verzamelen we?</strong></p>
+        <ul>
+            <li>Naam en e-mailadres van de koper</li>
+            <li>Naam en e-mailadres van de ontvanger</li>
+            <li>Betaalgegevens (via Gift Up en de gekoppelde betaalprovider)</li>
+        </ul>
+        
+        <p><strong>Waarom verzamelen we deze gegevens?</strong></p>
+        <ul>
+            <li>Om de cadeaubon digitaal te kunnen leveren</li>
+            <li>Om contact op te nemen bij vragen of problemen met de bestelling</li>
+        </ul>
+        
+        <p><strong>Wie heeft toegang tot deze gegevens?</strong></p>
+        <ul>
+            <li>Oriento (voor administratieve doeleinden)</li>
+            <li>Gift Up (als verwerker, conform hun privacybeleid)</li>
+        </ul>
+        
+        <p><strong>Bewaartermijn:</strong></p>
+        <p>Gegevens worden bewaard zolang nodig is voor de uitvoering van de bestelling en wettelijke verplichtingen (bijvoorbeeld boekhouding).</p>
+        
+        <p><strong>Jouw rechten:</strong></p>
+        <p>Je hebt het recht op inzage, correctie en verwijdering van jouw gegevens.<br>Neem contact op via <a href="mailto:oriento@skynet.be">oriento@skynet.be</a> voor vragen of verzoeken.</p>
+        
+        <h3>4. Externe diensten</h3>
+        <p>Onze website kan links bevatten naar externe websites of diensten. Wij zijn niet verantwoordelijk voor de privacypraktijken van deze externe partijen.</p>
+        
+        <h3>5. GDPR</h3>
+        <p>Wij verwerken persoonsgegevens conform de Algemene Verordening Gegevensbescherming (AVG/GDPR). Voor klachten kun je terecht bij de Gegevensbeschermingsautoriteit (<a href="https://www.gegevensbeschermingsautoriteit.be" target="_blank">www.gegevensbeschermingsautoriteit.be</a>).</p>
+    `;
+    
+    // Algemene Voorwaarden content
+    const algemeneVoorwaardenContent = `
+        <h2>Algemene Voorwaarden</h2>
+        <p><strong>Versie: november 2025</strong></p>
+        <p>Welkom op de website van Oriento (www.oriento.net). Door deze website te gebruiken, ga je akkoord met deze voorwaarden.</p>
+        
+        <h3>1. Doel van de website</h3>
+        <p>Onze website is uitsluitend bedoeld om informatie en sfeerbeelden te delen over onze fysieke winkel en collectie. Er is geen online verkoop van producten via deze site.</p>
+        
+        <h3>2. Inhoud en rechten</h3>
+        <p>De afbeeldingen en teksten op deze website zijn uitsluitend bedoeld ter illustratie. Wij claimen geen rechten op materiaal dat afkomstig is van externe bronnen of leveranciers. Het gebruik van deze website geeft geen rechten op de inhoud.</p>
+        
+        <h3>3. Juistheid van informatie</h3>
+        <p>Wij doen ons best om correcte en actuele informatie te tonen, maar kunnen niet garanderen dat alle informatie volledig of foutloos is.</p>
+        
+        <h3>4. Cadeaubonnen (toekomstige functionaliteit)</h3>
+        <p>Binnenkort bieden wij cadeaubonnen aan via een externe dienst (Gift Up).</p>
+        <ul>
+            <li>Cadeaubonnen worden digitaal geleverd via e-mail.</li>
+            <li>De waarde en geldigheid van de cadeaubon worden duidelijk vermeld bij aankoop.</li>
+            <li>Cadeaubonnen zijn niet inwisselbaar voor contant geld.</li>
+            <li>Het herroepingsrecht geldt tot 14 dagen na aankoop, tenzij de cadeaubon al is gebruikt.</li>
+            <li>Voor de verwerking van persoonsgegevens (naam, e-mailadres) verwijzen wij naar ons Privacybeleid.</li>
+        </ul>
+        
+        <h3>5. Externe links</h3>
+        <p>Onze website kan links bevatten naar externe websites. Wij zijn niet verantwoordelijk voor de inhoud of privacypraktijken van deze externe sites.</p>
+        
+        <h3>6. Wijzigingen</h3>
+        <p>Wij behouden ons het recht voor om deze voorwaarden op elk moment te wijzigen. De meest recente versie is altijd beschikbaar op deze website.</p>
+        
+        <h3>7. Toepasselijk recht</h3>
+        <p>Op deze voorwaarden is het Belgische recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechtbanken in België.</p>
     `;
     
     // Modal trigger logic
@@ -421,8 +492,18 @@ function initModal() {
             e.preventDefault();
             const modalType = this.getAttribute('data-modal');
             
-            if (modalType === 'algemene-voorwaarden') {
+            if (modalType === 'privacy') {
                 modalContent.innerHTML = privacyContent;
+                
+                // Use flex for mobile bottom sheet, block for desktop
+                const isMobile = window.innerWidth <= 768;
+                privacyModal.style.display = isMobile ? 'flex' : 'block';
+                // force reflow before adding class to ensure transition
+                // eslint-disable-next-line no-unused-expressions
+                privacyModal.offsetHeight;
+                privacyModal.classList.add('show');
+            } else if (modalType === 'algemene-voorwaarden') {
+                modalContent.innerHTML = algemeneVoorwaardenContent;
                 
                 // Use flex for mobile bottom sheet, block for desktop
                 const isMobile = window.innerWidth <= 768;

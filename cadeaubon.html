@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oriento - Collectie</title>
+    <title>Oriento - Cadeaubon</title>
     <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -43,87 +43,58 @@
                     </div>
                     <ul class="nav-menu">
                         <li><a href="/" data-umami-event="Nav - Home"><i data-lucide="home"></i> Home</a></li>
-                        <li><a href="/collectie.html" class="active" data-umami-event="Nav - Collectie"><i data-lucide="shopping-bag"></i> Collectie</a></li>
+                        <li><a href="/collectie.html" data-umami-event="Nav - Collectie"><i data-lucide="shopping-bag"></i> Collectie</a></li>
                         <li><a href="/about.html" data-umami-event="Nav - Over ons"><i data-lucide="users"></i> Over ons</a></li>
-                        <li><a href="/cadeaubon.html" data-umami-event="Nav - Cadeaubon"><i data-lucide="gift"></i> Cadeaubon</a></li>
+                        <li><a href="/cadeaubon.html" class="active" data-umami-event="Nav - Cadeaubon"><i data-lucide="gift"></i> Cadeaubon</a></li>
                     </ul>
                 </nav>
             </div>
         </header>
     </div>
 
-    <!-- Mobile Sidebar Toggle Button -->
-    <button class="sidebar-toggle-mobile" id="sidebar-toggle-mobile" aria-label="Toggle sidebar" data-umami-event="Sidebar Toggle">
-        <i data-lucide="align-left"></i>
-    </button>
-
-    <!-- Mobile Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-    <div class="collection-page">
-        <!-- Sidebar Navigation -->
-        <aside class="collection-sidebar" id="collection-sidebar">
-            <button class="icon-button sidebar-close" id="sidebar-close" aria-label="Close sidebar" data-umami-event="Sidebar Close">
-                <i data-lucide="x"></i>
-            </button>
-            <nav class="sidebar-nav">
-                <!-- Filters (moved to top) -->
-                <div class="sidebar-filters">
-                    <h4>Filters</h4>
-                    <div class="filter-buttons">
-                        <button type="button" class="filter-btn" data-filter="new" data-umami-event="Filter - NEW">NEW</button>
-                        <button type="button" class="filter-btn" data-filter="cadeautip" data-umami-event="Filter - CADEAUTIP">CADEAUTIP</button>
+    <section class="giftcard-section">
+        <div class="giftcard-container">
+            <!-- Tab Navigation -->
+            <div class="giftcard-tabs">
+                <button type="button" class="giftcard-tab giftcard-tab-active" data-tab="online" data-umami-event="Giftcard Tab - Online">
+                    Online
+                </button>
+                <button type="button" class="giftcard-tab" data-tab="store" data-umami-event="Giftcard Tab - Fysiek">
+                    Fysiek
+                </button>
+            </div>
+            
+            <!-- Online Cadeaubon Content (visible by default) -->
+            <div class="giftcard-content-wrapper" id="giftcard-online-content">
+                <div class="giftcard-online">
+                    <div class="giftcard-widget">
+                        <div class="coming-soon-message">
+                            <i data-lucide="gift" class="coming-soon-icon"></i>
+                            <h4>Binnenkort beschikbaar</h4>
+                            <p>We zijn bezig met de laatste voorbereidingen voor de online cadeaubon. Binnenkort kun je hier een cadeaubon kopen en direct via e-mail ontvangen.</p>
+                            <p>Tot die tijd ben je welkom in onze winkel in Zwevegem voor een prachtig ingepakte cadeaubon.</p>
+                        </div>
+                        <!-- Gift Up widget - temporarily disabled -->
+                        <!-- <div class="gift-up-target" data-site-id="6c95273a-a914-498b-dd57-08de1ad66191" data-platform="Other"></div> -->
                     </div>
                 </div>
-
-                <ul class="category-list">
-                    <li class="category-item">
-                        <a href="#juwelen" class="category-link" data-category="juwelen" data-umami-event="Category - Juwelen">
-                            <i data-lucide="gem" class="category-icon"></i>
-                            <h3>Juwelen</h3>
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#accessoires" class="category-link" data-category="accessoires" data-umami-event="Category - Accessoires">
-                            <i data-lucide="handbag" class="category-icon"></i>
-                            <h3>Accessoires</h3>
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#wonen" class="category-link" data-category="wonen" data-umami-event="Category - Wonen">
-                            <i data-lucide="house-heart" class="category-icon"></i>
-                            <h3>Wonen</h3>
-                        </a>
-                    </li>
-                </ul>
-
-                
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="collection-content">
-            <div class="collection-main">
-                <!-- Juwelen Section -->
-                <section id="juwelen" class="category-section" data-category="juwelen">
-                    <h1>Juwelen</h1>
-                    <div class="product-grid"></div>
-                </section>
-
-                <!-- Accessoires Section -->
-                <section id="accessoires" class="category-section" data-category="accessoires">
-                    <h1>Accessoires</h1>
-                    <div class="product-grid"></div>
-                </section>
-
-                <!-- Wonen Section -->
-                <section id="wonen" class="category-section" data-category="wonen">
-                    <h1>Wonen</h1>
-                    <div class="product-grid"></div>
-                </section>
             </div>
-        </main>
-    </div>
+
+            <!-- Fysieke Cadeaubon Content (hidden by default) -->
+            <div class="giftcard-content-wrapper giftcard-hidden" id="giftcard-store-content">
+                <div class="giftcard-store-card">
+                    <div class="giftcard-store-image">
+                        <img src="img/cadeaubon.webp" alt="Ingepakte cadeaubon">
+                    </div>
+                    <div class="giftcard-store-content">
+                        <h3>Bezoek onze winkel voor een prachtig ingepakte cadeaubon</h3>
+                        <p>Liever persoonlijk advies en een cadeaubon die met zorg is ingepakt? Kom dan langs in onze winkel in Zwevegem. We helpen je graag om de perfecte cadeaubon te kiezen en maken er een mooi geschenk van, klaar om te geven.</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Otegemstraat+31,+8550+Zwevegem,+Belgium" target="_blank" class="btn btn-primary" data-umami-event="Giftcard - Visit Store">Kom naar onze winkel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer class="site-footer">
         <div class="footer-container">
@@ -150,7 +121,7 @@
                 <div class="hours-grid">
                     <div class="day-hours">
                         <span class="day">Maandag</span>
-                        <span class="hours closed">Gesloten</span>
+                        <span class="hours">Gesloten</span>
                     </div>
                     <div class="day-hours">
                         <span class="day">Dinsdag</span>
@@ -174,7 +145,7 @@
                     </div>
                     <div class="day-hours">
                         <span class="day">Zondag</span>
-                        <span class="hours closed">Gesloten</span>
+                        <span class="hours">Gesloten</span>
                     </div>
                 </div>
             </div>
@@ -226,7 +197,6 @@
         </div>
     </div>
 
-
     <!-- Modal for Privacy -->
     <div id="privacy-modal" class="modal">
         <div class="modal-content">
@@ -237,28 +207,17 @@
         </div>
     </div>
 
-    <!-- Product Detail Modal -->
-    <div id="product-modal" class="modal">
-        <div class="modal-content product-modal-content">
-            <button class="icon-button modal-close" id="product-modal-close" aria-label="Close product modal" data-umami-event="Close Product Modal">
-                <i data-lucide="x"></i>
-            </button>
-            <div class="product-modal-body">
-                <div class="product-modal-media">
-                    <div class="product-modal-badges" id="product-modal-badges"></div>
-                    <img id="product-modal-image" src="" alt="Product">
-                </div>
-                <div class="product-modal-info">
-                    <h3 id="product-modal-brand"></h3>
-                    <p class="product-modal-text" id="product-modal-text">Even spieken?<br>Dit is een van de vele pareltjes uit onze collectie.<br>Kom langs in Zwevegem voor de prijs en om alles van dichtbij te beleven.</p>
-                    <div class="modal-navigation">
-                        <a href="https://www.google.com/maps/search/?api=1&query=Otegemstraat+31,+8550+Zwevegem" target="_blank" class="btn btn-primary" data-umami-event="Product Modal - Kom naar onze winkel">Kom naar onze winkel</a>
-                        <button type="button" class="btn btn-link" id="product-modal-close-btn" data-umami-event="Close Product Modal">Sluiten</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Gift Up script - temporarily disabled -->
+    <!-- <script type="text/javascript">
+    (function (g, i, f, t, u, p, s) {
+        g[u] = g[u] || function() { (g[u].q = g[u].q || []).push(arguments) };
+        p = i.createElement(f);
+        p.async = 1;
+        p.src = t;
+        s = i.getElementsByTagName(f)[0];
+        s.parentNode.insertBefore(p, s);
+    })(window, document, "script", "https://cdn.giftup.app/dist/gift-up.js", "giftup");
+    </script> -->
 
     <script src="script.js"></script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -272,7 +231,53 @@
                 }
             });
         }
-        lucide.createIcons();
+        
+        // Initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
+        // Giftcard tabs functionality
+        (function() {
+            const tabs = document.querySelectorAll('.giftcard-tab');
+            const onlineContent = document.getElementById('giftcard-online-content');
+            const storeContent = document.getElementById('giftcard-store-content');
+            
+            if (tabs.length === 0 || !onlineContent || !storeContent) return;
+            
+            function switchTab(activeTab) {
+                // Update tab buttons
+                tabs.forEach(tab => {
+                    if (tab.getAttribute('data-tab') === activeTab) {
+                        tab.classList.add('giftcard-tab-active');
+                        tab.setAttribute('aria-selected', 'true');
+                    } else {
+                        tab.classList.remove('giftcard-tab-active');
+                        tab.setAttribute('aria-selected', 'false');
+                    }
+                });
+                
+                // Update content visibility
+                if (activeTab === 'online') {
+                    onlineContent.classList.remove('giftcard-hidden');
+                    storeContent.classList.add('giftcard-hidden');
+                } else {
+                    onlineContent.classList.add('giftcard-hidden');
+                    storeContent.classList.remove('giftcard-hidden');
+                }
+            }
+            
+            // Add click handlers to tabs
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+            
+            // Initialize: online is active by default
+            switchTab('online');
+        })();
     </script>
 </body>
 </html>

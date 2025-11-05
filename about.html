@@ -24,10 +24,10 @@
 
         <header class="site-header">
             <div class="header-container">
-                <a href="/" class="logo">
-                    <img src="img/logo.svg" alt="Oriento Logo">
-                </a>
                 <nav class="main-nav">
+                    <a href="/" class="logo">
+                        <img src="img/logo.svg" alt="Oriento Logo">
+                    </a>
                     <div class="header-social">
                         <a href="https://www.facebook.com/profile.php?id=100063604631891" target="_blank" aria-label="Facebook" data-umami-event="Social - Facebook">
                             <i data-lucide="facebook"></i>
@@ -35,16 +35,17 @@
                         <a href="instagram://user?username=oriento_home.fashion" data-fallback="https://www.instagram.com/oriento_home.fashion/" class="instagram-link" aria-label="Instagram" data-umami-event="Social - Instagram">
                             <i data-lucide="instagram"></i>
                         </a>
+                        <button class="hamburger" aria-label="Menu" data-umami-event="Toggle Menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
                     </div>
-                    <button class="hamburger" aria-label="Menu" data-umami-event="Toggle Menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
                     <ul class="nav-menu">
                         <li><a href="/" data-umami-event="Nav - Home"><i data-lucide="home"></i> Home</a></li>
                         <li><a href="/collectie.html" data-umami-event="Nav - Collectie"><i data-lucide="shopping-bag"></i> Collectie</a></li>
                         <li><a href="/about.html" class="active" data-umami-event="Nav - Over ons"><i data-lucide="users"></i> Over ons</a></li>
+                        <li><a href="/cadeaubon.html" data-umami-event="Nav - Cadeaubon"><i data-lucide="gift"></i> Cadeaubon</a></li>
                     </ul>
                 </nav>
             </div>
@@ -140,7 +141,7 @@
                 <p>Otegemstraat 31</p>
                 <p>8550 Zwevegem</p>
                 <p>Tel: <a href="tel:056754577">056/75.45.77</a></p>
-                <p>Email: <a href="mailto:info@oriento.net">info@oriento.net</a></p>
+                <p>Email: <a href="mailto:oriento@skynet.be">oriento@skynet.be</a></p>
                 <p>BTW: BE 0678.212.914</p>
                 
                 <div class="footer-social">
@@ -192,6 +193,7 @@
                 <a href="/">Home</a>
                 <a href="/about.html">Over ons</a>
                 <a href="/collectie.html">Collectie</a>
+                <a href="/cadeaubon.html">Cadeaubon</a>
             </div>
         </div>
         
@@ -205,7 +207,9 @@
                         <span class="toggle-label">Dark mode</span>
                     </button>
                     <span class="footer-separator">|</span>
-                    <a href="#" class="footer-bottom-link" data-modal="algemene-voorwaarden" data-umami-event="Open Privacy Modal">Privacy</a>
+                    <a href="#" class="footer-bottom-link" data-modal="privacy" data-umami-event="Open Privacy Modal">Privacy</a>
+                    <span class="footer-separator">|</span>
+                    <a href="#" class="footer-bottom-link" data-modal="algemene-voorwaarden" data-umami-event="Open Algemene Voorwaarden Modal">Algemene Voorwaarden</a>
                 </div>
                 <div class="footer-copyright">
                     <p>© Oriento 2025</p>
