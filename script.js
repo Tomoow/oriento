@@ -828,21 +828,6 @@ function loadAnnouncements() {
                 return;
             }
             
-            // Combine all active announcements on one line (replace line breaks with spaces)
-            const combinedText = activeAnnouncements.map(ann => ann.text.replace(/\n/g, ' ').trim()).join(' • ');
-            
-            // Create a content hash based on the announcement text to detect changes
-            // Use encodeURIComponent to handle Unicode characters before btoa
-            const contentHash = btoa(encodeURIComponent(combinedText)).substring(0, 16);
-            
-            // Check if this specific announcement content was dismissed in this session
-            const dismissedHash = sessionStorage.getItem('announcement-dismissed-hash');
-            if (dismissedHash === contentHash) {
-                // This exact announcement was already dismissed in this session, don't show
-                banner.style.display = 'none';
-                return;
-            }
-            
             // Convert markdown to HTML for rich text formatting
             function markdownToHtml(text) {
                 if (!text) return '';
@@ -861,31 +846,123 @@ function loadAnnouncements() {
                     .replace(/`(.*?)`/g, '<code>$1</code>'); // Inline code `text`
             }
             
-            // Combine announcements with markdown conversion
-            const combinedHtml = activeAnnouncements.map(ann => markdownToHtml(ann.text.replace(/\n/g, ' ').trim())).join(' • ');
-            textElement.innerHTML = combinedHtml;
+            // Get the header wrapper - it should contain the original announcement banner
+            const headerWrapper = document.querySelector('.header-wrapper');
+            if (!headerWrapper) {
+                console.warn('Header wrapper not found, cannot display announcements');
+                return;
+            }
             
-            // Show banner
-            banner.style.display = 'block';
+            // Clear any existing dynamically created banners (keep the original one for fallback)
+            const existingBanners = document.querySelectorAll('.announcement-banner[data-announcement-index]');
+            existingBanners.forEach(b => b.remove());
             
-            // Initialize Lucide icons for close button
-            lucide.createIcons();
+            // Track if we successfully created any banners
+            let bannersCreated = 0;
             
-            // Handle close button - set up listener here to access contentHash
-            // Use event delegation or ensure single listener by removing old one first
-            const actualCloseBtn = document.getElementById('announcement-close');
-            if (actualCloseBtn) {
-                // Remove old listeners by replacing with a clone
-                const newCloseBtn = actualCloseBtn.cloneNode(true);
-                actualCloseBtn.parentNode.replaceChild(newCloseBtn, actualCloseBtn);
+            // Create a banner for each active announcement
+            activeAnnouncements.forEach((announcement, index) => {
+                if (!announcement || !announcement.text) return;
                 
-                newCloseBtn.addEventListener('click', function() {
-                    banner.style.display = 'none';
-                    // Remember that this specific announcement content was dismissed in this session
-                    sessionStorage.setItem('announcement-dismissed-hash', contentHash);
-                    // Re-initialize icons after DOM change
-                    lucide.createIcons();
-                });
+                const announcementText = announcement.text.replace(/\n/g, ' ').trim();
+                if (!announcementText) return;
+                
+                try {
+                    // Create a content hash based on the announcement text to detect changes
+                    // Use encodeURIComponent to handle Unicode characters before btoa
+                    const contentHash = btoa(encodeURIComponent(announcementText)).substring(0, 16);
+                    
+                    // Check if this specific announcement was dismissed in this session
+                    let dismissedHashes = [];
+                    try {
+                        dismissedHashes = JSON.parse(sessionStorage.getItem('announcement-dismissed-hashes') || '[]');
+                    } catch (e) {
+                        // If sessionStorage is corrupted, reset it
+                        sessionStorage.removeItem('announcement-dismissed-hashes');
+                    }
+                    
+                    if (dismissedHashes.includes(contentHash)) {
+                        // This announcement was already dismissed, skip it
+                        return;
+                    }
+                    
+                    // Create a new banner element for this announcement
+                    const newBanner = document.createElement('div');
+                    newBanner.className = 'announcement-banner';
+                    newBanner.setAttribute('data-announcement-index', index);
+                    newBanner.setAttribute('data-content-hash', contentHash);
+                    newBanner.style.display = 'block';
+                    
+                    // Escape HTML in the text before inserting (markdownToHtml handles formatting)
+                    const safeHtml = markdownToHtml(announcementText);
+                    
+                    newBanner.innerHTML = `
+                        <div class="announcement-content">
+                            <i data-lucide="alert-triangle" class="announcement-icon"></i>
+                            <div class="announcement-text">${safeHtml}</div>
+                            <button class="icon-button announcement-close" aria-label="Close announcement" data-umami-event="Close Announcement" data-content-hash="${contentHash}">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Insert before header wrapper (so banners appear at the top)
+                    if (headerWrapper.parentNode) {
+                        headerWrapper.parentNode.insertBefore(newBanner, headerWrapper);
+                        bannersCreated++;
+                    }
+                    
+                    // Set up close button listener
+                    const closeBtn = newBanner.querySelector('.announcement-close');
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', function() {
+                            try {
+                                // Mark this announcement as dismissed
+                                let dismissedHashes = [];
+                                try {
+                                    dismissedHashes = JSON.parse(sessionStorage.getItem('announcement-dismissed-hashes') || '[]');
+                                } catch (e) {
+                                    dismissedHashes = [];
+                                }
+                                
+                                if (!dismissedHashes.includes(contentHash)) {
+                                    dismissedHashes.push(contentHash);
+                                    sessionStorage.setItem('announcement-dismissed-hashes', JSON.stringify(dismissedHashes));
+                                }
+                                
+                                // Remove this banner
+                                newBanner.remove();
+                                
+                                // Re-initialize icons
+                                if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                                    lucide.createIcons();
+                                }
+                            } catch (error) {
+                                console.error('Error closing announcement:', error);
+                                // Fallback: just remove the banner
+                                newBanner.remove();
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error creating announcement banner:', error, announcement);
+                    // Continue with next announcement even if this one fails
+                }
+            });
+            
+            // Hide the original banner (we're using dynamically created ones)
+            if (banner) {
+                banner.style.display = 'none';
+            }
+            
+            // Initialize Lucide icons for all new banners
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+            
+            // If no banners were created, ensure the original is hidden
+            if (bannersCreated === 0 && banner) {
+                banner.style.display = 'none';
             }
         })
         .catch(error => {
