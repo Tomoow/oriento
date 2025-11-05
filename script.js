@@ -832,7 +832,8 @@ function loadAnnouncements() {
             const combinedText = activeAnnouncements.map(ann => ann.text.replace(/\n/g, ' ').trim()).join(' • ');
             
             // Create a content hash based on the announcement text to detect changes
-            const contentHash = btoa(combinedText).substring(0, 16);
+            // Use encodeURIComponent to handle Unicode characters before btoa
+            const contentHash = btoa(encodeURIComponent(combinedText)).substring(0, 16);
             
             // Check if this specific announcement content was dismissed in this session
             const dismissedHash = sessionStorage.getItem('announcement-dismissed-hash');
