@@ -533,6 +533,19 @@ function initModal() {
             closeModal();
         }
     });
+    
+    // Handle modal repositioning on resize
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            // Only update if modal is currently open
+            if (privacyModal.classList.contains('show')) {
+                const isMobile = window.innerWidth <= 768;
+                privacyModal.style.display = isMobile ? 'flex' : 'block';
+            }
+        }, 50);
+    });
 }
 
 // Initialize scroll fade-in animations for gallery
@@ -792,6 +805,19 @@ function initProductModal() {
     if (closeLinkBtn) closeLinkBtn.addEventListener('click', close);
     window.addEventListener('click', function(e) {
         if (e.target === modal) close();
+    });
+    
+    // Handle modal repositioning on resize
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            // Only update if modal is currently open
+            if (modal.classList.contains('show')) {
+                const isMobile = window.innerWidth <= 768;
+                modal.style.display = isMobile ? 'flex' : 'block';
+            }
+        }, 50);
     });
 }
 
@@ -1408,6 +1434,19 @@ function loadPopupModal() {
                     closePopup(contentHash);
                 }
             });
+            
+            // Handle modal repositioning on resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    // Only update if modal is currently open
+                    if (popupModal.classList.contains('show')) {
+                        const isMobile = window.innerWidth <= 768;
+                        popupModal.style.display = isMobile ? 'flex' : 'block';
+                    }
+                }, 100);
+            });
         })
         .catch(error => {
             console.error('Error loading popup:', error);
@@ -1568,6 +1607,19 @@ function initOpeningsurenModal() {
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
     window.addEventListener('click', function(event) {
         if (event.target === modal) closeModal();
+    });
+    
+    // Handle modal repositioning on resize
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            // Only update if modal is currently open
+            if (modal.classList.contains('show')) {
+                const isMobile = window.innerWidth <= 768;
+                modal.style.display = isMobile ? 'flex' : 'block';
+            }
+        }, 50);
     });
     
     // Load hours and render into modal

@@ -518,12 +518,12 @@ body {
 }
 
 .brand-item:hover img {
-    filter: grayscale(0%);
+    filter: brightness(0) saturate(100%) invert(27%) sepia(68%) saturate(1352%) hue-rotate(333deg) brightness(90%) contrast(85%);
     opacity: 1;
 }
 
 [data-theme="dark"] .brand-item:hover img {
-    filter: grayscale(0%);
+    filter: brightness(0) saturate(100%) invert(27%) sepia(68%) saturate(1352%) hue-rotate(333deg) brightness(90%) contrast(85%);
     opacity: 1;
 }
 
@@ -1696,6 +1696,21 @@ a.gallery-item {
 .giftcard-store-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(var(--color-text-rgb), var(--opacity-15));
+}
+
+.giftcard-store-card:hover .giftcard-store-content h3,
+.giftcard-store-card:active .giftcard-store-content h3 {
+    text-decoration: underline;
+}
+
+.giftcard-store-card:hover .giftcard-store-content .btn-primary {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+}
+
+.giftcard-store-card:active .giftcard-store-content .btn-primary {
+    background-color: var(--color-primary-active);
+    border-color: var(--color-primary-active);
 }
 
 .giftcard-store-image {

@@ -21,12 +21,6 @@
     {
       "new": false,
       "cadeautip": false,
-      "image": "img/uploads/collectie-19.webp",
-      "alt": "Souvenirs De Pomme"
-    },
-    {
-      "new": false,
-      "cadeautip": true,
       "image": "img/uploads/collectie-18.webp",
       "alt": "Christine Bekaert"
     },
@@ -39,14 +33,74 @@
     {
       "new": false,
       "cadeautip": false,
-      "image": "img/uploads/collectie-17.webp",
-      "alt": "Rebecca"
+      "image": "img/uploads/juweel24.webp",
+      "alt": "Joidart"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/juweel28.webp",
+      "alt": "Silver Rose"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/juweel32.webp",
+      "alt": "Joidart"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/juweel33.webp",
+      "alt": "Anna Haie"
+    },
+    {
+      "new": false,
+      "cadeautip": true,
+      "image": "img/uploads/juweel34.webp",
+      "alt": "Anna Haie"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/juweel35.webp",
+      "alt": "Lulu"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/juweel36.webp",
+      "alt": "Joidart"
+    },
+    {
+      "new": false,
+      "cadeautip": true,
+      "image": "img/uploads/juweel37.webp",
+      "alt": "Souvenirs Des Pommes"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/juweel38.webp",
+      "alt": "Pavie"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/juweel30.webp",
+      "alt": "Silver Rose"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/juweel31.webp",
+      "alt": "Murielle Perrotti"
     }
   ],
   "accessoires": [
     {
       "new": false,
-      "cadeautip": false,
+      "cadeautip": true,
       "image": "img/uploads/collectie-13.webp",
       "alt": "Marie Martens"
     },
@@ -58,21 +112,9 @@
     },
     {
       "new": false,
-      "cadeautip": true,
-      "image": "img/uploads/collectie-10.webp",
-      "alt": "Souvenirs De Pomme"
-    },
-    {
-      "new": false,
       "cadeautip": false,
       "image": "img/uploads/collectie-11.webp",
       "alt": "Souvenirs De Pomme"
-    },
-    {
-      "new": false,
-      "cadeautip": false,
-      "image": "img/uploads/collectie-01.webp",
-      "alt": "Bufandy"
     },
     {
       "new": false,
@@ -85,6 +127,24 @@
       "cadeautip": false,
       "image": "img/uploads/collectie-24.webp",
       "alt": "Steel & Barnett"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/accessoire26.webp",
+      "alt": "Komono"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/accessoire29.webp",
+      "alt": "Komono"
+    },
+    {
+      "new": true,
+      "cadeautip": false,
+      "image": "img/uploads/accessoire39.webp",
+      "alt": "Gianni Chiarini"
     }
   ],
   "wonen": [
@@ -101,13 +161,13 @@
       "alt": "Alessi"
     },
     {
-      "new": false,
+      "new": true,
       "cadeautip": false,
       "image": "img/uploads/collectie-21.webp",
       "alt": "Onderlegger"
     },
     {
-      "new": false,
+      "new": true,
       "cadeautip": false,
       "image": "img/uploads/collectie-22.webp",
       "alt": "Keukenschort"
@@ -117,6 +177,18 @@
       "cadeautip": false,
       "image": "img/uploads/collectie-25.webp",
       "alt": "Geurstokjes - Oxygen"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/wonen25.webp",
+      "alt": "Wonen"
+    },
+    {
+      "new": false,
+      "cadeautip": false,
+      "image": "img/uploads/wonen27.webp",
+      "alt": "J-Line"
     }
   ]
 }

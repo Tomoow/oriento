@@ -278,6 +278,54 @@
             // Initialize: online is active by default
             switchTab('online');
         })();
+        
+        // Make giftcard store card clickable (desktop only)
+        (function() {
+            const storeCard = document.querySelector('.giftcard-store-card');
+            const storeButton = document.querySelector('.giftcard-store-content .btn-primary');
+            
+            if (!storeCard || !storeButton) return;
+            
+            function updateCardClickability() {
+                const isDesktop = window.innerWidth > 768;
+                
+                if (isDesktop) {
+                    // Make card clickable on desktop
+                    storeCard.style.cursor = 'pointer';
+                    
+                    // Remove existing listener if any
+                    storeCard.removeEventListener('click', handleCardClick);
+                    storeCard.addEventListener('click', handleCardClick);
+                } else {
+                    // Remove clickability on mobile
+                    storeCard.style.cursor = 'default';
+                    storeCard.removeEventListener('click', handleCardClick);
+                }
+            }
+            
+            function handleCardClick(e) {
+                // Don't navigate if clicking directly on the button (let button handle it)
+                if (e.target.closest('.btn-primary')) {
+                    return;
+                }
+                
+                // Navigate to the button's href
+                const buttonHref = storeButton.getAttribute('href');
+                if (buttonHref) {
+                    window.open(buttonHref, storeButton.getAttribute('target') || '_self');
+                }
+            }
+            
+            // Initialize
+            updateCardClickability();
+            
+            // Update on resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(updateCardClickability, 100);
+            });
+        })();
     </script>
 </body>
 </html>

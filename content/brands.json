@@ -1,32 +1,96 @@
 {
   "brands": [
     {
-      "name": "Murielle",
-      "logo": "img/uploads/murielle.svg"
+      "logo": "img/uploads/brand-16.svg",
+      "name": "Brand 16"
     },
     {
-      "logo": "img/uploads/christine-bekaert.svg",
-      "name": "Christine Bekaert"
+      "logo": "img/uploads/brand-17.svg",
+      "name": "Brand 17"
     },
     {
-      "logo": "img/uploads/melano.svg",
-      "name": "Melano"
+      "logo": "img/uploads/brand-18.svg",
+      "name": "Brand 18"
     },
     {
-      "logo": "img/uploads/joidart.svg",
-      "name": "Joidart"
+      "logo": "img/uploads/brand-19.svg",
+      "name": "Brand 19"
     },
     {
-      "logo": "img/uploads/marie-martens.svg",
-      "name": "Marie Martens"
+      "logo": "img/uploads/brand-20.svg",
+      "name": "Brand 20"
     },
     {
-      "logo": "img/uploads/gianni.svg",
-      "name": "Gianni Chiarini"
+      "logo": "img/uploads/brand-21.svg",
+      "name": "Brand 21"
     },
     {
-      "logo": "img/uploads/souvenir-dp.svg",
-      "name": "Souvenirs De Pomme"
+      "logo": "img/uploads/brand-22.svg",
+      "name": "Brand 22"
+    },
+    {
+      "logo": "img/uploads/brand-1.svg",
+      "name": "Brand 1"
+    },
+    {
+      "logo": "img/uploads/brand-2.svg",
+      "name": "Brand 2"
+    },
+    {
+      "logo": "img/uploads/brand-3.svg",
+      "name": "Brand 3"
+    },
+    {
+      "logo": "img/uploads/brand-4.svg",
+      "name": "Brand 4"
+    },
+    {
+      "logo": "img/uploads/brand-5.svg",
+      "name": "Brand 5"
+    },
+    {
+      "logo": "img/uploads/brand-6.svg",
+      "name": "Brand 6"
+    },
+    {
+      "logo": "img/uploads/brand-7.svg",
+      "name": "Brand 7"
+    },
+    {
+      "logo": "img/uploads/brand-8.svg",
+      "name": "Brand 8"
+    },
+    {
+      "logo": "img/uploads/brand-9.svg",
+      "name": "Brand 9"
+    },
+    {
+      "logo": "img/uploads/brand-10.svg",
+      "name": "Brand 10"
+    },
+    {
+      "logo": "img/uploads/brand-11.svg",
+      "name": "Brand 11"
+    },
+    {
+      "logo": "img/uploads/brand-12.svg",
+      "name": "Brand 12"
+    },
+    {
+      "logo": "img/uploads/brand-14.svg",
+      "name": "Brand 14"
+    },
+    {
+      "logo": "img/uploads/brand-15.svg",
+      "name": "Brand 15"
+    },
+    {
+      "logo": "img/uploads/brand-23.svg",
+      "name": "Brand 23"
+    },
+    {
+      "logo": "img/uploads/brand-24.svg",
+      "name": "Brand 24"
     }
   ]
 }
