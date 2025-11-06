@@ -1178,7 +1178,7 @@ a.gallery-item {
     scroll-snap-type: x mandatory;
     width: 100%;
     box-sizing: border-box;
-    justify-content: flex-start; /* Start cards from the left */
+    justify-content: center; /* Center cards on desktop */
     align-items: stretch;
 }
 
