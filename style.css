@@ -3020,11 +3020,17 @@ a.gallery-item {
     }
 
     .popup-image-wrapper {
-        max-height: 400px;
+        max-height: 35vh;
+        min-height: 30vh;
+        height: 35vh;
     }
 
     .popup-image-wrapper img {
-        max-height: 400px;
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        object-fit: cover;
+        object-position: center;
     }
 
     /* Footer */
