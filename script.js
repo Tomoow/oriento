@@ -359,9 +359,19 @@ function initReviewsCarousel() {
     
     // Initialize: Scroll to first card (position 0) on load
     // This ensures we start at the first card, not the centered middle card
-    carousel.scrollTo({
-        left: 0,
-        behavior: 'auto' // Instant, no animation on initial load
+    function resetToFirstCard() {
+        carousel.scrollLeft = 0;
+    }
+    
+    // Reset immediately and after a short delay to ensure it sticks
+    resetToFirstCard();
+    setTimeout(resetToFirstCard, 50);
+    setTimeout(resetToFirstCard, 200);
+    setTimeout(resetToFirstCard, 500);
+    
+    // Also reset on resize
+    window.addEventListener('resize', () => {
+        setTimeout(resetToFirstCard, 100);
     });
     
     // Arrow click handlers
@@ -1371,13 +1381,19 @@ function loadPopupModal() {
                 return; // Popup not enabled
             }
             
+            // Check if caching is enabled (default to false - show once per session)
+            const cacheDismissal = data.cacheDismissal === true;
+            
             // Create a content hash based on image, title, and text to detect changes
             // Use encodeURIComponent to handle Unicode characters before btoa
             const contentString = (data.image || '') + '|' + (data.title || '') + '|' + (data.text || '');
             const contentHash = btoa(encodeURIComponent(contentString)).substring(0, 16);
             
-            // Check if this specific popup content was already dismissed
-            const dismissedHash = localStorage.getItem('popup-dismissed-hash');
+            // Check storage based on cacheDismissal setting
+            // If cacheDismissal is false (default): use sessionStorage (only for current session)
+            // If cacheDismissal is true: use localStorage (persists across sessions)
+            const storage = cacheDismissal ? localStorage : sessionStorage;
+            const dismissedHash = storage.getItem('popup-dismissed-hash');
             if (dismissedHash === contentHash) {
                 return; // This exact popup was already dismissed, don't show again
             }
@@ -1425,13 +1441,13 @@ function loadPopupModal() {
             
             // Handle close button
             popupClose.addEventListener('click', function() {
-                closePopup(contentHash);
+                closePopup(contentHash, cacheDismissal);
             });
             
             // Close when clicking outside
             popupModal.addEventListener('click', function(event) {
                 if (event.target === popupModal) {
-                    closePopup(contentHash);
+                    closePopup(contentHash, cacheDismissal);
                 }
             });
             
@@ -1452,18 +1468,22 @@ function loadPopupModal() {
             console.error('Error loading popup:', error);
         });
     
-    function closePopup(contentHash) {
+    function closePopup(contentHash, cacheDismissal) {
         popupModal.classList.remove('show');
         setTimeout(() => {
             popupModal.style.display = 'none';
-            // Remember that this specific popup content was dismissed
-            localStorage.setItem('popup-dismissed-hash', contentHash);
+            // Save to appropriate storage based on cacheDismissal setting
+            // If cacheDismissal is false (default): use sessionStorage (only for current session)
+            // If cacheDismissal is true: use localStorage (persists across sessions)
+            const storage = cacheDismissal ? localStorage : sessionStorage;
+            storage.setItem('popup-dismissed-hash', contentHash);
         }, 300);
     }
     
     // Helper function for debugging - can be called from console: clearPopupDismissal()
     window.clearPopupDismissal = function() {
         localStorage.removeItem('popup-dismissed-hash');
+        sessionStorage.removeItem('popup-dismissed-hash');
         console.log('Popup dismissal cleared. Refresh the page to see the popup again.');
     };
 }
