@@ -38,6 +38,7 @@ collections:
           - {label: "Afbeelding", name: "image", widget: "image", required: false}
           - {label: "Titel", name: "title", widget: "string", required: false}
           - {label: "Tekst", name: "text", widget: "markdown", required: false, hint: "Je kunt <br> gebruiken voor nieuwe regels"}
+          - {label: "Onthoud sluiting (cache)", name: "cacheDismissal", widget: "boolean", default: false, hint: "Indien ingeschakeld: popup verschijnt niet meer na sluiten, zelfs na het sluiten van de browser. Indien uitgeschakeld: popup verschijnt opnieuw wanneer de klant de website bezoekt."}
   
   - name: "hero" # Homepage hero content
     label: "Welkom tekstje"
