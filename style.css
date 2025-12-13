@@ -1607,19 +1607,15 @@ a.gallery-item {
 
 .giftcard-widget {
     width: 100%;
-    max-width: 32rem;
     min-height: 400px;
     overflow: hidden;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .giftcard-widget .gift-up-target,
 .giftcard-widget iframe {
     display: block;
-    margin-bottom: -93px;
+    margin-bottom: -30px;
     height: calc(100% + 93px);
     transition: filter 0.3s ease;
 }
