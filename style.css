@@ -1620,65 +1620,36 @@ a.gallery-item {
     transition: filter 0.3s ease;
 }
 
-/* In-app browser warning banner */
-.in-app-browser-warning {
-    background-color: rgba(var(--color-primary-rgb), 0.1);
-    border: 1px solid var(--color-primary);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    position: relative;
+/* In-app browser replacement (replaces iframe) */
+.giftcard-in-app-replacement {
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    text-align: center;
 }
 
-.in-app-browser-warning-content {
+.giftcard-in-app-content {
     display: flex;
-    align-items: flex-start;
-    gap: 1rem;
+    flex-direction: column;
+        align-items: center;
+    gap: 1.5rem;
 }
 
-.in-app-browser-warning-icon {
-    width: 24px;
-    height: 24px;
+.giftcard-in-app-icon {
+    width: 64px;
+    height: 64px;
     color: var(--color-primary);
-    flex-shrink: 0;
-    margin-top: 0.125rem;
 }
 
-.in-app-browser-warning-text {
-    flex: 1;
+.giftcard-in-app-content p {
     color: var(--color-text);
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
 }
 
-.in-app-browser-warning-text strong {
-    color: var(--color-primary);
-    font-weight: 600;
-}
-
-.in-app-browser-warning-close {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--color-text);
-    opacity: var(--opacity-60);
-    transition: opacity 0.2s ease;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-}
-
-.in-app-browser-warning-close:hover {
-    opacity: 1;
-}
-
-.in-app-browser-warning-close i {
-    width: 18px;
-    height: 18px;
+.giftcard-in-app-content .btn {
+    margin-top: 0.5rem;
 }
 
 

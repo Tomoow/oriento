@@ -67,19 +67,17 @@
             <!-- Online Cadeaubon Content (visible by default) -->
             <div class="giftcard-content-wrapper" id="giftcard-online-content">
                 <div class="giftcard-online">
-                    <!-- In-app browser warning (shown only when detected) -->
-                    <div class="in-app-browser-warning" id="in-app-browser-warning" style="display: none;">
-                        <div class="in-app-browser-warning-content">
-                            <i data-lucide="alert-triangle" class="in-app-browser-warning-icon"></i>
-                            <div class="in-app-browser-warning-text">
-                                <strong>Belangrijk:</strong> Betalingen werken niet altijd in de in-app browser van Instagram of Facebook. Open deze pagina in Safari of Chrome om de betaling te voltooien.
-                            </div>
-                            <button type="button" class="in-app-browser-warning-close" id="in-app-browser-warning-close" aria-label="Sluiten">
-                                <i data-lucide="x"></i>
-                            </button>
+                    <!-- In-app browser replacement (shown instead of iframe) -->
+                    <div class="giftcard-in-app-replacement" id="giftcard-in-app-replacement" style="display: none;">
+                        <div class="giftcard-in-app-content">
+                            <i data-lucide="gift" class="giftcard-in-app-icon"></i>
+                            <p>Klik op de knop hieronder om een cadeaubon te kopen:</p>
+                            <a href="https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production&instance=z8k6en6czt" target="_blank" class="btn btn-primary" data-umami-event="Giftcard - In-App Browser Direct Link">
+                                Koop een cadeaubon
+                            </a>
                         </div>
                     </div>
-                    <div class="giftcard-widget">
+                    <div class="giftcard-widget" id="giftcard-widget">
                         <div class="gift-up-target" data-site-id="6c95273a-a914-498b-dd57-08de1ad66191" data-platform="Other" data-locale="nl_NL"></div>
                     </div>
                 </div>
@@ -262,24 +260,24 @@
         
         const inAppBrowser = isInAppBrowser();
         
-        // 2. Show warning if in-app browser detected
+        // 2. Replace iframe with direct link if in-app browser detected
         if (inAppBrowser) {
-            const warning = document.getElementById('in-app-browser-warning');
-            if (warning) {
-                warning.style.display = 'block';
-                
-                // Close button
-                const closeBtn = document.getElementById('in-app-browser-warning-close');
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', function() {
-                        warning.style.display = 'none';
-                    });
-                }
+            const widget = document.getElementById('giftcard-widget');
+            const replacement = document.getElementById('giftcard-in-app-replacement');
+            
+            if (widget && replacement) {
+                // Hide the iframe widget
+                widget.style.display = 'none';
+                // Show the replacement content
+                replacement.style.display = 'block';
                 
                 // Re-initialize Lucide icons
                 if (typeof lucide !== 'undefined') {
                     lucide.createIcons();
                 }
+                
+                // Don't monitor iframe since it's hidden
+                return;
             }
         }
         
