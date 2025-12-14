@@ -67,26 +67,20 @@
             <!-- Online Cadeaubon Content (visible by default) -->
             <div class="giftcard-content-wrapper" id="giftcard-online-content">
                 <div class="giftcard-online">
+                    <!-- In-app browser warning (shown only when detected) -->
+                    <div class="in-app-browser-warning" id="in-app-browser-warning" style="display: none;">
+                        <div class="in-app-browser-warning-content">
+                            <i data-lucide="alert-triangle" class="in-app-browser-warning-icon"></i>
+                            <div class="in-app-browser-warning-text">
+                                <strong>Belangrijk:</strong> Betalingen werken niet altijd in de in-app browser van Instagram of Facebook. Open deze pagina in Safari of Chrome om de betaling te voltooien.
+                            </div>
+                            <button type="button" class="in-app-browser-warning-close" id="in-app-browser-warning-close" aria-label="Sluiten">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                    </div>
                     <div class="giftcard-widget">
                         <div class="gift-up-target" data-site-id="6c95273a-a914-498b-dd57-08de1ad66191" data-platform="Other" data-locale="nl_NL"></div>
-                        <div class="giftcard-loading-overlay" id="giftcard-loading-overlay" style="display: none;">
-                            <div class="giftcard-loading-content">
-                                <div class="giftcard-loading-spinner"></div>
-                                <p>Bezig met laden...</p>
-                            </div>
-                        </div>
-                        <div class="giftcard-error-message" id="giftcard-error-message" style="display: none;">
-                            <div class="giftcard-error-content">
-                                <i data-lucide="alert-circle" class="giftcard-error-icon"></i>
-                                <h4>Open in browser</h4>
-                                <p>Je gebruikt een in-app browser (Instagram/Facebook). Om de betaling te voltooien, open deze pagina in je standaard browser (Safari of Chrome).</p>
-                                <div class="giftcard-error-actions">
-                                    <button type="button" class="btn btn-primary" id="open-payment-browser-btn">Open in browser</button>
-                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('giftcard-error-message').style.display='none'">Sluiten</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="giftcard-payment-url" id="giftcard-payment-url" style="display: none;"></div>
                     </div>
                 </div>
             </div>
@@ -253,235 +247,84 @@
         }
     }
     
-    // Detect if user is in an in-app browser (Instagram, Facebook, etc.)
-    function isInAppBrowser() {
-        const ua = navigator.userAgent || navigator.vendor || window.opera;
-        
-        // Check for Instagram in-app browser
-        if (ua.includes('Instagram')) {
-            return true;
-        }
-        
-        // Check for Facebook in-app browser
-        if (ua.includes('FBAV') || ua.includes('FBAN') || ua.includes('FBSV')) {
-            return true;
-        }
-        
-        // Check for other common in-app browsers
-        if (ua.includes('wv') || ua.includes('WebView')) {
-            return true;
-        }
-        
-        // Check if standalone (not in-app) - iOS Safari
-        if (window.navigator.standalone === true) {
-            return false;
-        }
-        
-        // Check if window is same as top (not in iframe) but still might be in-app
-        // Additional check: if window.outerHeight === window.innerHeight, might be in-app
-        if (window.outerHeight === window.innerHeight && (ua.includes('iPhone') || ua.includes('iPad') || ua.includes('Android'))) {
-            // Could be in-app, but not definitive
-            return false; // Default to false, but we'll be more aggressive with redirects
-        }
-        
-        return false;
-    }
-    
-    // Store payment URL globally for button click
-    let currentPaymentUrl = null;
-    
-    // Force open URL in native browser (works on iOS and Android)
-    function openInNativeBrowser(url) {
-        currentPaymentUrl = url; // Store for button fallback
-        
-        // Method 1: Create a link element and click it (most reliable for in-app browsers)
-        try {
-            const link = document.createElement('a');
-            link.href = url;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            
-            // Trigger click
-            const clickEvent = new MouseEvent('click', {
-                view: window,
-                bubbles: true,
-                cancelable: true
-            });
-            link.dispatchEvent(clickEvent);
-            
-            // Clean up after a moment
-            setTimeout(function() {
-                document.body.removeChild(link);
-            }, 100);
-            
-            return true;
-        } catch(e) {
-            console.log('Link method failed:', e);
-        }
-        
-        // Method 2: Try window.open (might be blocked but worth trying)
-        try {
-            const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
-            if (newWindow && !newWindow.closed) {
-                return true;
-            }
-        } catch(e) {
-            console.log('Window.open failed:', e);
-        }
-        
-        // Method 3: Try location.href (will redirect current window)
-        try {
-            window.location.href = url;
-            return true;
-        } catch(e) {
-            console.log('Location.href failed:', e);
-        }
-        
-        return false;
-    }
-    
-    // Monitor Gift-up iframe for stuck loading states and payment redirects
+    // BEST PRACTICE: Break out of iframe for payment redirects
+    // This implements the industry-standard solution for in-app browser payment issues
     (function() {
-        const widgetContainer = document.querySelector('.giftcard-widget');
-        const loadingOverlay = document.getElementById('giftcard-loading-overlay');
-        const errorMessage = document.getElementById('giftcard-error-message');
-        let loadingTimeout = null;
-        let lastIframeSrc = null;
-        let iframeCheckInterval = null;
-        let redirectDetected = false;
+        // 1. Detect in-app browsers
+        function isInAppBrowser() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            return ua.includes('Instagram') ||
+                   ua.includes('FBAN') ||
+                   ua.includes('FBAV') ||
+                   ua.includes('Messenger') ||
+                   ua.includes('FBSV');
+        }
+        
         const inAppBrowser = isInAppBrowser();
         
-        if (!widgetContainer) return;
-        
-        // Listen for postMessage from Gift-up iframe
-        window.addEventListener('message', function(event) {
-            // Check if message is from Gift-up domain
-            if (event.origin.includes('giftup.app') || event.origin.includes('gift-up')) {
-                // Payment redirect detected
-                if (event.data && (event.data.type === 'payment' || event.data.action === 'redirect')) {
-                    redirectDetected = true;
-                    hideLoadingOverlay();
-                    // Allow redirect to happen
-                    if (event.data.url) {
-                        window.location.href = event.data.url;
-                    }
+        // 2. Show warning if in-app browser detected
+        if (inAppBrowser) {
+            const warning = document.getElementById('in-app-browser-warning');
+            if (warning) {
+                warning.style.display = 'block';
+                
+                // Close button
+                const closeBtn = document.getElementById('in-app-browser-warning-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        warning.style.display = 'none';
+                    });
+                }
+                
+                // Re-initialize Lucide icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
                 }
             }
-        });
-        
-        function showLoadingOverlay() {
-            if (loadingOverlay) {
-                loadingOverlay.style.display = 'flex';
-            }
         }
         
-        function hideLoadingOverlay() {
-            if (loadingOverlay) {
-                loadingOverlay.style.display = 'none';
-            }
-            if (loadingTimeout) {
-                clearTimeout(loadingTimeout);
-                loadingTimeout = null;
-            }
-        }
+        // 3. Monitor iframe for Mollie payment URL and do top-level redirect
+        const widgetContainer = document.querySelector('.giftcard-widget');
+        if (!widgetContainer) return;
         
-        function showErrorMessage() {
-            hideLoadingOverlay();
-            if (errorMessage) {
-                errorMessage.style.display = 'block';
-            }
-            // Re-initialize Lucide icons for the error icon
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        }
+        let lastIframeSrc = null;
+        let iframeCheckInterval = null;
         
-        // Monitor iframe for changes and stuck states
         function monitorIframe() {
             const iframe = widgetContainer.querySelector('iframe');
             
-            if (iframe) {
+            if (iframe && iframe.src) {
                 const currentSrc = iframe.src;
                 
-                // Detect if iframe is trying to redirect to payment (URL changes to Mollie)
-                // CRITICAL FIX: Force open in native browser when in-app browser is detected
+                // Detect if iframe URL changed to Mollie payment
                 if (lastIframeSrc && currentSrc !== lastIframeSrc) {
-                    // Iframe URL changed - check if it's a payment redirect to Mollie
-                    if (currentSrc.includes('mollie') || currentSrc.includes('mollie.com') || 
+                    // Check if it's a Mollie payment URL
+                    if (currentSrc.includes('mollie') || currentSrc.includes('mollie.com') ||
                         (currentSrc.includes('payment') && (currentSrc.includes('checkout') || currentSrc.includes('pay')))) {
-                        redirectDetected = true;
-                        hideLoadingOverlay();
                         
-                        // Store payment URL for button fallback
-                        const paymentUrlContainer = document.getElementById('giftcard-payment-url');
-                        if (paymentUrlContainer) {
-                            paymentUrlContainer.textContent = currentSrc;
-                            paymentUrlContainer.setAttribute('data-url', currentSrc);
-                        }
-                        
-                        // If in in-app browser, force open in native browser
-                        if (inAppBrowser) {
-                            // Immediately try to open in native browser
-                            openInNativeBrowser(currentSrc);
-                            
-                            // Always show the button immediately as backup
-                            // User can click it if automatic redirect doesn't work
-                            setTimeout(function() {
-                                showErrorMessage();
-                            }, 500);
-                        } else {
-                            // Regular browser - redirect normally
-                            try {
-                                window.top.location.href = currentSrc;
-                            } catch(e) {
-                                try {
-                                    window.location.href = currentSrc;
-                                } catch(e2) {
-                                    window.open(currentSrc, '_blank', 'noopener,noreferrer');
-                                }
-                            }
-                        }
+                        // CRITICAL: Break out of iframe with top-level redirect
+                        // This is the industry-standard solution that works in most cases
+                        window.location.href = currentSrc;
+                        return; // Stop monitoring
                     }
-                    lastIframeSrc = currentSrc;
-                } else if (!lastIframeSrc) {
-                    lastIframeSrc = currentSrc;
                 }
                 
-                // Monitor for stuck loading state (simplified approach)
-                // Since we can't access iframe content due to CORS, we'll use a timeout-based approach
-                if (!redirectDetected && !loadingTimeout) {
-                    // Start a timeout that will show error if no redirect happens
-                    loadingTimeout = setTimeout(function() {
-                        // After 45 seconds, if no redirect detected, show error message
-                        if (!redirectDetected) {
-                            showErrorMessage();
-                        }
-                    }, 45000); // 45 seconds timeout
-                }
-            } else {
-                // No iframe yet, check if Gift-up target exists
-                const target = widgetContainer.querySelector('.gift-up-target');
-                if (target && !iframe) {
-                    // Gift-up hasn't loaded iframe yet
-                    setTimeout(monitorIframe, 1000);
+                if (!lastIframeSrc) {
+                    lastIframeSrc = currentSrc;
                 }
             }
         }
         
-        // Start monitoring after a delay to allow Gift-up to initialize
-        // Use more frequent checks to catch redirects immediately (critical for in-app browsers)
+        // Start monitoring after Gift-up loads
         setTimeout(function() {
-            iframeCheckInterval = setInterval(monitorIframe, 500); // Check every 500ms for faster detection
-        }, 1000);
+            iframeCheckInterval = setInterval(monitorIframe, 500); // Check every 500ms
+        }, 2000);
         
         // Also monitor for iframe creation
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 mutation.addedNodes.forEach(function(node) {
                     if (node.tagName === 'IFRAME' || (node.querySelector && node.querySelector('iframe'))) {
-                        // Iframe was added, start monitoring
                         setTimeout(monitorIframe, 500);
                     }
                 });
@@ -493,32 +336,27 @@
             subtree: true
         });
         
-        // Button to open payment in native browser
-        const openPaymentBtn = document.getElementById('open-payment-browser-btn');
-        if (openPaymentBtn) {
-            openPaymentBtn.addEventListener('click', function() {
-                const paymentUrlContainer = document.getElementById('giftcard-payment-url');
-                const paymentUrl = currentPaymentUrl || (paymentUrlContainer ? paymentUrlContainer.getAttribute('data-url') : null);
-                
-                if (paymentUrl) {
-                    openInNativeBrowser(paymentUrl);
-                } else {
-                    // Try to get URL from iframe
+        // 4. Listen for postMessage from Gift-up iframe (if they support it)
+        window.addEventListener('message', function(event) {
+            // Check if message is from Gift-up domain
+            if (event.origin.includes('giftup.app') || event.origin.includes('gift-up')) {
+                // If Gift-up sends payment URL via postMessage, use it
+                if (event.data && event.data.paymentUrl) {
+                    window.location.href = event.data.paymentUrl;
+                } else if (event.data && (event.data.action === 'start-payment' || event.data.action === 'redirect')) {
+                    // If they send a redirect action, try to get URL from iframe
                     const iframe = widgetContainer.querySelector('iframe');
                     if (iframe && iframe.src) {
-                        openInNativeBrowser(iframe.src);
+                        window.location.href = iframe.src;
                     }
                 }
-            });
-        }
+            }
+        });
         
-        // Clean up on page unload
+        // Cleanup
         window.addEventListener('beforeunload', function() {
             if (iframeCheckInterval) {
                 clearInterval(iframeCheckInterval);
-            }
-            if (loadingTimeout) {
-                clearTimeout(loadingTimeout);
             }
         });
     })();

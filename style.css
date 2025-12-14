@@ -630,34 +630,34 @@ a.gallery-item {
 
 /* Create varied sizes for bento box effect with dynamic filling */
 /* On desktop: reduced heights to make section less tall - max 2 rows for vertical items */
-.gallery-grid {
-    grid-auto-rows: 280px; /* Fixed row height for consistent layout */
-}
-
-/* Regular items fill exactly 1 row */
-.gallery-item {
-    height: 280px;
-}
-
-/* Some items can be vertical (span 2 rows) but not more */
-/* Height = 2 rows (280px each) + 1 gap (1rem = 16px) = 576px */
-.gallery-grid .gallery-item:nth-child(1),
-.gallery-grid .gallery-item:nth-child(6),
-.gallery-grid .gallery-item:nth-child(10),
-.gallery-grid .gallery-item:nth-child(14),
-.gallery-grid .gallery-item:nth-child(18) {
-    grid-row: span 2;
-    height: calc(280px * 2 + 1rem); /* Exactly 2 rows + gap */
-}
-
-/* Horizontal items (span 2 columns) still fill 1 row height */
-.gallery-grid .gallery-item:nth-child(3),
-.gallery-grid .gallery-item:nth-child(7),
-.gallery-grid .gallery-item:nth-child(11),
-.gallery-grid .gallery-item:nth-child(15),
-.gallery-grid .gallery-item:nth-child(19) {
-    grid-column: span 2;
-    height: 280px; /* Same as regular items */
+    .gallery-grid {
+        grid-auto-rows: 280px; /* Fixed row height for consistent layout */
+    }
+    
+    /* Regular items fill exactly 1 row */
+    .gallery-item {
+        height: 280px;
+    }
+    
+    /* Some items can be vertical (span 2 rows) but not more */
+    /* Height = 2 rows (280px each) + 1 gap (1rem = 16px) = 576px */
+    .gallery-grid .gallery-item:nth-child(1),
+    .gallery-grid .gallery-item:nth-child(6),
+    .gallery-grid .gallery-item:nth-child(10),
+    .gallery-grid .gallery-item:nth-child(14),
+    .gallery-grid .gallery-item:nth-child(18) {
+        grid-row: span 2;
+        height: calc(280px * 2 + 1rem); /* Exactly 2 rows + gap */
+    }
+    
+    /* Horizontal items (span 2 columns) still fill 1 row height */
+    .gallery-grid .gallery-item:nth-child(3),
+    .gallery-grid .gallery-item:nth-child(7),
+    .gallery-grid .gallery-item:nth-child(11),
+    .gallery-grid .gallery-item:nth-child(15),
+    .gallery-grid .gallery-item:nth-child(19) {
+        grid-column: span 2;
+        height: 280px; /* Same as regular items */
 }
 
 /* Main Content */
@@ -974,8 +974,8 @@ a.gallery-item {
 
 /* Switch to responsive auto-fill only when there's ample width,
    avoiding the 1-column edge case on mid-width layouts */
-.product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 
 .product-item {
@@ -1444,32 +1444,32 @@ a.gallery-item {
 }
 
 /* Desktop - horizontal layout */
-.feature-item-left {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-}
-
-.feature-item-right {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-}
-
-.feature-item-left .feature-image {
-    order: 1;
-}
-
-.feature-item-left .feature-content {
-    order: 2;
-}
-
-.feature-item-right .feature-image {
-    order: 2;
-}
-
-.feature-item-right .feature-content {
-    order: 1;
+    .feature-item-left {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+    }
+    
+    .feature-item-right {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+    }
+    
+    .feature-item-left .feature-image {
+        order: 1;
+    }
+    
+    .feature-item-left .feature-content {
+        order: 2;
+    }
+    
+    .feature-item-right .feature-image {
+        order: 2;
+    }
+    
+    .feature-item-right .feature-content {
+        order: 1;
 }
 
 .feature-image img {
@@ -1509,43 +1509,43 @@ a.gallery-item {
     padding: 5rem 0;
 }
 
-.features-container {
+    .features-container {
     padding: 0 3rem;
     display: flex;
     flex-direction: column;
     gap: 4rem;
-}
-
-.features-title {
-    font-size: 2.5rem;
+    }
+    
+    .features-title {
+        font-size: 2.5rem;
     margin-bottom: 3rem;
-}
-
-.feature-item-left,
-.feature-item-right {
+    }
+    
+    .feature-item-left,
+    .feature-item-right {
     gap: 5rem;
-    align-items: center;
+        align-items: center;
     flex-direction: row;
-}
-
-.feature-content {
+    }
+    
+    .feature-content {
     min-width: 350px;
-}
-
-.feature-image {
+    }
+    
+    .feature-image {
     flex: 0 0 400px;
     width: 400px;
     height: 400px;
-}
-
-.feature-image img {
+    }
+    
+    .feature-image img {
     max-width: 400px;
     max-height: 400px;
-}
-
-.feature-content h3 {
-    font-size: 1.5rem;
-}
+    }
+    
+    .feature-content h3 {
+        font-size: 1.5rem;
+    }
 
 .feature-content p {
     font-size: 1.05rem;
@@ -1574,8 +1574,8 @@ a.gallery-item {
 }
 
 .giftcard-online {
-    display: flex;
-    flex-direction: column;
+        display: flex;
+        flex-direction: column;
     gap: 1rem;
     margin-bottom: 4rem;
     align-items: center;
@@ -1620,115 +1620,67 @@ a.gallery-item {
     transition: filter 0.3s ease;
 }
 
-/* Loading overlay for stuck states */
-.giftcard-loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(var(--color-bg-rgb), 0.95);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
+/* In-app browser warning banner */
+.in-app-browser-warning {
+    background-color: rgba(var(--color-primary-rgb), 0.1);
+    border: 1px solid var(--color-primary);
     border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
 }
 
-.giftcard-loading-content {
-    text-align: center;
-    color: var(--color-text);
-}
-
-.giftcard-loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(var(--color-text-rgb), var(--opacity-20));
-    border-top-color: var(--color-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.giftcard-loading-content p {
-    color: var(--color-text);
-    font-size: 1rem;
-    margin: 0;
-}
-
-/* Error message for stuck payment redirects */
-.giftcard-error-message {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--color-bg);
+.in-app-browser-warning-content {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
-    padding: 2rem;
-    border-radius: 8px;
-    border: 1px solid rgba(var(--color-text-rgb), var(--opacity-20));
+    align-items: flex-start;
+    gap: 1rem;
 }
 
-.giftcard-error-content {
-    text-align: center;
-    max-width: 500px;
-}
-
-.giftcard-error-icon {
-    width: 48px;
-    height: 48px;
+.in-app-browser-warning-icon {
+    width: 24px;
+    height: 24px;
     color: var(--color-primary);
-    margin: 0 auto 1rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
 }
 
-.giftcard-error-content h4 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    color: var(--color-text);
-    margin-bottom: 1rem;
-}
-
-.giftcard-error-content p {
+.in-app-browser-warning-text {
+    flex: 1;
     color: var(--color-text);
     font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
+    line-height: 1.5;
 }
 
-.giftcard-error-list {
-    text-align: left;
+.in-app-browser-warning-text strong {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.in-app-browser-warning-close {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
     color: var(--color-text);
-    font-size: 0.9rem;
-    line-height: 1.8;
-    margin: 1rem 0;
-    padding-left: 1.5rem;
-}
-
-.giftcard-error-list li {
-    margin-bottom: 0.5rem;
-}
-
-.giftcard-error-actions {
+    opacity: var(--opacity-60);
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
     display: flex;
-    gap: 1rem;
+    align-items: center;
     justify-content: center;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
+    width: 24px;
+    height: 24px;
 }
 
-.giftcard-error-actions .btn {
-    margin-top: 0;
-    min-width: 140px;
+.in-app-browser-warning-close:hover {
+    opacity: 1;
 }
+
+.in-app-browser-warning-close i {
+    width: 18px;
+    height: 18px;
+}
+
 
 /* Dark mode: Apply filters to make iframe match dark theme */
 [data-theme="dark"] .giftcard-widget iframe {
@@ -1739,7 +1691,7 @@ a.gallery-item {
 .coming-soon-message {
     display: flex;
     flex-direction: column;
-    align-items: center;
+        align-items: center;
     justify-content: center;
     text-align: center;
     padding: 3rem 2rem;
@@ -1968,8 +1920,8 @@ a.gallery-item {
 }
 
 .giftcard-content p {
-    font-size: 1.05rem;
-}
+        font-size: 1.05rem;
+    }
 
 .giftcard-widget {
     min-height: 600px;
@@ -2357,13 +2309,13 @@ a.gallery-item {
     right: auto;
 }
 
-.product-modal-body {
-    flex-direction: row;
-}
+    .product-modal-body {
+        flex-direction: row;
+    }
 
-.product-modal-media {
-    flex: 1;
-}
+    .product-modal-media {
+        flex: 1;
+    }
 
 .product-modal-info {
     flex: 1;
@@ -3145,21 +3097,21 @@ a.gallery-item {
         gap: 2rem;
         padding: 3rem 1rem 2rem;
     }
-
+    
     .footer-social {
         margin-top: 1rem;
     }
-
+    
     .modal {
         display: none;
         align-items: flex-end;
         justify-content: center;
     }
-
+    
     .modal.show {
         display: flex;
     }
-
+    
     .modal-content {
         width: 100%;
         max-width: none;
@@ -3170,33 +3122,33 @@ a.gallery-item {
         transform: translateY(100%);
         transition: transform 300ms ease;
     }
-
+    
     .modal.show .modal-content {
         transform: translateY(0);
     }
-
+    
     .announcement-banner {
         padding: 0.5rem 0;
     }
-
+    
     .announcement-content {
         padding: 0 1rem;
     }
-
+    
     .announcement-text {
         font-size: 0.85rem;
     }
-
+    
     .footer-bottom-content {
         flex-direction: column;
         align-items: flex-start;
         padding: 0 1rem;
     }
 
-    .footer-bottom {
+     .footer-bottom {
         padding: 1rem 0;
     }
-
+    
     .footer-copyright {
         align-items: flex-start;
     }
