@@ -72,9 +72,9 @@
                         <div class="giftcard-in-app-content">
                             <i data-lucide="gift" class="giftcard-in-app-icon"></i>
                             <p>Klik op de knop hieronder om een cadeaubon te kopen:</p>
-                            <a href="https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production&instance=z8k6en6czt" target="_blank" class="btn btn-primary" data-umami-event="Giftcard - In-App Browser Direct Link">
+                            <button type="button" class="btn btn-primary" id="giftcard-open-native-browser-btn" data-umami-event="Giftcard - In-App Browser Direct Link">
                                 Koop een cadeaubon
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <div class="giftcard-widget" id="giftcard-widget">
@@ -274,6 +274,46 @@
                 // Re-initialize Lucide icons
                 if (typeof lucide !== 'undefined') {
                     lucide.createIcons();
+                }
+                
+                // Button to open in native browser
+                const checkoutUrl = 'https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production&instance=z8k6en6czt';
+                const openBtn = document.getElementById('giftcard-open-native-browser-btn');
+                
+                if (openBtn) {
+                    openBtn.addEventListener('click', function() {
+                        // Force open in native browser using multiple methods
+                        // Method 1: Create and click a link (most reliable for in-app browsers)
+                        try {
+                            const link = document.createElement('a');
+                            link.href = checkoutUrl;
+                            link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            
+                            // Trigger click event
+                            const clickEvent = new MouseEvent('click', {
+                                view: window,
+                                bubbles: true,
+                                cancelable: true
+                            });
+                            link.dispatchEvent(clickEvent);
+                            
+                            // Clean up
+                            setTimeout(function() {
+                                document.body.removeChild(link);
+                            }, 100);
+                        } catch(e) {
+                            // Fallback: try window.open
+                            try {
+                                window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
+                            } catch(e2) {
+                                // Last resort: redirect current window
+                                window.location.href = checkoutUrl;
+                            }
+                        }
+                    });
                 }
                 
                 // Don't monitor iframe since it's hidden
