@@ -68,7 +68,30 @@
             <div class="giftcard-content-wrapper" id="giftcard-online-content">
                 <div class="giftcard-online">
                     <div class="giftcard-widget">
-                        <div class="gift-up-target" data-site-id="6c95273a-a914-498b-dd57-08de1ad66191" data-platform="Other"></div>
+                        <div class="gift-up-target" data-site-id="6c95273a-a914-498b-dd57-08de1ad66191" data-platform="Other" data-locale="nl_NL"></div>
+                        <div class="giftcard-loading-overlay" id="giftcard-loading-overlay" style="display: none;">
+                            <div class="giftcard-loading-content">
+                                <div class="giftcard-loading-spinner"></div>
+                                <p>Bezig met laden...</p>
+                            </div>
+                        </div>
+                        <div class="giftcard-error-message" id="giftcard-error-message" style="display: none;">
+                            <div class="giftcard-error-content">
+                                <i data-lucide="alert-circle" class="giftcard-error-icon"></i>
+                                <h4>Probleem met betaling</h4>
+                                <p>De betalingspagina lijkt niet te laden. Dit kan worden veroorzaakt door:</p>
+                                <ul class="giftcard-error-list">
+                                    <li>Pop-up blockers in uw browser</li>
+                                    <li>Browser beveiligingsinstellingen</li>
+                                    <li>Netwerkproblemen</li>
+                                </ul>
+                                <p><strong>Oplossing:</strong> Controleer of pop-ups zijn toegestaan en probeer de pagina te vernieuwen. Als het probleem aanhoudt, neem dan contact met ons op.</p>
+                                <div class="giftcard-error-actions">
+                                    <button type="button" class="btn btn-primary" onclick="location.reload()">Pagina vernieuwen</button>
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('giftcard-error-message').style.display='none'">Sluiten</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -210,6 +233,181 @@
         s = i.getElementsByTagName(f)[0];
         s.parentNode.insertBefore(p, s);
     })(window, document, "script", "https://cdn.giftup.app/dist/gift-up.js", "giftup");
+    
+    // Set locale to Dutch for Mollie payment page
+    // Wait for Gift-up to fully load before setting locale
+    document.addEventListener('DOMContentLoaded', function() {
+        // Try to set locale after a short delay to ensure Gift-up is loaded
+        setTimeout(function() {
+            if (window.giftup) {
+                try {
+                    window.giftup('setLocale', 'nl_NL');
+                } catch(e) {
+                    console.log('Gift-up locale setting:', e);
+                }
+            }
+        }, 1000);
+    });
+    
+    // Also try setting it immediately if giftup is already available
+    if (window.giftup) {
+        try {
+            window.giftup('setLocale', 'nl_NL');
+        } catch(e) {
+            // Will retry on DOMContentLoaded
+        }
+    }
+    
+    // Monitor Gift-up iframe for stuck loading states and payment redirects
+    (function() {
+        const widgetContainer = document.querySelector('.giftcard-widget');
+        const loadingOverlay = document.getElementById('giftcard-loading-overlay');
+        const errorMessage = document.getElementById('giftcard-error-message');
+        let loadingTimeout = null;
+        let lastIframeSrc = null;
+        let iframeCheckInterval = null;
+        let redirectDetected = false;
+        
+        if (!widgetContainer) return;
+        
+        // Listen for postMessage from Gift-up iframe
+        window.addEventListener('message', function(event) {
+            // Check if message is from Gift-up domain
+            if (event.origin.includes('giftup.app') || event.origin.includes('gift-up')) {
+                // Payment redirect detected
+                if (event.data && (event.data.type === 'payment' || event.data.action === 'redirect')) {
+                    redirectDetected = true;
+                    hideLoadingOverlay();
+                    // Allow redirect to happen
+                    if (event.data.url) {
+                        window.location.href = event.data.url;
+                    }
+                }
+            }
+        });
+        
+        function showLoadingOverlay() {
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex';
+            }
+        }
+        
+        function hideLoadingOverlay() {
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'none';
+            }
+            if (loadingTimeout) {
+                clearTimeout(loadingTimeout);
+                loadingTimeout = null;
+            }
+        }
+        
+        function showErrorMessage() {
+            hideLoadingOverlay();
+            if (errorMessage) {
+                errorMessage.style.display = 'block';
+            }
+            // Re-initialize Lucide icons for the error icon
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        // Monitor iframe for changes and stuck states
+        function monitorIframe() {
+            const iframe = widgetContainer.querySelector('iframe');
+            
+            if (iframe) {
+                const currentSrc = iframe.src;
+                
+                // Detect if iframe is trying to redirect to payment (URL changes to Mollie)
+                // CRITICAL FIX: Immediately redirect parent window when Mollie payment URL is detected
+                // This fixes the issue with in-app browsers (Instagram/Facebook) blocking iframe redirects
+                if (lastIframeSrc && currentSrc !== lastIframeSrc) {
+                    // Iframe URL changed - check if it's a payment redirect to Mollie
+                    if (currentSrc.includes('mollie') || currentSrc.includes('mollie.com') || 
+                        (currentSrc.includes('payment') && (currentSrc.includes('checkout') || currentSrc.includes('pay')))) {
+                        redirectDetected = true;
+                        hideLoadingOverlay();
+                        
+                        // IMMEDIATELY redirect parent window to payment URL
+                        // This ensures it works in in-app browsers that block iframe redirects
+                        try {
+                            // Redirect parent window immediately - don't wait
+                            window.top.location.href = currentSrc;
+                        } catch(e) {
+                            // If top.location fails (cross-origin), try regular location
+                            try {
+                                window.location.href = currentSrc;
+                            } catch(e2) {
+                                // Last resort: try opening in new window
+                                try {
+                                    window.open(currentSrc, '_top');
+                                } catch(e3) {
+                                    console.log('Payment redirect failed:', e3);
+                                }
+                            }
+                        }
+                    }
+                    lastIframeSrc = currentSrc;
+                } else if (!lastIframeSrc) {
+                    lastIframeSrc = currentSrc;
+                }
+                
+                // Monitor for stuck loading state (simplified approach)
+                // Since we can't access iframe content due to CORS, we'll use a timeout-based approach
+                if (!redirectDetected && !loadingTimeout) {
+                    // Start a timeout that will show error if no redirect happens
+                    loadingTimeout = setTimeout(function() {
+                        // After 45 seconds, if no redirect detected, show error message
+                        if (!redirectDetected) {
+                            showErrorMessage();
+                        }
+                    }, 45000); // 45 seconds timeout
+                }
+            } else {
+                // No iframe yet, check if Gift-up target exists
+                const target = widgetContainer.querySelector('.gift-up-target');
+                if (target && !iframe) {
+                    // Gift-up hasn't loaded iframe yet
+                    setTimeout(monitorIframe, 1000);
+                }
+            }
+        }
+        
+        // Start monitoring after a delay to allow Gift-up to initialize
+        // Use more frequent checks to catch redirects immediately (critical for in-app browsers)
+        setTimeout(function() {
+            iframeCheckInterval = setInterval(monitorIframe, 500); // Check every 500ms for faster detection
+        }, 1000);
+        
+        // Also monitor for iframe creation
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.tagName === 'IFRAME' || (node.querySelector && node.querySelector('iframe'))) {
+                        // Iframe was added, start monitoring
+                        setTimeout(monitorIframe, 500);
+                    }
+                });
+            });
+        });
+        
+        observer.observe(widgetContainer, {
+            childList: true,
+            subtree: true
+        });
+        
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            if (iframeCheckInterval) {
+                clearInterval(iframeCheckInterval);
+            }
+            if (loadingTimeout) {
+                clearTimeout(loadingTimeout);
+            }
+        });
+    })();
     </script>
 
     <script src="script.js"></script>
