@@ -70,11 +70,17 @@
                     <!-- In-app browser replacement (shown instead of iframe) -->
                     <div class="giftcard-in-app-replacement" id="giftcard-in-app-replacement" style="display: none;">
                         <div class="giftcard-in-app-content">
-                            <i data-lucide="gift" class="giftcard-in-app-icon"></i>
-                            <p>Klik op de knop hieronder om een cadeaubon te kopen:</p>
-                            <button type="button" class="btn btn-primary" id="giftcard-open-native-browser-btn" data-umami-event="Giftcard - In-App Browser Direct Link">
+                            <img src="img/giftcard.png" alt="Cadeaubon" class="giftcard-in-app-illustration">
+                            <h4 class="giftcard-in-app-title">Oriento cadeaubon per e-mail</h4>
+                            <p>Op zoek naar een last-minute cadeau of een attent geschenk? Koop eenvoudig een cadeaubon online en ontvang hem meteen in je mailbox. Zo kan je hem direct doorsturen of zelf mooi afdrukken.</p>
+                            <a href="https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production&instance=z8k6en6czt" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="btn btn-primary" 
+                               id="giftcard-open-native-browser-btn" 
+                               data-umami-event="Giftcard - In-App Browser Direct Link">
                                 Koop een cadeaubon
-                            </button>
+                            </a>
                         </div>
                     </div>
                     <div class="giftcard-widget" id="giftcard-widget">
@@ -220,184 +226,59 @@
         s = i.getElementsByTagName(f)[0];
         s.parentNode.insertBefore(p, s);
     })(window, document, "script", "https://cdn.giftup.app/dist/gift-up.js", "giftup");
-    
-    // Set locale to Dutch for Mollie payment page
-    // Wait for Gift-up to fully load before setting locale
-    document.addEventListener('DOMContentLoaded', function() {
-        // Try to set locale after a short delay to ensure Gift-up is loaded
-        setTimeout(function() {
-            if (window.giftup) {
-                try {
-                    window.giftup('setLocale', 'nl_NL');
-                } catch(e) {
-                    console.log('Gift-up locale setting:', e);
-                }
-            }
-        }, 1000);
-    });
-    
-    // Also try setting it immediately if giftup is already available
-    if (window.giftup) {
-        try {
-            window.giftup('setLocale', 'nl_NL');
-        } catch(e) {
-            // Will retry on DOMContentLoaded
-        }
-    }
-    
-    // BEST PRACTICE: Break out of iframe for payment redirects
-    // This implements the industry-standard solution for in-app browser payment issues
-    (function() {
-        // 1. Detect in-app browsers
-        function isInAppBrowser() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            return ua.includes('Instagram') ||
-                   ua.includes('FBAN') ||
-                   ua.includes('FBAV') ||
-                   ua.includes('Messenger') ||
-                   ua.includes('FBSV');
-        }
-        
-        const inAppBrowser = isInAppBrowser();
-        
-        // 2. Replace iframe with direct link if in-app browser detected
-        if (inAppBrowser) {
+    </script>
+
+    <script>
+        // Toggle iframe vs direct link based on viewport, and wire the button
+        (function() {
+            const checkoutUrl = 'https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production&instance=z8k6en6czt';
             const widget = document.getElementById('giftcard-widget');
             const replacement = document.getElementById('giftcard-in-app-replacement');
-            
-            if (widget && replacement) {
-                // Hide the iframe widget
-                widget.style.display = 'none';
-                // Show the replacement content
-                replacement.style.display = 'block';
-                
-                // Re-initialize Lucide icons
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
-                
-                // Button to open in native browser
-                const checkoutUrl = 'https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production&instance=z8k6en6czt';
-                const openBtn = document.getElementById('giftcard-open-native-browser-btn');
-                
-                if (openBtn) {
-                    openBtn.addEventListener('click', function() {
-                        // Force open in native browser using multiple methods
-                        // Method 1: Create and click a link (most reliable for in-app browsers)
+            const openLink = document.getElementById('giftcard-open-native-browser-btn');
+
+            if (openLink) {
+                openLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                        window.location.href = checkoutUrl;
+                    } catch (err) {
                         try {
-                            const link = document.createElement('a');
-                            link.href = checkoutUrl;
-                            link.target = '_blank';
-                            link.rel = 'noopener noreferrer';
-                            link.style.display = 'none';
-                            document.body.appendChild(link);
-                            
-                            // Trigger click event
-                            const clickEvent = new MouseEvent('click', {
-                                view: window,
-                                bubbles: true,
-                                cancelable: true
-                            });
-                            link.dispatchEvent(clickEvent);
-                            
-                            // Clean up
-                            setTimeout(function() {
-                                document.body.removeChild(link);
-                            }, 100);
-                        } catch(e) {
-                            // Fallback: try window.open
-                            try {
-                                window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
-                            } catch(e2) {
-                                // Last resort: redirect current window
-                                window.location.href = checkoutUrl;
-                            }
+                            window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
+                        } catch (err2) {
+                            // Last resort: default link behavior
                         }
-                    });
-                }
-                
-                // Don't monitor iframe since it's hidden
-                return;
-            }
-        }
-        
-        // 3. Monitor iframe for Mollie payment URL and do top-level redirect
-        const widgetContainer = document.querySelector('.giftcard-widget');
-        if (!widgetContainer) return;
-        
-        let lastIframeSrc = null;
-        let iframeCheckInterval = null;
-        
-        function monitorIframe() {
-            const iframe = widgetContainer.querySelector('iframe');
-            
-            if (iframe && iframe.src) {
-                const currentSrc = iframe.src;
-                
-                // Detect if iframe URL changed to Mollie payment
-                if (lastIframeSrc && currentSrc !== lastIframeSrc) {
-                    // Check if it's a Mollie payment URL
-                    if (currentSrc.includes('mollie') || currentSrc.includes('mollie.com') ||
-                        (currentSrc.includes('payment') && (currentSrc.includes('checkout') || currentSrc.includes('pay')))) {
-                        
-                        // CRITICAL: Break out of iframe with top-level redirect
-                        // This is the industry-standard solution that works in most cases
-                        window.location.href = currentSrc;
-                        return; // Stop monitoring
-                    }
-                }
-                
-                if (!lastIframeSrc) {
-                    lastIframeSrc = currentSrc;
-                }
-            }
-        }
-        
-        // Start monitoring after Gift-up loads
-        setTimeout(function() {
-            iframeCheckInterval = setInterval(monitorIframe, 500); // Check every 500ms
-        }, 2000);
-        
-        // Also monitor for iframe creation
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                mutation.addedNodes.forEach(function(node) {
-                    if (node.tagName === 'IFRAME' || (node.querySelector && node.querySelector('iframe'))) {
-                        setTimeout(monitorIframe, 500);
                     }
                 });
-            });
-        });
-        
-        observer.observe(widgetContainer, {
-            childList: true,
-            subtree: true
-        });
-        
-        // 4. Listen for postMessage from Gift-up iframe (if they support it)
-        window.addEventListener('message', function(event) {
-            // Check if message is from Gift-up domain
-            if (event.origin.includes('giftup.app') || event.origin.includes('gift-up')) {
-                // If Gift-up sends payment URL via postMessage, use it
-                if (event.data && event.data.paymentUrl) {
-                    window.location.href = event.data.paymentUrl;
-                } else if (event.data && (event.data.action === 'start-payment' || event.data.action === 'redirect')) {
-                    // If they send a redirect action, try to get URL from iframe
-                    const iframe = widgetContainer.querySelector('iframe');
-                    if (iframe && iframe.src) {
-                        window.location.href = iframe.src;
-                    }
+            }
+
+            function isMobileOrTablet() {
+                return window.innerWidth <= 1024;
+            }
+
+            function updateView() {
+                if (!widget || !replacement) return;
+                if (isMobileOrTablet()) {
+                    widget.style.display = 'none';
+                    replacement.style.display = 'block';
+                } else {
+                    widget.style.display = 'block';
+                    replacement.style.display = 'none';
                 }
             }
-        });
-        
-        // Cleanup
-        window.addEventListener('beforeunload', function() {
-            if (iframeCheckInterval) {
-                clearInterval(iframeCheckInterval);
+
+            updateView();
+
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(updateView, 150);
+            });
+
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
             }
-        });
-    })();
+        })();
     </script>
 
     <script src="script.js"></script>
@@ -510,4 +391,5 @@
     </script>
 </body>
 </html>
+
 
