@@ -1770,6 +1770,40 @@ a.gallery-item {
     margin-top: 0.5rem;
 }
 
+/* Facebook info message (shown under iframe when Facebook app detected) */
+.giftcard-fb-info-message {
+    max-width: 32rem;
+    margin: 1.5rem auto 0;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    background-color: rgba(var(--color-cadeautip-rgb), 0.15);
+    border: 1px solid rgba(var(--color-cadeautip-rgb), 0.3);
+    border-radius: 8px;
+}
+
+.giftcard-fb-info-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.giftcard-fb-info-icon {
+    width: 20px;
+    height: 20px;
+    color: rgba(var(--color-cadeautip-rgb), 0.7);
+    flex-shrink: 0;
+    filter: brightness(0.7);
+}
+
+.giftcard-fb-info-message p {
+    color: var(--color-text);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
 /* Dark mode: Apply filters to make iframe match dark theme */
 [data-theme="dark"] .giftcard-widget iframe {
     filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1);

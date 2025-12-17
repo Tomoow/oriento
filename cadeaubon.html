@@ -104,6 +104,17 @@
                     <div class="giftcard-widget" id="giftcard-widget">
                         <div class="gift-up-target" data-site-id="6c95273a-a914-498b-dd57-08de1ad66191" data-platform="Other" data-locale="nl_NL"></div>
                     </div>
+                    <!-- Debug text to show detection status -->
+                    <div class="giftcard-debug-text" id="giftcard-debug-text" style="text-align: center; margin-top: 1rem; padding: 0.5rem; font-size: 0.85rem; color: #666; display: none;">
+                        <p id="giftcard-debug-message"></p>
+                    </div>
+                    <!-- Facebook external browser info message (shown under iframe when Facebook app detected) -->
+                    <div class="giftcard-fb-info-message" id="giftcard-fb-info-message" style="display: none;">
+                        <div class="giftcard-fb-info-content">
+                            <i data-lucide="info" class="giftcard-fb-info-icon"></i>
+                            <p>Als de betaling vastloopt, open deze website in een externe browser via de drie puntjes (•••).</p>
+                        </div>
+                    </div>
                     <!-- In-app browser detection message (shown instead of iframe on mobile/tablet) -->
                     <div class="giftcard-in-app-detection-message" id="giftcard-in-app-detection-message" style="display: none;">
                         <div class="giftcard-in-app-detection-content">
@@ -286,22 +297,106 @@
             }
             
             function detectInAppBrowser() {
-                const ua = navigator.userAgent || navigator.vendor || window.opera;
+                const uaOriginal = navigator.userAgent || navigator.vendor || window.opera || '';
+                const ua = uaOriginal.toLowerCase();
                 const result = {
                     detected: false,
                     name: '',
                     title: '',
-                    note: ''
+                    note: '',
+                    debugMessage: '',
+                    isFBApp: false, // Flag to show external browser prompt
+                    browserName: '' // Browser name for the button
                 };
                 
-                // Check for Messenger specifically (not just Facebook app)
-                // Messenger user agent contains "Messenger" explicitly
-                if (ua.includes('Messenger')) {
+                // Log user agent for debugging
+                console.log('User agent:', uaOriginal);
+                
+                // FIRST: Extract FBAN value if present - this is the most reliable indicator
+                const fbanMatch = uaOriginal.match(/FBAN[\/;]([^;\)\]]+)/i);
+                const fbanValue = fbanMatch ? fbanMatch[1] : '';
+                const hasFBAN = ua.includes('fban');
+                
+                console.log('FBAN detected:', hasFBAN);
+                console.log('FBAN value extracted:', fbanValue);
+                
+                // Check for Messenger FIRST (before Facebook) using multiple methods
+                const uaOriginalUpper = uaOriginal.toUpperCase();
+                const hasMessengerInUA = uaOriginalUpper.includes('MESSENGER');
+                const hasFacebookInUA = uaOriginalUpper.includes('FACEBOOK');
+                
+                // Method 1: Check FBAN value directly
+                const fbanValueUpper = fbanValue ? fbanValue.toUpperCase() : '';
+                const fbanIsMessenger = fbanValueUpper.includes('MESSENGER');
+                const fbanIsFacebook = fbanValueUpper.includes('FACEBOOK') && !fbanValueUpper.includes('MESSENGER');
+                
+                // Method 2: Check for FBAN/Messenger patterns
+                const hasFBANMessenger = ua.includes('fban/messenger') || ua.includes('fban;messenger') || ua.includes('[fban;messenger');
+                const hasFBANFacebook = ua.includes('fban/facebook') || ua.includes('fban;facebook') || ua.includes('[fban;facebook');
+                
+                // Method 3: Check for MessengerForAndroid
+                const hasMessengerForAndroid = ua.includes('messengerforandroid');
+                
+                // Method 4: Check if "Messenger" appears anywhere in UA (case-insensitive)
+                const hasMessengerText = hasMessengerInUA;
+                
+                // Determine if it's Messenger (check this FIRST, before Facebook)
+                const isMessenger = fbanIsMessenger || hasFBANMessenger || hasMessengerForAndroid || (hasFBAN && hasMessengerText && !hasFacebookInUA);
+                
+                // Determine if it's Facebook (only if NOT Messenger)
+                const isFacebook = !isMessenger && (fbanIsFacebook || hasFBANFacebook || (hasFBAN && hasFacebookInUA && !hasMessengerText));
+                
+                console.log('Messenger checks:', {
+                    fbanIsMessenger: fbanIsMessenger,
+                    hasFBANMessenger: hasFBANMessenger,
+                    hasMessengerForAndroid: hasMessengerForAndroid,
+                    hasMessengerText: hasMessengerText,
+                    hasMessengerInUA: hasMessengerInUA,
+                    isMessenger: isMessenger
+                });
+                
+                console.log('Facebook checks:', {
+                    fbanIsFacebook: fbanIsFacebook,
+                    hasFBANFacebook: hasFBANFacebook,
+                    hasFacebookInUA: hasFacebookInUA,
+                    isFacebook: isFacebook
+                });
+                
+                // Set debug message - Messenger FIRST
+                if (isMessenger) {
                     result.detected = true;
+                    result.isFBApp = true;
                     result.name = 'Messenger';
                     result.title = 'Je kunt geen cadeaubon kopen via de Messenger browser.';
                     result.note = 'Je kan met de drie puntjes (•••) dit scherm in een externe browser openen om een cadeaubon aan te kopen.';
+                    result.debugMessage = '✅ Gedetecteerd: Messenger (FBAN: ' + (fbanValue || 'N/A') + ')';
+                    console.log('Messenger detected!');
                     return result;
+                } else if (isFacebook) {
+                    result.debugMessage = '✅ Gedetecteerd: Facebook app (niet geblokkeerd) - FBAN: ' + (fbanValue || 'N/A');
+                    result.isFBApp = true;
+                    result.name = 'Facebook';
+                    console.log('Facebook app detected (not blocking)');
+                    return result; // Don't block Facebook app
+                } else if (ua.includes('instagram')) {
+                    result.debugMessage = '✅ Gedetecteerd: Instagram';
+                    console.log('Instagram detected (not blocking)');
+                    return result; // Don't block Instagram
+                } else if (hasFBAN) {
+                    // Has FBAN but couldn't determine which one
+                    result.debugMessage = '⚠️ Gedetecteerd: Facebook/Messenger (onbekend type) - FBAN waarde: "' + (fbanValue || 'niet gevonden') + '" - UA bevat Messenger: ' + hasMessengerInUA + ', Facebook: ' + hasFacebookInUA;
+                    result.isFBApp = true;
+                    result.name = 'Facebook/Messenger';
+                    console.log('FB app detected but type unknown. User agent:', uaOriginal);
+                    console.log('FBAN value:', fbanValue);
+                    console.log('Full UA analysis:', {
+                        hasMessengerInUA: hasMessengerInUA,
+                        hasFacebookInUA: hasFacebookInUA,
+                        fbanValue: fbanValue
+                    });
+                    return result;
+                } else {
+                    result.debugMessage = '❓ Niet gedetecteerd: Geen Facebook/Messenger/Google app';
                 }
                 
                 // Check for Google app
@@ -312,6 +407,8 @@
                     result.name = 'Google App';
                     result.title = 'Je kunt geen cadeaubon kopen via de Google app.';
                     result.note = '';
+                    result.debugMessage = '✅ Gedetecteerd: Google app';
+                    console.log('Google app detected!');
                     return result;
                 }
                 
@@ -333,12 +430,50 @@
                 const messageTitle = document.getElementById('giftcard-in-app-detection-title');
                 const messageList = document.getElementById('giftcard-in-app-detection-list');
                 const messageNote = document.getElementById('giftcard-in-app-detection-note');
+                const debugText = document.getElementById('giftcard-debug-text');
+                const debugMessage = document.getElementById('giftcard-debug-message');
+                const fbInfoMessage = document.getElementById('giftcard-fb-info-message');
                 
-                // Only hide iframe and show message on mobile/tablet for Google app or Messenger
-                if (detection.detected && isMobile && widget && message && messageTitle && messageList) {
+                // Hide debug message - don't show it to users
+                if (debugText) {
+                    debugText.style.display = 'none';
+                }
+                
+                // Show info message for Facebook/Messenger UA detection
+                // Always show iframe for Facebook/Messenger, just show info message
+                const isFBOrMessenger = (detection.name === 'Facebook' || detection.name === 'Messenger' || detection.name === 'Facebook/Messenger') && detection.isFBApp;
+                
+                if (isFBOrMessenger && fbInfoMessage) {
+                    // Show the info message
+                    fbInfoMessage.style.display = 'block';
+                    
+                    // Re-initialize Lucide icons
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                } else if (fbInfoMessage) {
+                    // Hide if not Facebook/Messenger
+                    fbInfoMessage.style.display = 'none';
+                }
+                
+                // Debug logging
+                console.log('Detection result:', detection);
+                console.log('Is mobile/tablet:', isMobile);
+                console.log('Widget element:', widget);
+                console.log('Message element:', message);
+                
+                // Only hide iframe and show message on mobile/tablet for Google app (not Facebook/Messenger)
+                // Always show iframe for Facebook/Messenger, just show info message
+                if (detection.detected && isMobile && detection.name !== 'Messenger' && detection.name !== 'Facebook' && detection.name !== 'Facebook/Messenger' && widget && message && messageTitle && messageList) {
+                    console.log('Hiding iframe and showing message for:', detection.name);
                     // Hide iframe, show message
                     widget.style.display = 'none';
                     message.style.display = 'block';
+                    
+                    // Hide debug text when showing the full message
+                    if (debugText) {
+                        debugText.style.display = 'none';
+                    }
                     
                     // Set the title
                     messageTitle.textContent = detection.title;
@@ -363,6 +498,13 @@
                     
                     // Log for debugging
                     console.log(detection.name + ' detected on mobile/tablet. User agent:', navigator.userAgent);
+                } else {
+                    console.log('Not hiding iframe. Reasons:', {
+                        detected: detection.detected,
+                        isMobile: isMobile,
+                        hasWidget: !!widget,
+                        hasMessage: !!message
+                    });
                 }
             }
         })();
