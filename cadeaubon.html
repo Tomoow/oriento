@@ -104,6 +104,17 @@
                     <div class="giftcard-widget" id="giftcard-widget">
                         <div class="gift-up-target" data-site-id="6c95273a-a914-498b-dd57-08de1ad66191" data-platform="Other" data-locale="nl_NL"></div>
                     </div>
+                    <!-- In-app browser detection message (shown instead of iframe on mobile/tablet) -->
+                    <div class="giftcard-in-app-detection-message" id="giftcard-in-app-detection-message" style="display: none;">
+                        <div class="giftcard-in-app-detection-content">
+                            <i data-lucide="alert-triangle" class="giftcard-in-app-detection-icon"></i>
+                            <h4 id="giftcard-in-app-detection-title"></h4>
+                            <p><strong>Wat wel werkt:</strong></p>
+                            <ul id="giftcard-in-app-detection-list" style="text-align: left; display: inline-block; margin: 1rem 0; padding-left: 1.5rem;">
+                            </ul>
+                            <p id="giftcard-in-app-detection-note" style="margin-top: 1rem;"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -267,7 +278,94 @@
     }
     </script>
 
-
+    <script>
+        // Detect in-app browsers (Google app, Messenger) and show message instead of iframe on mobile/tablet
+        (function() {
+            function isMobileOrTablet() {
+                return window.innerWidth <= 1024 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
+            function detectInAppBrowser() {
+                const ua = navigator.userAgent || navigator.vendor || window.opera;
+                const result = {
+                    detected: false,
+                    name: '',
+                    title: '',
+                    note: ''
+                };
+                
+                // Check for Messenger
+                if (ua.includes('FBAN') || ua.includes('FBAV') || ua.includes('Messenger') || ua.includes('FBSV')) {
+                    result.detected = true;
+                    result.name = 'Messenger';
+                    result.title = 'Je kunt geen cadeaubon kopen via de Messenger browser.';
+                    result.note = 'Je kan met de drie puntjes (•••) dit scherm in een externe browser openen om een cadeaubon aan te kopen.';
+                    return result;
+                }
+                
+                // Check for Google app
+                if (/GSA/i.test(ua) || 
+                    /GoogleApp/i.test(ua) ||
+                    (ua.includes('iPhone') && ua.includes('Mobile') && ua.includes('Safari') && !ua.includes('CriOS') && !ua.includes('FxiOS') && window.navigator.standalone === undefined && document.referrer === '')) {
+                    result.detected = true;
+                    result.name = 'Google App';
+                    result.title = 'Je kunt geen cadeaubon kopen via de Google app.';
+                    result.note = '';
+                    return result;
+                }
+                
+                return result;
+            }
+            
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', checkInAppBrowser);
+            } else {
+                checkInAppBrowser();
+            }
+            
+            function checkInAppBrowser() {
+                const detection = detectInAppBrowser();
+                const isMobile = isMobileOrTablet();
+                const widget = document.getElementById('giftcard-widget');
+                const message = document.getElementById('giftcard-in-app-detection-message');
+                const messageTitle = document.getElementById('giftcard-in-app-detection-title');
+                const messageList = document.getElementById('giftcard-in-app-detection-list');
+                const messageNote = document.getElementById('giftcard-in-app-detection-note');
+                
+                // Only hide iframe and show message on mobile/tablet for Google app or Messenger
+                if (detection.detected && isMobile && widget && message && messageTitle && messageList) {
+                    // Hide iframe, show message
+                    widget.style.display = 'none';
+                    message.style.display = 'block';
+                    
+                    // Set the title
+                    messageTitle.textContent = detection.title;
+                    
+                    // Set the list items
+                    messageList.innerHTML = '<li>Open deze pagina in Safari of Chrome op je telefoon</li><li>Of gebruik je computer om een cadeaubon aan te schaffen</li>';
+                    
+                    // Set the note (only for Messenger)
+                    if (messageNote) {
+                        if (detection.note) {
+                            messageNote.textContent = detection.note;
+                            messageNote.style.display = 'block';
+                        } else {
+                            messageNote.style.display = 'none';
+                        }
+                    }
+                    
+                    // Re-initialize Lucide icons
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                    
+                    // Log for debugging
+                    console.log(detection.name + ' detected on mobile/tablet. User agent:', navigator.userAgent);
+                }
+            }
+        })();
+    </script>
 
     <script src="script.js"></script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>

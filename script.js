@@ -1701,9 +1701,13 @@ function loadGallery() {
 
 // Dark mode toggle functionality
 (function() {
-    // Note: Theme is already applied by inline script in <head> to prevent flash
-    // This function just syncs the toggle button state
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply theme on page load
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
     
     // Update toggle button state and label
     function updateToggleButton(theme) {
@@ -1731,7 +1735,6 @@ function loadGallery() {
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
             document.documentElement.setAttribute('data-theme', newTheme);
-            document.documentElement.style.colorScheme = newTheme === 'dark' ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
             
             // Update toggle state and label

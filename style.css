@@ -8,9 +8,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap');
 
 :root {
-  /* Tell browsers this site supports dark mode - prevents browser auto-darkening */
-  color-scheme: light dark;
-  
   --color-bg: #FFFFFF;        /* White */
   --color-primary: #C94D4D;   /* Muted Terracotta Red */
   --color-primary-hover: #B54747;   /* Darker red for hover */
@@ -1717,6 +1714,62 @@ a.gallery-item {
     margin-top: 0.5rem;
 }
 
+/* In-app browser detection message */
+.giftcard-in-app-detection-message {
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    background-color: rgba(var(--color-primary-rgb), 0.1);
+    border: 1px solid var(--color-primary);
+    border-radius: 8px;
+}
+
+.giftcard-in-app-detection-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.giftcard-in-app-detection-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--color-primary);
+}
+
+.giftcard-in-app-detection-message h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.giftcard-in-app-detection-message p {
+    color: var(--color-text);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.giftcard-in-app-detection-message ol,
+.giftcard-in-app-detection-message ul {
+    text-align: left;
+    display: inline-block;
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.giftcard-in-app-detection-message ol li,
+.giftcard-in-app-detection-message ul li {
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+}
+
+.giftcard-in-app-detection-message .btn {
+    margin-top: 0.5rem;
+}
+
 /* Dark mode: Apply filters to make iframe match dark theme */
 [data-theme="dark"] .giftcard-widget iframe {
     filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1);
@@ -3186,137 +3239,6 @@ a.gallery-item {
     
     .footer-copyright {
         align-items: flex-start;
-    }
-}
-
-/* Thank You Page */
-.thankyou-section {
-    min-height: calc(100vh - 200px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 1rem;
-}
-
-.thankyou-container {
-    max-width: 600px;
-    width: 100%;
-    margin: 0 auto;
-}
-
-.thankyou-content {
-    text-align: center;
-    background-color: var(--color-surface);
-    padding: 3rem 2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, var(--opacity-10));
-}
-
-.thankyou-icon-wrapper {
-    margin-bottom: 2rem;
-}
-
-.thankyou-icon {
-    width: 80px;
-    height: 80px;
-    color: var(--color-primary);
-    stroke-width: 1.5;
-}
-
-.thankyou-title {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--color-text);
-}
-
-.thankyou-subtitle {
-    font-size: 1.25rem;
-    color: rgba(var(--color-text-rgb), var(--opacity-70));
-    margin-bottom: 3rem;
-}
-
-.thankyou-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    margin-bottom: 3rem;
-    text-align: left;
-}
-
-.thankyou-info-item {
-    display: flex;
-    gap: 1.5rem;
-    align-items: flex-start;
-}
-
-.thankyou-info-icon {
-    width: 32px;
-    height: 32px;
-    color: var(--color-primary);
-    flex-shrink: 0;
-    margin-top: 0.25rem;
-}
-
-.thankyou-info-item h3 {
-    font-size: 1.125rem;
-    margin-bottom: 0.5rem;
-    color: var(--color-text);
-}
-
-.thankyou-info-item p {
-    color: rgba(var(--color-text-rgb), var(--opacity-80));
-    line-height: 1.6;
-    margin: 0;
-}
-
-.thankyou-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.thankyou-actions .btn {
-    min-width: 180px;
-}
-
-@media (max-width: 768px) {
-    .thankyou-section {
-        padding: 2rem 1rem;
-    }
-
-    .thankyou-content {
-        padding: 2rem 1.5rem;
-    }
-
-    .thankyou-title {
-        font-size: 2rem;
-    }
-
-    .thankyou-subtitle {
-        font-size: 1.125rem;
-    }
-
-    .thankyou-icon {
-        width: 64px;
-        height: 64px;
-    }
-
-    .thankyou-info {
-        gap: 1.5rem;
-    }
-
-    .thankyou-info-item {
-        gap: 1rem;
-    }
-
-    .thankyou-actions {
-        flex-direction: column;
-    }
-
-    .thankyou-actions .btn {
-        width: 100%;
-        min-width: auto;
     }
 }
 
