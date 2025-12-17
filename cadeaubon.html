@@ -3,8 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>Oriento - Cadeaubon</title>
     <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+    <!-- Apply theme immediately to prevent browser auto-darkening and flash -->
+    <script>
+        (function() {
+            const root = document.documentElement;
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            // Use saved preference, or default to user's system preference
+            const initial = saved || (prefersDark ? 'dark' : 'light');
+            root.setAttribute('data-theme', initial);
+            root.style.colorScheme = initial === 'dark' ? 'dark' : 'light';
+        })();
+    </script>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="0ab64e85-45ea-4c78-865c-c0731fd3dd7d"></script>
@@ -67,19 +80,24 @@
             <!-- Online Cadeaubon Content (visible by default) -->
             <div class="giftcard-content-wrapper" id="giftcard-online-content">
                 <div class="giftcard-online">
-                    <!-- In-app browser replacement (shown instead of iframe) -->
-                    <div class="giftcard-in-app-replacement" id="giftcard-in-app-replacement" style="display: none;">
+                    <!-- In-app browser message (shown instead of iframe) -->
+                    <div class="giftcard-in-app-message" id="giftcard-in-app-message" style="display: none;">
                         <div class="giftcard-in-app-content">
-                            <img src="img/giftcard.png" alt="Cadeaubon" class="giftcard-in-app-illustration">
-                            <h4 class="giftcard-in-app-title">Oriento cadeaubon per e-mail</h4>
-                            <p>Op zoek naar een last-minute cadeau of een attent geschenk? Koop eenvoudig een cadeaubon online en ontvang hem meteen in je mailbox. Zo kan je hem direct doorsturen of zelf mooi afdrukken.</p>
-                            <a href="https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production&instance=z8k6en6czt" 
+                            <i data-lucide="alert-triangle" class="giftcard-in-app-icon"></i>
+                            <h4>Open in Safari of Chrome</h4>
+                            <p>De betaling werkt niet in de in-app browser van Instagram of Facebook. Open deze pagina in Safari of Chrome om de betaling te voltooien.</p>
+                            <p><strong>Hoe te doen:</strong></p>
+                            <ol style="text-align: left; display: inline-block; margin: 1rem 0;">
+                                <li>Klik op de drie puntjes (•••) rechtsboven</li>
+                                <li>Selecteer "Open in Safari" of "Open in Chrome"</li>
+                                <li>Ga terug naar deze pagina en probeer opnieuw</li>
+                            </ol>
+                            <a href="https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production" 
                                target="_blank" 
                                rel="noopener noreferrer"
                                class="btn btn-primary" 
-                               id="giftcard-open-native-browser-btn" 
-                               data-umami-event="Giftcard - In-App Browser Direct Link">
-                                Koop een cadeaubon
+                               data-umami-event="Giftcard - Direct Checkout Link">
+                                Open checkout pagina
                             </a>
                         </div>
                     </div>
@@ -226,60 +244,30 @@
         s = i.getElementsByTagName(f)[0];
         s.parentNode.insertBefore(p, s);
     })(window, document, "script", "https://cdn.giftup.app/dist/gift-up.js", "giftup");
-    </script>
-
-    <script>
-        // Toggle iframe vs direct link based on viewport, and wire the button
-        (function() {
-            const checkoutUrl = 'https://cdn.giftup.app/dist/checkout.html?site=6c95273a-a914-498b-dd57-08de1ad66191&environment=Production&instance=z8k6en6czt';
-            const widget = document.getElementById('giftcard-widget');
-            const replacement = document.getElementById('giftcard-in-app-replacement');
-            const openLink = document.getElementById('giftcard-open-native-browser-btn');
-
-            if (openLink) {
-                openLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    try {
-                        window.location.href = checkoutUrl;
-                    } catch (err) {
-                        try {
-                            window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
-                        } catch (err2) {
-                            // Last resort: default link behavior
-                        }
-                    }
-                });
-            }
-
-            function isMobileOrTablet() {
-                return window.innerWidth <= 1024;
-            }
-
-            function updateView() {
-                if (!widget || !replacement) return;
-                if (isMobileOrTablet()) {
-                    widget.style.display = 'none';
-                    replacement.style.display = 'block';
-                } else {
-                    widget.style.display = 'block';
-                    replacement.style.display = 'none';
+    
+    // Set locale to Dutch for Mollie payment page
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            if (window.giftup) {
+                try {
+                    window.giftup('setLocale', 'nl_NL');
+                } catch(e) {
+                    console.log('Gift-up locale setting:', e);
                 }
             }
-
-            updateView();
-
-            let resizeTimeout;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(updateView, 150);
-            });
-
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        })();
+        }, 1000);
+    });
+    
+    if (window.giftup) {
+        try {
+            window.giftup('setLocale', 'nl_NL');
+        } catch(e) {
+            // Will retry on DOMContentLoaded
+        }
+    }
     </script>
+
+
 
     <script src="script.js"></script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
