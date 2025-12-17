@@ -294,8 +294,9 @@
                     note: ''
                 };
                 
-                // Check for Messenger
-                if (ua.includes('FBAN') || ua.includes('FBAV') || ua.includes('Messenger') || ua.includes('FBSV')) {
+                // Check for Messenger specifically (not just Facebook app)
+                // Messenger user agent contains "Messenger" explicitly
+                if (ua.includes('Messenger')) {
                     result.detected = true;
                     result.name = 'Messenger';
                     result.title = 'Je kunt geen cadeaubon kopen via de Messenger browser.';
