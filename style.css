@@ -19,6 +19,17 @@
   --color-text-white: #ffffff;        /* Deep Brown */
   --color-cadeautip: #F5D76E;         /* Soft golden yellow for CADEAUTIP badge */
   --color-accent: #FFBFBF;             /* Light pink accent for nav stroke */
+  --color-open: #0D8438;               /* Green for open status */
+  --color-closing-soon: #C75300;       /* Orange for closing soon status */
+  --color-closed: #BE3C3C;             /* Red for closed status */
+  
+  /* Opening hours status colors */
+  --color-open-text: #0D7805;         /* Green text for open status */
+  --color-closing-soon-text: #A85D00;  /* Orange text for closing soon status */
+  --color-closed-text: #BE3C3C;        /* Red text for closed status */
+  --color-open-bg: #F9FFE1;           /* Light green background for open status */
+  --color-closing-soon-bg: #FFF5E1;    /* Light orange background for closing soon status */
+  --color-closed-bg: #FFF1F1;         /* Light red background for closed status */
   
   /* Opacity tokens */
   --opacity-10: 0.1;
@@ -40,6 +51,8 @@
   --color-cadeautip-rgb: 245, 215, 110;
   --color-surface-rgb: 255, 255, 255;
   --color-bg-rgb: 0, 0, 0; /* For overlay backgrounds */
+  --color-open-rgb: 34, 197, 94;
+  --color-closing-soon-rgb: 249, 115, 22;
 }
 
 /* Dark mode color scheme */
@@ -55,6 +68,17 @@
   --color-text-white: #FAF3E0; /* Dark text where white was used */
   --color-cadeautip: #B8941F;  /* Darker muted gold for dark mode CADEAUTIP badge */
   --color-accent: #4D0D0D;     /* Dark red accent for dark mode nav stroke */
+  --color-open: #4ade80;       /* Lighter green for dark mode open status */
+  --color-closing-soon: #fb923c; /* Lighter orange for dark mode closing soon status */
+  --color-closed: #BE3C3C;     /* Red for closed status (same in dark mode) */
+  
+  /* Opening hours status colors (dark mode) */
+  --color-open-text: #4ade80;         /* Lighter green text for dark mode open status */
+  --color-closing-soon-text: #fb923c;  /* Lighter orange text for dark mode closing soon status */
+  --color-closed-text: #BE3C3C;        /* Red text for closed status (same in dark mode) */
+  --color-open-bg: rgba(74, 222, 128, 0.15);     /* Dark green background for open status */
+  --color-closing-soon-bg: rgba(251, 146, 60, 0.15); /* Dark orange background for closing soon status */
+  --color-closed-bg: rgba(190, 60, 60, 0.15);     /* Dark red background for closed status */
   
   /* RGB values only for borders/backgrounds that need rgba in dark mode */
   --color-secondary-rgb: 146, 40, 37;
@@ -63,6 +87,8 @@
   --color-cadeautip-rgb: 184, 148, 31;
   --color-surface-rgb: 42, 42, 42;
   --color-bg-rgb: 0, 0, 0; /* For overlay backgrounds */
+  --color-open-rgb: 74, 222, 128;
+  --color-closing-soon-rgb: 251, 146, 60;
 }
 
 * {
@@ -1301,7 +1327,7 @@ a.gallery-item {
 
 .review-date {
     color: var(--color-text);
-    opacity: var(--opacity-60);
+    opacity: var(--opacity-70);
     font-size: 0.85rem;
     margin-top: auto;
     padding-top: 1rem;
@@ -2118,6 +2144,17 @@ a.gallery-item {
     min-width: 200px;
 }
 
+.footer-hours {
+    min-width: 300px;
+}
+
+/* Desktop: footer hours min-width 400px */
+@media (min-width: 1025px) {
+    .footer-hours {
+        min-width: 400px;
+    }
+}
+
 .footer-info {
     margin-bottom: 1rem;
 }
@@ -2161,9 +2198,29 @@ a.gallery-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.25rem 0;
-    border-bottom: 1px solid rgba(var(--color-secondary-rgb), var(--opacity-20));
+    padding: 0.5rem 1rem;
+    min-height: 2.5rem;
     gap: 2rem;
+}
+
+.day-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.day-hours .day {
+    font-weight: 600;
+}
+
+.hours {
+    text-align: right;
+    line-height: 1.5;
+}
+
+.hours-subtext {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--color-closed-text);
 }
 
 .day-hours:last-child {
@@ -2545,17 +2602,100 @@ a.gallery-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(var(--color-secondary-rgb), var(--opacity-20));
+    padding: 0.75rem 1rem;
+    min-height: 2.5rem;
     gap: 2rem;
 }
 
-.modal-day-hours.is-today .modal-day,
-.modal-day-hours.is-today .modal-hours-text,
+.modal-day-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .day-hours.is-today .day,
-.day-hours.is-today .hours {
-    color: var(--color-primary);
+.day-hours.is-today .hours,
+.modal-day-hours.is-today .modal-day,
+.modal-day-hours.is-today .modal-hours-text {
     font-weight: 700;
+}
+
+/* Status colors and backgrounds for today */
+.day-hours.is-today.status-open {
+    background-color: var(--color-open-bg);
+}
+
+.day-hours.is-today.status-open .day,
+.day-hours.is-today.status-open .hours {
+    color: var(--color-open-text);
+}
+
+.day-hours.is-today.status-open .hours-subtext {
+    color: var(--color-open-text);
+}
+
+.modal-day-hours.is-today.status-open {
+    background-color: var(--color-open-bg);
+}
+
+.modal-day-hours.is-today.status-open .modal-day,
+.modal-day-hours.is-today.status-open .modal-hours-text {
+    color: var(--color-open-text);
+}
+
+.modal-day-hours.is-today.status-open .modal-hours-subtext {
+    color: var(--color-open-text);
+}
+
+.day-hours.is-today.status-closing-soon {
+    background-color: var(--color-closing-soon-bg);
+}
+
+.day-hours.is-today.status-closing-soon .day,
+.day-hours.is-today.status-closing-soon .hours {
+    color: var(--color-closing-soon-text);
+}
+
+.day-hours.is-today.status-closing-soon .hours-subtext {
+    color: var(--color-closing-soon-text);
+}
+
+.modal-day-hours.is-today.status-closing-soon {
+    background-color: var(--color-closing-soon-bg);
+}
+
+.modal-day-hours.is-today.status-closing-soon .modal-day,
+.modal-day-hours.is-today.status-closing-soon .modal-hours-text {
+    color: var(--color-closing-soon-text);
+}
+
+.modal-day-hours.is-today.status-closing-soon .modal-hours-subtext {
+    color: var(--color-closing-soon-text);
+}
+
+.day-hours.is-today.status-closed {
+    background-color: var(--color-closed-bg);
+}
+
+.day-hours.is-today.status-closed .day,
+.day-hours.is-today.status-closed .hours {
+    color: var(--color-closed-text);
+}
+
+.day-hours.is-today.status-closed .hours-subtext {
+    color: var(--color-closed-text);
+}
+
+.modal-day-hours.is-today.status-closed {
+    background-color: var(--color-closed-bg);
+}
+
+.modal-day-hours.is-today.status-closed .modal-day,
+.modal-day-hours.is-today.status-closed .modal-hours-text {
+    color: var(--color-closed-text);
+}
+
+.modal-day-hours.is-today.status-closed .modal-hours-subtext {
+    color: var(--color-closed-text);
 }
 
 .modal-day-hours:last-child {
@@ -2572,6 +2712,19 @@ a.gallery-item {
     color: var(--color-text);
     font-size: 0.95rem;
     text-align: right;
+    line-height: 1.5;
+}
+
+.modal-day-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.modal-hours-subtext {
+    font-size: 0.875rem;
+    font-style: italic;
+    color: var(--color-closed-text);
 }
 
 

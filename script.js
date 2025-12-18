@@ -1423,11 +1423,19 @@ function loadPopupModal() {
             // Set title
             if (data.title && popupTitle) {
                 popupTitle.textContent = data.title;
+                popupTitle.removeAttribute('aria-hidden');
+            } else if (popupTitle) {
+                popupTitle.textContent = '';
+                popupTitle.setAttribute('aria-hidden', 'true');
             }
             
             // Set text
             if (data.text && popupText) {
                 popupText.innerHTML = data.text;
+                popupText.removeAttribute('aria-hidden');
+            } else if (popupText) {
+                popupText.innerHTML = '';
+                popupText.setAttribute('aria-hidden', 'true');
             }
             
             // Show modal after a short delay
@@ -1538,6 +1546,65 @@ function loadHeroContent() {
         .catch(() => {});
 }
 
+// Helper function to parse hours string and determine status
+function parseHoursStatus(hoursString, isToday) {
+    if (!isToday) {
+        return { status: null, subtext: '' };
+    }
+    
+    const hours = hoursString.trim();
+    
+    // Check if closed
+    if (hours.toLowerCase() === 'gesloten' || hours === '') {
+        return { status: 'closed', subtext: '' };
+    }
+    
+    // Parse time ranges (e.g., "10:00 - 12:00 en 14:00 - 18:00" or "14:00 - 18:00")
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentTime = currentHour * 60 + currentMinute; // Convert to minutes
+    
+    // Split by "en" to handle multiple ranges
+    const ranges = hours.split(' en ').map(r => r.trim());
+    
+    let isOpen = false;
+    let closingTime = null;
+    let isClosingSoon = false;
+    
+    for (const range of ranges) {
+        // Match pattern like "10:00 - 12:00" or "14:00 - 18:00"
+        const match = range.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+        if (match) {
+            const openHour = parseInt(match[1]);
+            const openMinute = parseInt(match[2]);
+            const closeHour = parseInt(match[3]);
+            const closeMinute = parseInt(match[4]);
+            
+            const openTime = openHour * 60 + openMinute;
+            const closeTime = closeHour * 60 + closeMinute;
+            
+            // Check if currently open
+            if (currentTime >= openTime && currentTime < closeTime) {
+                isOpen = true;
+                closingTime = closeTime;
+                break;
+            }
+        }
+    }
+    
+    if (isOpen && closingTime) {
+        // Check if closing within 1 hour (60 minutes)
+        const minutesUntilClose = closingTime - currentTime;
+        if (minutesUntilClose <= 60) {
+            return { status: 'closing-soon', subtext: 'We sluiten bijna' };
+        }
+        return { status: 'open', subtext: 'Wij zijn open' };
+    }
+    
+    return { status: 'closed', subtext: 'We zijn gesloten voor vandaag' };
+}
+
 // Populate all footer hours grids from CMS
 function loadOpeningsurenFooter() {
     const grids = document.querySelectorAll('.hours-grid');
@@ -1558,10 +1625,22 @@ function loadOpeningsurenFooter() {
             const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
             const html = daysArray.map(d => {
                 const isToday = String(d.day).trim().toLowerCase().includes(todayName);
+                const statusInfo = parseHoursStatus(d.hours, isToday);
+                const isAlwaysClosed = d.hours.toLowerCase() === 'gesloten' || d.hours === '';
+                const showSubtext = statusInfo.subtext && (!isAlwaysClosed || statusInfo.status === 'open');
+                
+                // Format hours to display time ranges vertically
+                const formattedHours = d.hours.includes(' en ') 
+                    ? d.hours.split(' en ').map(range => range.trim()).join('<br>')
+                    : d.hours;
+                
                 return `
-                    <div class="day-hours${isToday ? ' is-today' : ''}" ${isToday ? 'aria-current="date"' : ''}>
-                        <span class="day">${d.day}</span>
-                        <span class="hours">${d.hours}</span>
+                    <div class="day-hours${isToday ? ' is-today' : ''}${statusInfo.status ? ' status-' + statusInfo.status : ''}" ${isToday ? 'aria-current="date"' : ''}>
+                        <div class="day-wrapper">
+                            <span class="day">${d.day}</span>
+                            ${showSubtext ? `<span class="hours-subtext">${statusInfo.subtext}</span>` : ''}
+                        </div>
+                        <span class="hours">${formattedHours}</span>
                     </div>
                 `;
             }).join('');
@@ -1597,10 +1676,22 @@ function initOpeningsurenModal() {
         const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
         container.innerHTML = daysArray.map(d => {
             const isToday = String(d.day).trim().toLowerCase().includes(todayName);
+            const statusInfo = parseHoursStatus(d.hours, isToday);
+            const isAlwaysClosed = d.hours.toLowerCase() === 'gesloten' || d.hours === '';
+            const showSubtext = statusInfo.subtext && (!isAlwaysClosed || statusInfo.status === 'open');
+            
+            // Format hours to display time ranges vertically
+            const formattedHours = d.hours.includes(' en ') 
+                ? d.hours.split(' en ').map(range => range.trim()).join('<br>')
+                : d.hours;
+            
             return `
-                <div class="modal-day-hours${isToday ? ' is-today' : ''}" ${isToday ? 'aria-current="date"' : ''}>
-                    <span class="modal-day">${d.day}</span>
-                    <span class="modal-hours-text">${d.hours}</span>
+                <div class="modal-day-hours${isToday ? ' is-today' : ''}${statusInfo.status ? ' status-' + statusInfo.status : ''}" ${isToday ? 'aria-current="date"' : ''}>
+                    <div class="modal-day-wrapper">
+                        <span class="modal-day">${d.day}</span>
+                        ${showSubtext ? `<span class="modal-hours-subtext">${statusInfo.subtext}</span>` : ''}
+                    </div>
+                    <span class="modal-hours-text">${formattedHours}</span>
                 </div>
             `;
         }).join('');
