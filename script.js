@@ -260,7 +260,14 @@ function loadReviews() {
             
             const html = displayReviews.map(review => {
                 const initials = review.author ? review.author.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??';
-                const stars = '★'.repeat(review.rating || 5);
+                const rating = review.rating || 5;
+                const stars = Array.from({ length: 5 }, (_, i) => {
+                    if (i < rating) {
+                        return '<i data-lucide="star" class="star-icon star-filled"></i>';
+                    } else {
+                        return '<i data-lucide="star" class="star-icon star-empty"></i>';
+                    }
+                }).join('');
                 
                 return `
                     <div class="review-card">
