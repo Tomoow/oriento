@@ -1601,9 +1601,9 @@ function parseHoursStatus(hoursString, isToday) {
     }
     
     if (isOpen && closingTime) {
-        // Check if closing within 1 hour (60 minutes)
+        // Check if closing within 30 minutes
         const minutesUntilClose = closingTime - currentTime;
-        if (minutesUntilClose <= 60) {
+        if (minutesUntilClose <= 30) {
             return { status: 'closing-soon', subtext: 'We sluiten bijna' };
         }
         return { status: 'open', subtext: 'Wij zijn open' };
@@ -1815,21 +1815,31 @@ function loadGallery() {
         document.documentElement.setAttribute('data-theme', 'dark');
     }
     
-    // Update toggle button state and label
+    // Update toggle button state and icons
     function updateToggleButton(theme) {
-        const toggle = document.getElementById('dark-mode-toggle');
-        const label = toggle?.querySelector('.toggle-label');
+        const toggle = document.getElementById('dark-mode-toggle-header');
+        const sunIcon = toggle?.querySelector('.theme-icon-sun');
+        const moonIcon = toggle?.querySelector('.theme-icon-moon');
         
-        if (toggle && label) {
+        if (toggle) {
             const isDark = theme === 'dark';
             toggle.setAttribute('aria-checked', isDark ? 'true' : 'false');
-            label.textContent = isDark ? 'Light mode' : 'Dark mode';
+            
+            if (sunIcon && moonIcon) {
+                if (isDark) {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                } else {
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                }
+            }
         }
     }
     
     // Initialize toggle button
     function initDarkModeToggle() {
-        const toggle = document.getElementById('dark-mode-toggle');
+        const toggle = document.getElementById('dark-mode-toggle-header');
         if (!toggle) return;
         
         // Set initial state
@@ -1843,8 +1853,13 @@ function loadGallery() {
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             
-            // Update toggle state and label
+            // Update toggle state and icons
             updateToggleButton(newTheme);
+            
+            // Reinitialize Lucide icons after theme change
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
         });
     }
     
