@@ -1570,7 +1570,7 @@ function parseHoursStatus(hoursString, isToday) {
     
     let isOpen = false;
     let closingTime = null;
-    let isClosingSoon = false;
+    let nextOpeningTime = null;
     
     for (const range of ranges) {
         // Match pattern like "10:00 - 12:00" or "14:00 - 18:00"
@@ -1590,6 +1590,13 @@ function parseHoursStatus(hoursString, isToday) {
                 closingTime = closeTime;
                 break;
             }
+            
+            // Track next opening time if we're before it
+            if (currentTime < openTime) {
+                if (nextOpeningTime === null || openTime < nextOpeningTime) {
+                    nextOpeningTime = openTime;
+                }
+            }
         }
     }
     
@@ -1602,7 +1609,15 @@ function parseHoursStatus(hoursString, isToday) {
         return { status: 'open', subtext: 'Wij zijn open' };
     }
     
-    return { status: 'closed', subtext: 'We zijn gesloten voor vandaag' };
+    // Check if store will open within 2 hours (120 minutes)
+    if (nextOpeningTime !== null) {
+        const minutesUntilOpen = nextOpeningTime - currentTime;
+        if (minutesUntilOpen <= 120 && minutesUntilOpen > 0) {
+            return { status: 'opening-soon', subtext: 'We gaan binnenkort open' };
+        }
+    }
+    
+    return { status: 'closed', subtext: 'We zijn momenteel gesloten' };
 }
 
 // Populate all footer hours grids from CMS

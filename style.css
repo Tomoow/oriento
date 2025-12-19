@@ -2672,6 +2672,32 @@ a.gallery-item {
     color: var(--color-closing-soon-text);
 }
 
+.day-hours.is-today.status-opening-soon {
+    background-color: var(--color-closing-soon-bg);
+}
+
+.day-hours.is-today.status-opening-soon .day,
+.day-hours.is-today.status-opening-soon .hours {
+    color: var(--color-closing-soon-text);
+}
+
+.day-hours.is-today.status-opening-soon .hours-subtext {
+    color: var(--color-closing-soon-text);
+}
+
+.modal-day-hours.is-today.status-opening-soon {
+    background-color: var(--color-closing-soon-bg);
+}
+
+.modal-day-hours.is-today.status-opening-soon .modal-day,
+.modal-day-hours.is-today.status-opening-soon .modal-hours-text {
+    color: var(--color-closing-soon-text);
+}
+
+.modal-day-hours.is-today.status-opening-soon .modal-hours-subtext {
+    color: var(--color-closing-soon-text);
+}
+
 .day-hours.is-today.status-closed {
     background-color: var(--color-closed-bg);
 }
