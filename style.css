@@ -240,6 +240,12 @@ body {
     color: var(--color-text);
 }
 
+.icon-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .icon-button i {
     display: block;
     margin: 0;
@@ -2621,6 +2627,51 @@ a.gallery-item {
     font-family: 'Playfair Display', serif;
     color: var(--color-primary);
     margin-bottom: 1rem;
+}
+
+/* Openingsuren date picker */
+.openingsuren-date-picker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background-color: var(--color-tertiary);
+    border-radius: 8px;
+}
+
+.date-picker-prev,
+.date-picker-next {
+    width: 40px;
+    height: 40px;
+}
+
+.date-picker-prev i,
+.date-picker-next i {
+    width: 20px;
+    height: 20px;
+}
+
+
+.date-picker-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    gap: 0.25rem;
+}
+
+.date-picker-label {
+    font-size: 0.85rem;
+    color: var(--color-text);
+    opacity: 0.7;
+}
+
+.date-picker-range {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
 }
 
 .modal h3 {

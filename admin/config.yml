@@ -93,6 +93,63 @@ collections:
             required: false
             hint: "Bijvoorbeeld: '10:00 - 12:00 en 14:00 - 18:00' of 'Gesloten'"
   
+  - name: "custom-dates" # Custom opening hours for specific dates
+    label: "Extra open- of sluitdagen"
+    files:
+      - label: "Extra open- of sluitdagen"
+        name: "customDates"
+        file: "content/custom-dates.json"
+        fields:
+          - label: "Aangepaste datums"
+            name: "customDates"
+            widget: "list"
+            required: false
+            summary: "{{fields.date}}"
+            hint: "Voeg specifieke datums toe waarop de openingsuren afwijken van de standaard. Bijvoorbeeld: extra open op zondag 28 december of gesloten tijdens vakantie."
+            fields:
+              - label: "Datum"
+                name: "date"
+                widget: "date"
+                required: true
+                format: "YYYY-MM-DD"
+                hint: "Selecteer de specifieke datum"
+              - label: "Voormiddag"
+                name: "morning"
+                widget: "object"
+                required: false
+                collapsed: true
+                fields:
+                  - label: "Van"
+                    name: "open"
+                    widget: "string"
+                    required: false
+                    pattern: ['^(?:[0-1]?[0-9]|2[0-3]):[0-5][0-9]$|^$', 'Formaat: HH:mm (bijv. 10:00) of leeg laten']
+                    hint: "Openingsuur voormiddag (bijv. 10:00). Laat leeg als gesloten."
+                  - label: "Tot"
+                    name: "close"
+                    widget: "string"
+                    required: false
+                    pattern: ['^(?:[0-1]?[0-9]|2[0-9]):[0-5][0-9]$|^$', 'Formaat: HH:mm (bijv. 12:00) of leeg laten']
+                    hint: "Sluitingsuur voormiddag (bijv. 12:00). Laat leeg als gesloten."
+              - label: "Namiddag"
+                name: "afternoon"
+                widget: "object"
+                required: false
+                collapsed: true
+                fields:
+                  - label: "Van"
+                    name: "open"
+                    widget: "string"
+                    required: false
+                    pattern: ['^(?:[0-1]?[0-9]|2[0-3]):[0-5][0-9]$|^$', 'Formaat: HH:mm (bijv. 14:00) of leeg laten']
+                    hint: "Openingsuur namiddag (bijv. 14:00). Laat leeg als gesloten."
+                  - label: "Tot"
+                    name: "close"
+                    widget: "string"
+                    required: false
+                    pattern: ['^(?:[0-1]?[0-9]|2[0-3]):[0-5][0-9]$|^$', 'Formaat: HH:mm (bijv. 18:00) of leeg laten']
+                    hint: "Sluitingsuur namiddag (bijv. 18:00). Laat leeg als gesloten."
+  
   - name: "brands" # Brands collection
     label: "Carrousel met merken" # Used in the UI
     files: # File-based collection for a single JSON file

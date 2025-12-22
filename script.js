@@ -1553,6 +1553,229 @@ function loadHeroContent() {
         .catch(() => {});
 }
 
+// Helper functions for date/week navigation
+function getWeekStart(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+    return new Date(d.setDate(diff));
+}
+
+function formatWeekRange(weekStart) {
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    
+    const months = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+    const startDay = weekStart.getDate();
+    const startMonth = months[weekStart.getMonth()];
+    const endDay = weekEnd.getDate();
+    const endMonth = months[weekEnd.getMonth()];
+    
+    if (weekStart.getMonth() === weekEnd.getMonth()) {
+        return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
+    } else {
+        return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
+    }
+}
+
+function isDateInPast(date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+    return checkDate < today;
+}
+
+function formatDateForLookup(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Helper function to extract time from various formats
+function extractTime(timeValue) {
+    if (!timeValue || timeValue === '') return null;
+    
+    // If it's already in HH:mm format, return it
+    if (typeof timeValue === 'string' && /^\d{1,2}:\d{2}$/.test(timeValue)) {
+        // Normalize to HH:mm format (pad hour if needed)
+        const parts = timeValue.split(':');
+        const hour = parts[0].padStart(2, '0');
+        const minute = parts[1];
+        return `${hour}:${minute}`;
+    }
+    
+    // If it's in ISO format (with date), extract time part
+    if (typeof timeValue === 'string' && timeValue.includes('T')) {
+        const timePart = timeValue.split('T')[1];
+        return timePart.substring(0, 5); // Get HH:mm
+    }
+    
+    // If it's a Date object, format it
+    if (timeValue instanceof Date) {
+        const hours = String(timeValue.getHours()).padStart(2, '0');
+        const minutes = String(timeValue.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+    
+    return null;
+}
+
+// Convert hours data to old format string (handles both string and object formats)
+function convertHoursToOldFormat(dayData) {
+    // If it's already a string, return it
+    if (typeof dayData === 'string') {
+        return dayData;
+    }
+    
+    // If it's null or undefined, return closed
+    if (!dayData) {
+        return 'Gesloten';
+    }
+    
+    // If it's an object with closed flag
+    if (dayData.closed) {
+        return 'Gesloten';
+    }
+    
+    // Build time ranges from morning/afternoon
+    const parts = [];
+    
+    // Handle morning (voormiddag)
+    if (dayData.morning && dayData.morning.open && dayData.morning.close) {
+        const morningOpen = extractTime(dayData.morning.open);
+        const morningClose = extractTime(dayData.morning.close);
+        if (morningOpen && morningClose) {
+            parts.push(`${morningOpen} - ${morningClose}`);
+        }
+    }
+    
+    // Handle afternoon (namiddag)
+    if (dayData.afternoon && dayData.afternoon.open && dayData.afternoon.close) {
+        const afternoonOpen = extractTime(dayData.afternoon.open);
+        const afternoonClose = extractTime(dayData.afternoon.close);
+        if (afternoonOpen && afternoonClose) {
+            parts.push(`${afternoonOpen} - ${afternoonClose}`);
+        }
+    }
+    
+    if (parts.length === 0) {
+        return 'Gesloten';
+    }
+    
+    return parts.join(' en ');
+}
+
+// Global variable to store custom dates (loaded separately)
+let customDatesData = null;
+
+// Load custom dates from separate JSON file
+function loadCustomDates() {
+    return fetch('content/custom-dates.json')
+        .then(r => {
+            if (!r.ok) {
+                console.log('Custom dates file not found or not accessible');
+                return null;
+            }
+            return r.json();
+        })
+        .then(data => {
+            console.log('Loaded custom dates:', data);
+            customDatesData = data;
+            return data;
+        })
+        .catch((err) => {
+            console.error('Error loading custom dates:', err);
+            customDatesData = null;
+            return null;
+        });
+}
+
+// Get hours for a specific date (check customDates first, then default)
+function getHoursForDate(data, date) {
+    const dateStr = formatDateForLookup(date);
+    const dayNames = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'];
+    const dayIndex = date.getDay();
+    const dayName = dayNames[dayIndex];
+    
+    // Check customDates from separate file first (highest priority)
+    if (customDatesData && customDatesData.customDates && Array.isArray(customDatesData.customDates)) {
+        console.log('Checking custom dates for:', dateStr, 'Available custom dates:', customDatesData.customDates);
+        for (const customDate of customDatesData.customDates) {
+            console.log('Comparing:', customDate.date, '===', dateStr, '?', customDate.date === dateStr);
+            if (customDate.date === dateStr) {
+                // Check if it's the new structured format (morning/afternoon)
+                if (customDate.morning || customDate.afternoon) {
+                    console.log('Found custom date match (structured format)! Returning:', customDate);
+                    return {
+                        closed: false,
+                        morning: customDate.morning || null,
+                        afternoon: customDate.afternoon || null
+                    };
+                }
+                // Check if it's the old string format (backward compatibility)
+                if (customDate.hours) {
+                    console.log('Found custom date match (string format)! Returning:', customDate.hours);
+                    return customDate.hours;
+                }
+            }
+        }
+    } else {
+        console.log('No custom dates data loaded:', customDatesData);
+    }
+    
+    // Check customDates in main data (backward compatibility)
+    if (data.customDates && Array.isArray(data.customDates)) {
+        for (const customDate of data.customDates) {
+            if (customDate.date === dateStr) {
+                if (customDate.hours) {
+                    return customDate.hours;
+                } else if (customDate.morning || customDate.afternoon || customDate.closed !== undefined) {
+                    return {
+                        closed: customDate.closed || false,
+                        morning: customDate.morning || null,
+                        afternoon: customDate.afternoon || null
+                    };
+                }
+            }
+        }
+    }
+    
+    // Check old custom structure (for backward compatibility)
+    if (data.custom && Array.isArray(data.custom)) {
+        for (const custom of data.custom) {
+            if (custom.date === dateStr) {
+                if (custom[dayName]) {
+                    return custom[dayName];
+                }
+            }
+            if (custom.dateRange) {
+                const start = new Date(custom.dateRange.start);
+                const end = new Date(custom.dateRange.end);
+                const checkDate = new Date(dateStr);
+                if (checkDate >= start && checkDate <= end) {
+                    if (custom[dayName]) {
+                        return custom[dayName];
+                    }
+                }
+            }
+        }
+    }
+    
+    // Fall back to default (new structure)
+    if (data.default && data.default[dayName]) {
+        return data.default[dayName];
+    }
+    
+    // Fall back to old default structure (backward compatibility)
+    if (data[dayName]) {
+        return data[dayName];
+    }
+    
+    return null;
+}
+
 // Helper function to parse hours string and determine status
 function parseHoursStatus(hoursString, isToday) {
     if (!isToday) {
@@ -1631,19 +1854,48 @@ function parseHoursStatus(hoursString, isToday) {
 function loadOpeningsurenFooter() {
     const grids = document.querySelectorAll('.hours-grid');
     if (grids.length === 0) return;
-    fetch('content/openingsuren.json')
-        .then(r => r.json())
-        .then(data => {
-            // Convert new structure (individual day fields) to array format
-            const daysArray = [
-                { day: 'Maandag', hours: data.maandag || '' },
-                { day: 'Dinsdag', hours: data.dinsdag || '' },
-                { day: 'Woensdag', hours: data.woensdag || '' },
-                { day: 'Donderdag', hours: data.donderdag || '' },
-                { day: 'Vrijdag', hours: data.vrijdag || '' },
-                { day: 'Zaterdag', hours: data.zaterdag || '' },
-                { day: 'Zondag', hours: data.zondag || '' }
-            ];
+    
+    // Load both openingsuren and custom dates
+    Promise.all([
+        fetch('content/openingsuren.json').then(r => r.json()),
+        loadCustomDates()
+    ]).then(([data]) => {
+        // Check if data has new structure (with default/custom) or old structure
+        const hasNewStructure = data.default !== undefined;
+        const today = new Date();
+            
+            let daysArray = [];
+            
+            // Always use getHoursForDate to check customDates first, then default
+            const dayNames = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'];
+            const dayNamesLower = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
+            
+            daysArray = dayNames.map((dayName, index) => {
+                // Map index to day of week: Maandag=1, Dinsdag=2, ..., Zondag=0
+                const dayOfWeek = index === 6 ? 0 : index + 1;
+                const dayDate = new Date(today);
+                const currentDay = today.getDay();
+                const diff = dayOfWeek - currentDay;
+                dayDate.setDate(today.getDate() + diff);
+                
+                // Check customDates first, then default
+                const dayData = getHoursForDate(data, dayDate);
+                let hours = '';
+                
+                if (dayData) {
+                    hours = convertHoursToOldFormat(dayData);
+                } else {
+                    // Fallback to old structure
+                    hours = data[dayNamesLower[index]] || '';
+                }
+                
+                return {
+                    day: dayName,
+                    hours: hours
+                };
+            });
+            
+            
             const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
             const html = daysArray.map(d => {
                 const isToday = String(d.day).trim().toLowerCase().includes(todayName);
@@ -1678,27 +1930,60 @@ function initOpeningsurenModal() {
     
     const openBtn = document.getElementById('openingsuren-btn');
     const closeBtn = modal.querySelector('.openingsuren-close');
+    const prevBtn = modal.querySelector('#date-picker-prev');
+    const nextBtn = modal.querySelector('#date-picker-next');
+    const dateRangeDisplay = modal.querySelector('#date-picker-range');
     
-    // Inject hours into modal
-    function renderModalHours(data) {
+    let currentWeekStart = getWeekStart(new Date());
+    let openingsurenData = null;
+    
+    // Inject hours into modal for a specific week
+    function renderModalHours(data, weekStart) {
+        openingsurenData = data;
         const container = modal.querySelector('.modal-hours');
         if (!container) return;
         
-        // Convert new structure (individual day fields) to array format
-        const daysArray = [
-            { day: 'Maandag', hours: data.maandag || '' },
-            { day: 'Dinsdag', hours: data.dinsdag || '' },
-            { day: 'Woensdag', hours: data.woensdag || '' },
-            { day: 'Donderdag', hours: data.donderdag || '' },
-            { day: 'Vrijdag', hours: data.vrijdag || '' },
-            { day: 'Zaterdag', hours: data.zaterdag || '' },
-            { day: 'Zondag', hours: data.zondag || '' }
-        ];
+        // Check if data has new structure (with default/custom) or old structure
+        const hasNewStructure = data.default !== undefined;
         
-        const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
+        const dayNames = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'];
+        const dayNamesLower = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
+        
+        const today = new Date();
+        const todayStr = formatDateForLookup(today);
+        
+        const daysArray = dayNames.map((dayName, index) => {
+            const dayDate = new Date(weekStart);
+            dayDate.setDate(weekStart.getDate() + index);
+            const dayDateStr = formatDateForLookup(dayDate);
+            const isToday = dayDateStr === todayStr;
+            
+            // Always use getHoursForDate to check customDates first, then default
+            const dayData = getHoursForDate(data, dayDate);
+            let hours = '';
+            
+            if (dayData) {
+                // Convert to old format string (handles both string and object)
+                hours = convertHoursToOldFormat(dayData);
+            } else {
+                // Fallback to old structure if no customDates and no new structure
+                if (!hasNewStructure) {
+                    hours = data[dayNamesLower[index]] || '';
+                } else {
+                    hours = 'Gesloten';
+                }
+            }
+            
+            return {
+                day: dayName,
+                hours: hours,
+                isToday: isToday,
+                dayData: dayData
+            };
+        });
+        
         container.innerHTML = daysArray.map(d => {
-            const isToday = String(d.day).trim().toLowerCase().includes(todayName);
-            const statusInfo = parseHoursStatus(d.hours, isToday);
+            const statusInfo = parseHoursStatus(d.hours, d.isToday);
             const isAlwaysClosed = d.hours.toLowerCase() === 'gesloten' || d.hours === '';
             const showSubtext = statusInfo.subtext && (!isAlwaysClosed || statusInfo.status === 'open');
             
@@ -1708,7 +1993,7 @@ function initOpeningsurenModal() {
                 : d.hours;
             
             return `
-                <div class="modal-day-hours${isToday ? ' is-today' : ''}${statusInfo.status ? ' status-' + statusInfo.status : ''}" ${isToday ? 'aria-current="date"' : ''}>
+                <div class="modal-day-hours${d.isToday ? ' is-today' : ''}${statusInfo.status ? ' status-' + statusInfo.status : ''}" ${d.isToday ? 'aria-current="date"' : ''}>
                     <div class="modal-day-wrapper">
                         <span class="modal-day">${d.day}</span>
                         ${showSubtext ? `<span class="modal-hours-subtext">${statusInfo.subtext}</span>` : ''}
@@ -1717,6 +2002,73 @@ function initOpeningsurenModal() {
                 </div>
             `;
         }).join('');
+        
+        // Update date range display
+        const datePickerLabel = modal.querySelector('.date-picker-label');
+        if (dateRangeDisplay) {
+            const today = new Date();
+            const todayWeekStart = getWeekStart(today);
+            const isCurrentWeek = formatDateForLookup(todayWeekStart) === formatDateForLookup(weekStart);
+            
+            if (datePickerLabel) {
+                if (isCurrentWeek) {
+                    datePickerLabel.textContent = 'Deze week';
+                } else {
+                    // Calculate weeks ahead
+                    const weeksDiff = Math.round((weekStart - todayWeekStart) / (7 * 24 * 60 * 60 * 1000));
+                    if (weeksDiff === 1) {
+                        datePickerLabel.textContent = 'Volgende week';
+                    } else if (weeksDiff > 1) {
+                        datePickerLabel.textContent = `${weeksDiff} weken vooruit`;
+                    } else {
+                        datePickerLabel.textContent = '';
+                    }
+                }
+            }
+            dateRangeDisplay.textContent = formatWeekRange(weekStart);
+        }
+        
+        // Update navigation buttons
+        const todayWeekStart = getWeekStart(today);
+        const isCurrentWeek = formatDateForLookup(weekStart) === formatDateForLookup(todayWeekStart);
+        
+        if (prevBtn) {
+            if (isCurrentWeek) {
+                prevBtn.setAttribute('disabled', '');
+            } else {
+                prevBtn.removeAttribute('disabled');
+            }
+        }
+        if (nextBtn) {
+            // Allow going forward indefinitely
+            nextBtn.removeAttribute('disabled');
+        }
+        
+        // Reinitialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+    
+    // Navigation handlers
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+            if (!prevBtn.disabled && openingsurenData) {
+                currentWeekStart = new Date(currentWeekStart);
+                currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+                renderModalHours(openingsurenData, currentWeekStart);
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+            if (!nextBtn.disabled && openingsurenData) {
+                currentWeekStart = new Date(currentWeekStart);
+                currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+                renderModalHours(openingsurenData, currentWeekStart);
+            }
+        });
     }
     
     // Open modal
@@ -1755,11 +2107,16 @@ function initOpeningsurenModal() {
         }, 50);
     });
     
-    // Load hours and render into modal
-    fetch('content/openingsuren.json')
-      .then(r => r.json())
-      .then(data => renderModalHours(data))
-      .catch(() => {});
+    // Load hours and custom dates, then render into modal
+    Promise.all([
+        fetch('content/openingsuren.json').then(r => r.json()),
+        loadCustomDates()
+    ]).then(([data]) => {
+        openingsurenData = data; // Store for navigation
+        currentWeekStart = getWeekStart(new Date());
+        renderModalHours(data, currentWeekStart);
+    })
+    .catch(() => {});
 }
 
 // Load homepage gallery (bento box) from JSON and render

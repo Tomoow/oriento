@@ -1,0 +1,71 @@
+{
+  "default": {
+    "maandag": {
+      "closed": true,
+      "morning": null,
+      "afternoon": null
+    },
+    "dinsdag": {
+      "closed": false,
+      "morning": { "open": "10:00", "close": "12:00" },
+      "afternoon": { "open": "14:00", "close": "18:00" }
+    },
+    "woensdag": {
+      "closed": false,
+      "morning": { "open": "10:00", "close": "12:00" },
+      "afternoon": { "open": "14:00", "close": "18:00" }
+    },
+    "donderdag": {
+      "closed": false,
+      "morning": null,
+      "afternoon": { "open": "14:00", "close": "18:00" }
+    },
+    "vrijdag": {
+      "closed": false,
+      "morning": { "open": "10:00", "close": "12:00" },
+      "afternoon": { "open": "14:00", "close": "18:00" }
+    },
+    "zaterdag": {
+      "closed": false,
+      "morning": { "open": "10:00", "close": "12:00" },
+      "afternoon": { "open": "14:00", "close": "18:00" }
+    },
+    "zondag": {
+      "closed": true,
+      "morning": null,
+      "afternoon": null
+    }
+  },
+  "custom": [
+    {
+      "date": "2024-12-15",
+      "maandag": {
+        "closed": false,
+        "morning": { "open": "10:00", "close": "12:00" },
+        "afternoon": { "open": "14:00", "close": "18:00" }
+      }
+    },
+    {
+      "date": "2024-12-22",
+      "zondag": {
+        "closed": false,
+        "morning": { "open": "10:00", "close": "12:00" },
+        "afternoon": { "open": "14:00", "close": "18:00" }
+      }
+    },
+    {
+      "dateRange": {
+        "start": "2024-12-24",
+        "end": "2024-12-31"
+      },
+      "maandag": { "closed": true },
+      "dinsdag": { "closed": true },
+      "woensdag": { "closed": true },
+      "donderdag": { "closed": true },
+      "vrijdag": { "closed": true },
+      "zaterdag": { "closed": true },
+      "zondag": { "closed": true }
+    }
+  ]
+}
+
