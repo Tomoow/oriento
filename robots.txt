@@ -1,5 +1,4 @@
-User-agent: *
-Allow: /
+user-agent: *
+disallow:
 
-Sitemap: https://oriento.net/sitemap.xml
-
+sitemap: https://oriento.net/sitemap.xml

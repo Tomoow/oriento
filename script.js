@@ -1,8 +1,6 @@
 // Your JavaScript code here
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Oriento is ready!');
-    
     // Load brands carousel
     loadBrands();
     
@@ -1675,18 +1673,15 @@ function loadCustomDates() {
     return fetch('content/custom-dates.json')
         .then(r => {
             if (!r.ok) {
-                console.log('Custom dates file not found or not accessible');
                 return null;
             }
             return r.json();
         })
         .then(data => {
-            console.log('Loaded custom dates:', data);
             customDatesData = data;
             return data;
         })
         .catch((err) => {
-            console.error('Error loading custom dates:', err);
             customDatesData = null;
             return null;
         });
@@ -1701,13 +1696,10 @@ function getHoursForDate(data, date) {
     
     // Check customDates from separate file first (highest priority)
     if (customDatesData && customDatesData.customDates && Array.isArray(customDatesData.customDates)) {
-        console.log('Checking custom dates for:', dateStr, 'Available custom dates:', customDatesData.customDates);
         for (const customDate of customDatesData.customDates) {
-            console.log('Comparing:', customDate.date, '===', dateStr, '?', customDate.date === dateStr);
             if (customDate.date === dateStr) {
                 // Check if it's the new structured format (morning/afternoon)
                 if (customDate.morning !== undefined || customDate.afternoon !== undefined) {
-                    console.log('Found custom date match (structured format)! Returning:', customDate);
                     // If both are null, the shop is closed
                     const isClosed = !customDate.morning && !customDate.afternoon;
                     return {
@@ -1718,13 +1710,10 @@ function getHoursForDate(data, date) {
                 }
                 // Check if it's the old string format (backward compatibility)
                 if (customDate.hours) {
-                    console.log('Found custom date match (string format)! Returning:', customDate.hours);
                     return customDate.hours;
                 }
             }
         }
-    } else {
-        console.log('No custom dates data loaded:', customDatesData);
     }
     
     // Check customDates in main data (backward compatibility)
@@ -1937,9 +1926,7 @@ function loadOpeningsurenFooter() {
         }).join('');
         grids.forEach(g => g.innerHTML = html);
     })
-    .catch((err) => {
-        console.error('Error loading openingsuren or custom dates for footer:', err);
-    });
+    .catch(() => {});
 }
 
 // Initialize openingsuren modal
@@ -2138,15 +2125,10 @@ function initOpeningsurenModal() {
         // Ensure customDatesData is set before rendering
         if (customDates && customDates.customDates) {
             customDatesData = customDates;
-            console.log('Modal: Custom dates loaded successfully:', customDates.customDates.length, 'dates');
-        } else {
-            console.warn('Modal: No custom dates found or loaded');
         }
         renderModalHours(data, currentWeekStart);
     })
-    .catch((err) => {
-        console.error('Error loading openingsuren or custom dates:', err);
-    });
+    .catch(() => {});
 }
 
 // Load homepage gallery (bento box) from JSON and render
