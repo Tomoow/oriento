@@ -1706,10 +1706,12 @@ function getHoursForDate(data, date) {
             console.log('Comparing:', customDate.date, '===', dateStr, '?', customDate.date === dateStr);
             if (customDate.date === dateStr) {
                 // Check if it's the new structured format (morning/afternoon)
-                if (customDate.morning || customDate.afternoon) {
+                if (customDate.morning !== undefined || customDate.afternoon !== undefined) {
                     console.log('Found custom date match (structured format)! Returning:', customDate);
+                    // If both are null, the shop is closed
+                    const isClosed = !customDate.morning && !customDate.afternoon;
                     return {
-                        closed: false,
+                        closed: isClosed,
                         morning: customDate.morning || null,
                         afternoon: customDate.afternoon || null
                     };
@@ -1851,76 +1853,93 @@ function parseHoursStatus(hoursString, isToday) {
 }
 
 // Populate all footer hours grids from CMS
+// Footer shows current week with custom date overrides (like modal)
 function loadOpeningsurenFooter() {
     const grids = document.querySelectorAll('.hours-grid');
+    const weekRangeDisplay = document.getElementById('footer-week-range');
     if (grids.length === 0) return;
     
-    // Load both openingsuren and custom dates
+    // Load both openingsuren and custom dates (footer should check custom dates for current week)
     Promise.all([
         fetch('content/openingsuren.json').then(r => r.json()),
         loadCustomDates()
-    ]).then(([data]) => {
+    ]).then(([data, customDates]) => {
+        // Ensure customDatesData is set
+        if (customDates && customDates.customDates) {
+            customDatesData = customDates;
+        }
+        
+        // Calculate current week (Monday to Sunday)
+        const today = new Date();
+        const currentWeekStart = getWeekStart(today);
+        const todayStr = formatDateForLookup(today);
+        
+        // Display "Deze week" instead of date range
+        if (weekRangeDisplay) {
+            weekRangeDisplay.textContent = 'Deze week';
+        }
+        
+        const dayNames = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'];
+        const dayNamesLower = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
+        
         // Check if data has new structure (with default/custom) or old structure
         const hasNewStructure = data.default !== undefined;
-        const today = new Date();
+        
+        const daysArray = dayNames.map((dayName, index) => {
+            // Calculate the actual date for this day of the week
+            const dayDate = new Date(currentWeekStart);
+            dayDate.setDate(currentWeekStart.getDate() + index);
+            const dayDateStr = formatDateForLookup(dayDate);
+            const isToday = dayDateStr === todayStr;
             
-            let daysArray = [];
+            // Use getHoursForDate to check customDates first, then default (like modal)
+            const dayData = getHoursForDate(data, dayDate);
+            let hours = '';
             
-            // Always use getHoursForDate to check customDates first, then default
-            const dayNames = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'];
-            const dayNamesLower = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
-            
-            daysArray = dayNames.map((dayName, index) => {
-                // Map index to day of week: Maandag=1, Dinsdag=2, ..., Zondag=0
-                const dayOfWeek = index === 6 ? 0 : index + 1;
-                const dayDate = new Date(today);
-                const currentDay = today.getDay();
-                const diff = dayOfWeek - currentDay;
-                dayDate.setDate(today.getDate() + diff);
-                
-                // Check customDates first, then default
-                const dayData = getHoursForDate(data, dayDate);
-                let hours = '';
-                
-                if (dayData) {
-                    hours = convertHoursToOldFormat(dayData);
-                } else {
-                    // Fallback to old structure
+            if (dayData) {
+                // Convert to old format string (handles both string and object)
+                hours = convertHoursToOldFormat(dayData);
+            } else {
+                // Fallback to old structure if no customDates and no new structure
+                if (!hasNewStructure) {
                     hours = data[dayNamesLower[index]] || '';
+                } else {
+                    hours = 'Gesloten';
                 }
-                
-                return {
-                    day: dayName,
-                    hours: hours
-                };
-            });
+            }
             
+            return {
+                day: dayName,
+                hours: hours,
+                isToday: isToday
+            };
+        });
+        
+        const html = daysArray.map(d => {
+            const statusInfo = parseHoursStatus(d.hours, d.isToday);
+            const isAlwaysClosed = d.hours.toLowerCase() === 'gesloten' || d.hours === '';
+            const showSubtext = statusInfo.subtext && (!isAlwaysClosed || statusInfo.status === 'open');
             
-            const todayName = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'][new Date().getDay()];
-            const html = daysArray.map(d => {
-                const isToday = String(d.day).trim().toLowerCase().includes(todayName);
-                const statusInfo = parseHoursStatus(d.hours, isToday);
-                const isAlwaysClosed = d.hours.toLowerCase() === 'gesloten' || d.hours === '';
-                const showSubtext = statusInfo.subtext && (!isAlwaysClosed || statusInfo.status === 'open');
-                
-                // Format hours to display time ranges vertically
-                const formattedHours = d.hours.includes(' en ') 
-                    ? d.hours.split(' en ').map(range => range.trim()).join('<br>')
-                    : d.hours;
-                
-                return `
-                    <div class="day-hours${isToday ? ' is-today' : ''}${statusInfo.status ? ' status-' + statusInfo.status : ''}" ${isToday ? 'aria-current="date"' : ''}>
-                        <div class="day-wrapper">
-                            <span class="day">${d.day}</span>
-                            ${showSubtext ? `<span class="hours-subtext">${statusInfo.subtext}</span>` : ''}
-                        </div>
-                        <span class="hours">${formattedHours}</span>
+            // Format hours to display time ranges vertically
+            const formattedHours = d.hours.includes(' en ') 
+                ? d.hours.split(' en ').map(range => range.trim()).join('<br>')
+                : d.hours;
+            
+            return `
+                <div class="day-hours${d.isToday ? ' is-today' : ''}${statusInfo.status ? ' status-' + statusInfo.status : ''}" ${d.isToday ? 'aria-current="date"' : ''}>
+                    <div class="day-wrapper">
+                        <span class="day">${d.day}</span>
+                        ${showSubtext ? `<span class="hours-subtext">${statusInfo.subtext}</span>` : ''}
                     </div>
-                `;
-            }).join('');
-            grids.forEach(g => g.innerHTML = html);
-        })
-        .catch(() => {});
+                    <span class="hours">${formattedHours}</span>
+                </div>
+            `;
+        }).join('');
+        grids.forEach(g => g.innerHTML = html);
+    })
+    .catch((err) => {
+        console.error('Error loading openingsuren or custom dates for footer:', err);
+    });
 }
 
 // Initialize openingsuren modal
@@ -1953,8 +1972,9 @@ function initOpeningsurenModal() {
         const todayStr = formatDateForLookup(today);
         
         const daysArray = dayNames.map((dayName, index) => {
+            // Create a new date object for each day to avoid mutation issues
             const dayDate = new Date(weekStart);
-            dayDate.setDate(weekStart.getDate() + index);
+            dayDate.setDate(dayDate.getDate() + index);
             const dayDateStr = formatDateForLookup(dayDate);
             const isToday = dayDateStr === todayStr;
             
@@ -2108,15 +2128,25 @@ function initOpeningsurenModal() {
     });
     
     // Load hours and custom dates, then render into modal
+    // Modal SHOULD check custom dates (unlike footer)
     Promise.all([
         fetch('content/openingsuren.json').then(r => r.json()),
         loadCustomDates()
-    ]).then(([data]) => {
+    ]).then(([data, customDates]) => {
         openingsurenData = data; // Store for navigation
         currentWeekStart = getWeekStart(new Date());
+        // Ensure customDatesData is set before rendering
+        if (customDates && customDates.customDates) {
+            customDatesData = customDates;
+            console.log('Modal: Custom dates loaded successfully:', customDates.customDates.length, 'dates');
+        } else {
+            console.warn('Modal: No custom dates found or loaded');
+        }
         renderModalHours(data, currentWeekStart);
     })
-    .catch(() => {});
+    .catch((err) => {
+        console.error('Error loading openingsuren or custom dates:', err);
+    });
 }
 
 // Load homepage gallery (bento box) from JSON and render
