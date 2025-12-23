@@ -2271,6 +2271,7 @@ a.gallery-item {
     padding: 0.5rem 1rem;
     min-height: 2.5rem;
     gap: 2rem;
+    border-radius: 8px;
 }
 
 .day-wrapper {
@@ -2580,14 +2581,43 @@ a.gallery-item {
     align-items: center;
     justify-content: flex-start;
     margin-top: auto; /* Push buttons to bottom */
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     padding-top: 1.5rem;
 }
 
 /* Ensure our modal nav rule wins over any generic modal-navigation rules */
 .product-modal-content .modal-navigation {
     justify-content: flex-start;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+}
+
+/* Prevent "Kom naar onze winkel" text from wrapping */
+.modal-navigation .btn-primary {
+    white-space: nowrap;
+    max-width: fit-content;
+}
+
+/* Ensure buttons don't get too wide on large tablets - display side-by-side */
+.modal-navigation .btn {
+    max-width: 300px;
+    flex: 0 1 auto;
+}
+
+/* Tablet: Keep buttons side-by-side if there's enough space */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .modal-navigation {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .modal-navigation .btn {
+        max-width: 300px;
+        flex: 0 1 auto;
+    }
+    
+    .modal-navigation .btn-primary {
+        white-space: nowrap;
+    }
 }
 
 
@@ -2596,8 +2626,8 @@ a.gallery-item {
     margin: 5% auto;
     padding: 2rem;
     border-radius: 12px;
-    max-width: 900px;
-    max-height: 80vh;
+    width: clamp(400px, 80vw, 900px);
+    max-height: 90vh;
     overflow-y: auto;
     position: relative;
 }
@@ -2649,7 +2679,7 @@ a.gallery-item {
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     padding: 0.75rem;
     background-color: var(--color-tertiary);
     border-radius: 8px;
@@ -2717,9 +2747,9 @@ a.gallery-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
-    min-height: 2.5rem;
-    gap: 2rem;
+    padding: 0.25rem 1rem;
+    min-height: 4rem;
+    border-radius: 8px;
 }
 
 .modal-day-wrapper {
@@ -2860,7 +2890,6 @@ a.gallery-item {
 .modal-day-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
 }
 
 .modal-hours-subtext {
@@ -3486,6 +3515,18 @@ a.gallery-item {
     .modal-navigation {
         flex-direction: column;
         align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    /* On mobile, make all buttons full width */
+    .modal-navigation .btn {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* On mobile, allow "Sluiten" to wrap but keep "Kom naar onze winkel" on one line */
+    .modal-navigation .btn-primary {
+        white-space: nowrap;
     }
 
     /* Popup modal */
