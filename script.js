@@ -1442,19 +1442,23 @@ function loadPopupModal() {
             // Set title
             if (data.title && popupTitle) {
                 popupTitle.textContent = data.title;
-                popupTitle.removeAttribute('aria-hidden');
+                popupTitle.removeAttribute('hidden');
+                popupTitle.style.display = '';
             } else if (popupTitle) {
                 popupTitle.textContent = '';
-                popupTitle.setAttribute('aria-hidden', 'true');
+                popupTitle.setAttribute('hidden', '');
+                popupTitle.style.display = 'none';
             }
             
             // Set text
             if (data.text && popupText) {
                 popupText.innerHTML = data.text;
-                popupText.removeAttribute('aria-hidden');
+                popupText.removeAttribute('hidden');
+                popupText.style.display = '';
             } else if (popupText) {
                 popupText.innerHTML = '';
-                popupText.setAttribute('aria-hidden', 'true');
+                popupText.setAttribute('hidden', '');
+                popupText.style.display = 'none';
             }
             
             // Show modal after a short delay

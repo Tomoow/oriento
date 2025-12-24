@@ -2370,8 +2370,12 @@ a.gallery-item {
 }
 
 .footer-separator {
-    color: var(--color-secondary);
-    font-size: 0.9rem;
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    background-color: var(--color-secondary);
+    vertical-align: middle;
+    opacity: 0.6;
 }
 
 /* Dark mode toggle button */
