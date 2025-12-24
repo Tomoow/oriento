@@ -549,6 +549,13 @@ function initModal() {
         }
     });
     
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && privacyModal.classList.contains('show')) {
+            closeModal();
+        }
+    });
+    
     // Handle modal repositioning on resize
     let resizeTimeout;
     window.addEventListener('resize', function() {
@@ -820,6 +827,13 @@ function initProductModal() {
     if (closeLinkBtn) closeLinkBtn.addEventListener('click', close);
     window.addEventListener('click', function(e) {
         if (e.target === modal) close();
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.classList.contains('show')) {
+            close();
+        }
     });
     
     // Handle modal repositioning on resize
@@ -1460,6 +1474,13 @@ function loadPopupModal() {
             // Close when clicking outside
             popupModal.addEventListener('click', function(event) {
                 if (event.target === popupModal) {
+                    closePopup(contentHash, cacheDismissal);
+                }
+            });
+            
+            // Close popup with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && popupModal.classList.contains('show')) {
                     closePopup(contentHash, cacheDismissal);
                 }
             });
@@ -2112,6 +2133,13 @@ function initOpeningsurenModal() {
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
     window.addEventListener('click', function(event) {
         if (event.target === modal) closeModal();
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.classList.contains('show')) {
+            closeModal();
+        }
     });
     
     // Handle modal repositioning on resize
