@@ -1698,9 +1698,19 @@ function getHoursForDate(data, date) {
     if (customDatesData && customDatesData.customDates && Array.isArray(customDatesData.customDates)) {
         for (const customDate of customDatesData.customDates) {
             if (customDate.date === dateStr) {
+                // Check if it's the old string format (backward compatibility)
+                if (customDate.hours) {
+                    return customDate.hours;
+                }
                 // Check if it's the new structured format (morning/afternoon)
-                if (customDate.morning !== undefined || customDate.afternoon !== undefined) {
-                    // If both are null, the shop is closed
+                // If date exists in customDates, it overrides default hours
+                // Check if morning or afternoon are explicitly set (even if null)
+                const hasMorning = customDate.morning !== undefined;
+                const hasAfternoon = customDate.afternoon !== undefined;
+                
+                // If either field is defined (even if null), use the custom date
+                if (hasMorning || hasAfternoon) {
+                    // If both are null/undefined, the shop is closed
                     const isClosed = !customDate.morning && !customDate.afternoon;
                     return {
                         closed: isClosed,
@@ -1708,10 +1718,13 @@ function getHoursForDate(data, date) {
                         afternoon: customDate.afternoon || null
                     };
                 }
-                // Check if it's the old string format (backward compatibility)
-                if (customDate.hours) {
-                    return customDate.hours;
-                }
+                // If date exists but no hours defined, treat as closed
+                // This handles cases where date is added but fields are not filled
+                return {
+                    closed: true,
+                    morning: null,
+                    afternoon: null
+                };
             }
         }
     }
