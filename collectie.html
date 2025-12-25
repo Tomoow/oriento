@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <meta name="description" content="Bekijk de volledige collectie van Oriento: juwelen, accessoires en woondecoratie. Filter op categorie en ontdek unieke stukken voor elke stijl.">
     <title>Oriento - Collectie</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="favicon.ico">
+    <!-- Apply theme immediately to prevent browser auto-darkening and flash -->
+    <script>
+        (function() {
+            const root = document.documentElement;
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            // Use saved preference, or default to user's system preference
+            const initial = saved || (prefersDark ? 'dark' : 'light');
+            root.setAttribute('data-theme', initial);
+            root.style.colorScheme = initial === 'dark' ? 'dark' : 'light';
+        })();
+    </script>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="0ab64e85-45ea-4c78-865c-c0731fd3dd7d"></script>

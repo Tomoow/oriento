@@ -2228,12 +2228,15 @@ function loadGallery() {
 
 // Dark mode toggle functionality
 (function() {
-    // Check for saved theme preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') || 'light';
+    // Check for saved theme preference or use system preference
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = saved || (prefersDark ? 'dark' : 'light');
     
-    // Apply theme on page load
-    if (currentTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
+    // Apply theme on page load (if not already set by inline script)
+    if (!document.documentElement.getAttribute('data-theme')) {
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        document.documentElement.style.colorScheme = currentTheme === 'dark' ? 'dark' : 'light';
     }
     
     // Update toggle button state and icons

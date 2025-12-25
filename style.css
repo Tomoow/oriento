@@ -288,7 +288,7 @@ body {
 }
 
 .logo img {
-    height: 50px;
+    height: 2.75rem;
     width: auto;
 }
 
@@ -306,7 +306,7 @@ body {
 .header-social {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .header-social a {
