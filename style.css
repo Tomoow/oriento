@@ -75,7 +75,7 @@
   /* Opening hours status colors (dark mode) */
   --color-open-text: #4ade80;         /* Lighter green text for dark mode open status */
   --color-closing-soon-text: #fb923c;  /* Lighter orange text for dark mode closing soon status */
-  --color-closed-text: #BE3C3C;        /* Red text for closed status (same in dark mode) */
+  --color-closed-text: #ff6d6d;        /* Red text for closed status (same in dark mode) */
   --color-open-bg: rgba(74, 222, 128, 0.15);     /* Dark green background for open status */
   --color-closing-soon-bg: rgba(251, 146, 60, 0.15); /* Dark orange background for closing soon status */
   --color-closed-bg: rgba(190, 60, 60, 0.15);     /* Dark red background for closed status */
@@ -2178,9 +2178,13 @@ a.gallery-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    padding-right: 1rem;
+    gap: 1rem;  
 }
+
+.footer-hours h4 {
+    padding: 0 0.75rem;
+}
+
 
 .footer-week-range {
     font-family: 'Lato', sans-serif;
@@ -2268,7 +2272,7 @@ a.gallery-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     min-height: 2.5rem;
     gap: 2rem;
     border-radius: 8px;
@@ -3024,7 +3028,7 @@ a.gallery-item {
 
     /* Footer bottom content */
     .footer-bottom-content {
-        padding: 0 2rem;
+        padding: 1rem 2rem;
     }
 
     /* Team container */
@@ -3126,6 +3130,7 @@ a.gallery-item {
     .waze-mobile {
         display: inline-flex !important;
     }
+    
 
     /* Hero section */
     .hero-section {
@@ -3554,6 +3559,11 @@ a.gallery-item {
     }
 
     /* Footer */
+
+    .footer-info, .footer-nav, .footer-hours h4 {
+        padding: 0 0.75rem;
+    }
+
     .footer-container {
         flex-direction: column;
         gap: 2rem;
@@ -3604,7 +3614,7 @@ a.gallery-item {
     .footer-bottom-content {
         flex-direction: column;
         align-items: flex-start;
-        padding: 0 1rem;
+        padding: 0 2rem;
     }
 
      .footer-bottom {
