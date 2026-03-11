@@ -485,7 +485,7 @@ body {
     position: relative;
     width: 100%;
     height: 75vh;
-    background-image: url('img/oriento.jpg');
+    background-image: url('img/hero.png');
     background-size: cover;
     background-position: 75% center;
     background-repeat: no-repeat;
@@ -500,15 +500,15 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--color-bg);
-    opacity: var(--opacity-50);
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 1;
     pointer-events: none;
 }
 
-/* Dark mode hero overlay - darker overlay for text readability */
+/* Dark mode hero overlay - same dark overlay for consistency */
 [data-theme="dark"] .hero-section::after {
-    background-color: rgba(var(--color-bg-rgb), var(--opacity-50));
-    opacity: 1; /* Override the opacity property since rgba already includes it */
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 1;
 }
 
 .hero-content {
@@ -521,7 +521,7 @@ body {
 .hero-content h1 {
     font-size: 3.5rem;
     margin-bottom: 1rem;
-    color: var(--color-text);
+    color: #fff;
     position: relative;
     z-index: 1;
 }
@@ -530,7 +530,7 @@ body {
     font-size: 1.3rem;
     line-height: 150%;
     margin-bottom: 2rem;
-    color: var(--color-text);
+    color: #fff;
     max-width: 600px;
     position: relative;
     z-index: 1;
@@ -542,6 +542,20 @@ body {
     flex-wrap: wrap;
     position: relative;
     z-index: 1;
+}
+
+/* Openingsuren button in hero: 25% white opacity background */
+.hero-buttons #openingsuren-btn {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+}
+.hero-buttons #openingsuren-btn:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+    color: #fff;
+}
+.hero-buttons #openingsuren-btn:active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
 }
 
 /* Brands Section */
