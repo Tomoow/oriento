@@ -1,7 +1,7 @@
 {
-  "enabled": false,
-  "image": "img/uploads/kerstbanner-wb.png",
+  "enabled": true,
+  "image": "img/uploads/fashionweek-mail-zomer-26.jpg",
   "title": "",
-  "text": "",
+  "text": "\\*tijdens de FASHIONWEEK GESLOTEN op zondag, maandag en donderdagvoormiddag",
   "cacheDismissal": false
 }
