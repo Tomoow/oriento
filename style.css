@@ -3559,9 +3559,7 @@ a.gallery-item {
     }
 
     .popup-image-wrapper {
-        max-height: 35vh;
         min-height: 30vh;
-        height: 35vh;
     }
 
     .popup-image-wrapper img {
