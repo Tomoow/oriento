@@ -179,7 +179,7 @@ body {
     margin: 0 auto;
     padding: 0 3rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.75rem;
     justify-content: center;
 }
@@ -189,7 +189,25 @@ body {
     font-size: 0.9rem;
     line-height: 1.5;
     flex: 1;
-    text-align: center;
+    text-align: left;
+}
+
+.announcement-text p {
+    margin: 0;
+}
+
+.announcement-text p + p {
+    margin-top: 0.5rem;
+}
+
+.announcement-text ul,
+.announcement-text ol {
+    margin: 0.5rem 0 0 1.25rem;
+    padding-left: 1rem;
+}
+
+.announcement-text li + li {
+    margin-top: 0.35rem;
 }
 
 .announcement-icon {
@@ -327,6 +345,14 @@ body {
 .header-social i {
     width: 20px;
     height: 20px;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.social-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
 }
 
 /* Dark mode toggle in header */
@@ -2274,6 +2300,16 @@ a.gallery-item {
 .footer-social svg {
     width: 20px;
     height: 20px;
+}
+
+.footer-social i {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.footer-social .social-icon {
+    width: 24px;
+    height: 24px;
 }
 
 .hours-grid {

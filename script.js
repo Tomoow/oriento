@@ -857,6 +857,7 @@ function loadAnnouncements() {
     const closeBtn = document.getElementById('announcement-close');
     const heroSection = document.querySelector('.hero-section');
     const siteHeader = document.querySelector('.site-header');
+    const isLocalPreview = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     
     if (!banner || !textElement) return;
     
@@ -883,22 +884,61 @@ function loadAnnouncements() {
                 return;
             }
             
-            // Convert markdown to HTML for rich text formatting
+            // Convert CMS content to HTML while preserving paragraphs and bullet lists.
             function markdownToHtml(text) {
                 if (!text) return '';
-                // Check if already HTML (contains tags)
-                if (text.includes('<')) {
+
+                // Rich text mode in the CMS stores HTML, so we can render it directly.
+                if (/<[a-z][\s\S]*>/i.test(text)) {
                     return text;
                 }
-                // Convert markdown syntax to HTML
-                return text
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold **text**
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic *text*
-                    .replace(/__(.*?)__/g, '<strong>$1</strong>') // Bold __text__
-                    .replace(/_(.*?)_/g, '<em>$1</em>') // Italic _text_
-                    .replace(/~~(.*?)~~/g, '<del>$1</del>') // Strikethrough ~~text~~
-                    .replace(/<u>(.*?)<\/u>/g, '<u>$1</u>') // Underline (if using HTML)
-                    .replace(/`(.*?)`/g, '<code>$1</code>'); // Inline code `text`
+
+                function formatInline(value) {
+                    return value
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                        .replace(/__(.*?)__/g, '<strong>$1</strong>')
+                        .replace(/_(.*?)_/g, '<em>$1</em>')
+                        .replace(/~~(.*?)~~/g, '<del>$1</del>')
+                        .replace(/`(.*?)`/g, '<code>$1</code>');
+                }
+
+                const lines = text.split('\n').map(line => line.trim());
+                const blocks = [];
+                const hasList = lines.some(line => /^[-*]\s+/.test(line));
+                let listItems = [];
+
+                function flushList() {
+                    if (listItems.length === 0) return;
+                    blocks.push(`<ul>${listItems.map(item => `<li>${formatInline(item)}</li>`).join('')}</ul>`);
+                    listItems = [];
+                }
+
+                lines.forEach((line, index) => {
+                    if (!line) {
+                        flushList();
+                        return;
+                    }
+
+                    const listMatch = line.match(/^[-*]\s+(.*)$/);
+                    if (listMatch) {
+                        listItems.push(listMatch[1]);
+                        return;
+                    }
+
+                    flushList();
+
+                    if (index === 0 && hasList) {
+                        blocks.push(`<p><strong>${formatInline(line)}</strong></p>`);
+                        return;
+                    }
+
+                    blocks.push(`<p>${formatInline(line)}</p>`);
+                });
+
+                flushList();
+
+                return blocks.join('');
             }
             
             // Get the header wrapper - it should contain the original announcement banner
@@ -919,7 +959,7 @@ function loadAnnouncements() {
             activeAnnouncements.forEach((announcement, index) => {
                 if (!announcement || !announcement.text) return;
                 
-                const announcementText = announcement.text.replace(/\n/g, ' ').trim();
+                const announcementText = announcement.text.trim();
                 if (!announcementText) return;
                 
                 try {
@@ -936,7 +976,7 @@ function loadAnnouncements() {
                         sessionStorage.removeItem('announcement-dismissed-hashes');
                     }
                     
-                    if (dismissedHashes.includes(contentHash)) {
+                    if (!isLocalPreview && dismissedHashes.includes(contentHash)) {
                         // This announcement was already dismissed, skip it
                         return;
                     }
@@ -980,7 +1020,7 @@ function loadAnnouncements() {
                                     dismissedHashes = [];
                                 }
                                 
-                                if (!dismissedHashes.includes(contentHash)) {
+                                if (!isLocalPreview && !dismissedHashes.includes(contentHash)) {
                                     dismissedHashes.push(contentHash);
                                     sessionStorage.setItem('announcement-dismissed-hashes', JSON.stringify(dismissedHashes));
                                 }
